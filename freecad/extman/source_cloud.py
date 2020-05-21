@@ -62,7 +62,7 @@ class CloudPackageSource(PackageSource):
             self.protocol = FCWikiProtocol(data['url'], data['wiki'])
 
         else:
-            raise UnsupportedSourceException(f"Unsupported protocol: {data['protocol']}")
+            raise UnsupportedSourceException("Unsupported protocol: {0}".format(data['protocol']))
         
         self.updates = {}
 
@@ -76,7 +76,7 @@ class CloudPackageSource(PackageSource):
         return self.icon
 
     def getProtocolIcon(self):
-        return utils.pathToUrl(getResourcePath('html', 'img', f'source_cloud_{self.protocolName}.svg'))
+        return utils.pathToUrl(getResourcePath('html', 'img', 'source_cloud_{0}.svg'.format(self.protocolName)))
 
     def getPackages(self, cache = True):
 
@@ -123,7 +123,7 @@ class CloudPackageSource(PackageSource):
         store = getResourcePath('cache')
         if not os.path.exists(store): 
             os.mkdir(store)
-        filename = re.sub(r'\W+', '-', f"{self.channelId}-{self.name}") + '.json'
+        filename = re.sub(r'\W+', '-', "{0}-{1}".format(self.channelId, self.name)) + '.json'
         store = getResourcePath('cache', filename)
         return store
 

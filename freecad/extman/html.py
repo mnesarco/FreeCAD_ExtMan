@@ -60,7 +60,7 @@ class DictObject:
 
     def __getattr__(self, name):
         if self.errorOnMissing:
-            raise AttributeError(f'{name} not defined')
+            raise AttributeError('{0} not defined'.format(name))
         else:
             return None
 
@@ -131,10 +131,10 @@ def TemplateExpressionEvaluator(path, model):
                 return compileAndExecute(eexpr, model, 'exec')
             # Resolve local symbol
             else:
-                return str(model.get(eexpr, f'???{etype}{eexpr}???'))
+                return str(model.get(eexpr, '???{0}{1}???'.format(etype, eexpr)))
         except:
             log(traceback.format_exc())
-            log(f"Error executing expression {eexpr} in template {path}")
+            log("Error executing expression {0} in template {1}".format(eexpr, path))
             return 'Error:' + traceback.format_exc()
             
     return evalExpr
@@ -191,7 +191,7 @@ def parseBlocks(code, path):
     blocks = {}
     def compileBlock(match):
         block = textwrap.dedent(match.group(1))
-        name = f"block_{random.randint(0, 65000)}_{int(time.time())}"
+        name = "block_{0}_{1}".format(random.randint(0, 65000), int(time.time()))
         blocks[name] = TemplateMacro(name, block, path)
         return '${x:' + block + '()}'
 

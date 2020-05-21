@@ -69,7 +69,7 @@ class ParametersProxy:
             return group.SetFloat(name, value)
 
 def setPluginParam(plugin, name, value):
-    param = App.ParamGet(f'User parameter:Plugins/{plugin}')
+    param = App.ParamGet('User parameter:Plugins/{0}'.format(plugin))
     if isinstance(value, str):
         param.SetString(name, value)
     elif isinstance(value, bool):
@@ -79,7 +79,7 @@ def setPluginParam(plugin, name, value):
     elif isinstance(value, int):
         param.SetInt(name, value)                
     else:
-        raise ValueError(f'Unsupported param type [{type(value)}] {name}')
+        raise ValueError('Unsupported param type [{0}] {1}'.format(type(value), name))
 
 # ExtMan Parameters Proxy (Constant/Singleton)
 ExtManParameters = ParametersProxy()

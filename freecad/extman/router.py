@@ -38,7 +38,7 @@ class Router:
     def __init__(self, **routes):
         self._CURRENT_ = '/'
         for k, match in routes.items():
-            self.__setattr__(f"is{k}", self.dispatch(k, match))
+            self.__setattr__("is{0}".format(k), self.dispatch(k, match))
 
     def getCurrent(self):
         return self._CURRENT_

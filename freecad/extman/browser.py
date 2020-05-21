@@ -131,7 +131,7 @@ def requestHandler(path, action, params, request, response):
     if action:
         responseWrapper = TemplateResponseWrapper(response)
         eval(
-            f'actions.{action}(path, session, params, request, responseWrapper)', 
+            'actions.{0}(path, session, params, request, responseWrapper)'.format(action), 
             {'actions': actions}, 
             locals()
         )

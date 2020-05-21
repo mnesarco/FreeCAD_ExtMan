@@ -155,7 +155,7 @@ def run_macro(path, session, params, request, response):
 
     path = params['macro']
     if os.path.exists(path):
-        Gui.doCommandGui(f"exec(open(\"{path}\").read())")  
+        Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))  
     response.htmlOk()
             
 def createRouter():

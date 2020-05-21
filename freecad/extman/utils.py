@@ -144,7 +144,7 @@ def extractIcon(src, default='freecad.svg'):
 
 def getWorkbenchKey(name):
     if name.endswith("Workbench"): name = name[:-9]
-    return nonStandardNamedWorkbenches.get(name, f"{name}Workbench")
+    return nonStandardNamedWorkbenches.get(name, "{0}Workbench".format(name))
 
 def getWorkbenchCategories(wb):
     if wb and hasattr(wb, 'Categories'):

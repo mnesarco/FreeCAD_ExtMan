@@ -28,7 +28,7 @@ def getFlagsDatabase():
 
     """
     Reads Resources/data/flags.json
-    returns dict( f"{pkg.type:pkg.name.lower()}" => flags )
+    returns dict( "{pkg.type:pkg.name.lower()}" => flags )
     """
 
     db = {}
@@ -39,7 +39,7 @@ def getFlagsDatabase():
             macros = flag.get('Macro', [])
             items = itertools.chain( ((m, 'Mod') for m in mods), ((m, 'Macro') for m in macros) )
             for name, mtype in items:
-                key = f"{mtype}:{name.lower()}"
+                key = "{0}:{1}".format(mtype, name.lower())
                 mod = db.get(key, {})
                 mod[flagId] = True
                 db[key] = mod
@@ -49,7 +49,7 @@ def applyPredefinedFlags(pkg):
     ptype = pkg.type
     if ptype == 'Workbench':
         ptype = 'Mod'
-    flags = getFlagsDatabase().get(f"{ptype}:{pkg.name.lower()}", [])
+    flags = getFlagsDatabase().get("{0}:{1}".format(ptype, pkg.name.lower()), [])
     if flags:
         if pkg.flags:
             pkg.flags.update(flags)

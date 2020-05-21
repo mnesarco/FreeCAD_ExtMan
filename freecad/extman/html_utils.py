@@ -41,5 +41,5 @@ def getResourceUrl(*path):
     else:
         url = filepath
         parentUrl = parent
-    return f"file://{url}", f"file://{parentUrl}", filepath
+    return "file://" + url, "file://" + parentUrl, filepath
 

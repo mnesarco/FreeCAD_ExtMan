@@ -57,9 +57,9 @@ class ReadmeParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if self.inContent:
-            text = f"<{tag} "
+            text = "<{0} ".format(tag)
             for attName, attVal in attrs:
-                text += f"{attName}=\"{attVal}\" "
+                text += "{0}=\"{1}\" ".format(attName, attVal)
             text += '>'
             self.html += text
 
@@ -78,7 +78,7 @@ class ReadmeParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if self.inContent:
-            self.html += f"</{tag}>"
+            self.html += "</{0}>".format(tag)
         elif tag == 'article':
             self.inContent = False
 
@@ -99,7 +99,7 @@ class GithubRepo(egit.GitRepo):
         url = self.url.replace('github.com', 'raw.githubusercontent.com')
         if url.endswith('.git'):
             url = url[:-4]
-        return url + f"/master/{path}"
+        return "{0}/master/{1}".format(url, path)
 
     def syncReadmeHttp(self):
         readme = self.getRawFile('README.md')
@@ -197,7 +197,7 @@ class GithubProtocol(Protocol):
         if syncReadme:
             repo.syncReadmeHttp()
 
-        iconPath = f"Resources/icons/{subm['name']}Workbench.svg"
+        iconPath = "Resources/icons/{0}Workbench.svg".format(subm['name'])
 
         indexKey = subm['url']
         if indexKey.endswith('.git'):
@@ -282,7 +282,7 @@ class GithubProtocol(Protocol):
         
         # Check valid install dir
         if not pkg.installDir.startswith(App.getUserAppDataDir()) and not pkg.installDir.startswith(App.getUserMacroDir(True)):
-            log(f'Invalid install dir: {pkg.installDir}')
+            log('Invalid install dir: {0}'.format(pkg.installDir))
             result.ok = False
             result.invalidInstallDir = True
             return result
@@ -441,7 +441,7 @@ class GithubProtocol(Protocol):
             if not os.path.exists(macrosDir):
                 os.makedirs(macrosDir)
 
-            log(f'Installing {pkg.installFile}')
+            log('Installing', pkg.installFile)
 
             shutil.copy2(srcFile, pkg.installFile)
             files.append(pkg.installFile)
@@ -454,7 +454,7 @@ class GithubProtocol(Protocol):
                     dst = os.path.abspath(os.path.join(pkg.installDir, fpath))
                     src = os.path.abspath(os.path.join(pkg.basePath, fpath))
 
-                    log(f'Installing {dst}')
+                    log('Installing ', dst)
 
                     if not dst.startswith(pkg.installDir):
                         result.message = tr('Macro package attempts to install files outside of permitted path') 
@@ -486,7 +486,7 @@ class GithubProtocol(Protocol):
             files.sort(reverse=True, key=lambda t: t[0])
             for f in files:
                 try:
-                    log(f"Rollback {f}")
+                    log("Rollback ", f)
                     if os.path.isfile(f):
                         os.remove(f)
                     elif os.path.isdir(f):

@@ -122,9 +122,7 @@ class FCWikiProtocol(Protocol):
                         categories = [tr('Uncategorized')],
                         date = None,
                         version = None,
-                        #readmeUrl = self.wiki + f'/api.php?action=parse&page=Macro_{name}&prop=text&formatversion=2&origin=*&format=json',
-                        #readmeFormat = 'wikimedia'              
-                        readmeUrl = self.wiki + f'/Macro_{name}?origin=*',
+                        readmeUrl = '{0}/Macro_{1}?origin=*'.format(self.wiki, name),
                         readmeFormat = 'html'              
                     )
                     flags.applyPredefinedFlags(pkg)
@@ -136,12 +134,12 @@ class FCWikiProtocol(Protocol):
         return macros
 
     def getWikiPageUrlJson(self, name):
-        return self.wiki + f'/api.php?action=query&prop=revisions&titles={name}&rvslots=%2A&rvprop=content&formatversion=2&format=json'
+        return '{0}/api.php?action=query&prop=revisions&titles={1}&rvslots=%2A&rvprop=content&formatversion=2&format=json'.format(self.wiki, name)
 
     def installMacro(self, pkg):
 
         result = InstallResult()
-        url = self.getWikiPageUrlJson(f"Macro_{quote(pkg.name)}")
+        url = self.getWikiPageUrlJson("Macro_{0}".format(quote(pkg.name)))
         content = httpGet(url)
         if content:
             wikitext = getPageContentFormJson(json.loads(content))

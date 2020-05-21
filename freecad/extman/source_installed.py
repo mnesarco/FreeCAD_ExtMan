@@ -120,7 +120,7 @@ class InstalledPackageSource(PackageSource):
             return pkg
 
     def getModIcon(self, name, installDir, wbKey, wb):
-        iconPath = os.path.join(installDir, 'Resources', 'icons', f'{name}Workbench.svg')
+        iconPath = os.path.join(installDir, 'Resources', 'icons', '{0}Workbench.svg'.format(name))
         if os.path.exists(iconPath):
             return utils.pathToUrl(iconPath)
         else:

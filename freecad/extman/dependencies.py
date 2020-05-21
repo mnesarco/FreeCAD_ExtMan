@@ -35,7 +35,7 @@ def isWorkbenchAvailable(name, keys=None):
     if not keys:
         keys = Gui.listWorkbenches().keys()
     name = name.strip()
-    return name in keys or f"{name}Workbench" in keys
+    return name in keys or (name + "Workbench") in keys
 
 def isExecutableAvailable(name):
     return bool(shutil.which(name))

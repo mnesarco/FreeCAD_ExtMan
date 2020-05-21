@@ -46,6 +46,9 @@ TR_FLAG_PY2ONLY = tr('Python2 only')
 TR_README = tr('readme')
 TR_INSTALL = tr('Install')
 TR_INSTALLING = tr('Installing...')
+TR_VIEWMODE = tr('View mode')
+TR_VIEWMODE_LIST = tr('List view')
+TR_VIEWMODE_CARD = tr('Card view')
 
 def PackageIcon(pkg, cssClass="icon", style=""):
     
@@ -57,41 +60,40 @@ def PackageIcon(pkg, cssClass="icon", style=""):
 
     if fallback:
         fallback = fallback.replace("'", "")
-        fallback = f" data-fallback='{fallback}' "
+        fallback = " data-fallback='{0}' ".format(fallback)
         onerror = " onerror='extman_onImageError(this)' "
     else:
         fallback = ''
         onerror = ''
 
-    return f"""
-    <img src="{icon}" {fallback} class="{cssClass}" style="{style}" {onerror} />
-    """
+    return '<img src="{0}" {1} class="{2}" style="{3}" {4} />'\
+        .format(icon, fallback, cssClass, style, onerror)
 
 @lru_cache()
 def IconComponent(name, fallback='img/freecad.svg', title="", cssClass="icon"):
     url, ctx, absPath = getResourceUrl('img', name)
     if os.path.exists(absPath):
-        return f"""
+        return """
         <img 
-            src="{url}" 
-            data-fallback="{fallback}"
-            alt="{title}" 
-            title="{title}" 
-            class="{cssClass}" />
-        """
+            src="{0}" 
+            data-fallback="{1}"
+            alt="{2}" 
+            title="{2}" 
+            class="{3}" />
+        """.format(url, fallback, title, cssClass)
     else:
-        return f"???{name}???"
+        return "???{0}???".format(name)
 
 @lru_cache()
 def BtnOpenMacro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled(): 
         macro = pkg.key.replace('"', r'\"')
-        return f"""
+        return """
         <a class="btn btn-sm btn-outline-success btn-labeled extman-ajax" 
-            href="action.open_macro?macro={macro}">
-            {TR_EDIT}
+            href="action.open_macro?macro={0}">
+            {1}
         </a>
-        """
+        """.format(macro, TR_EDIT)
     else:
         return ''
 
@@ -100,62 +102,71 @@ def BtnRunMacro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled(): 
         macro = pkg.installFile.replace('"', r'\"')
         if pkg.markedAsSafe:
-            return f"""
+            return """
             <button class="btn btn-sm btn-outline-danger btn-labeled" 
-                onclick="extman_runMacro('{macro}')">
-                {TR_RUN}
+                onclick="extman_runMacro('{0}')">
+                {1}
             </button>
-            """
+            """.format(macro, TR_RUN)
         else:
             title = pkg.title.replace('"', r'\"')
-            return f"""
+            return """
             <button class="btn btn-sm btn-outline-danger btn-labeled" 
-                onclick='extman_confirmMacro("{macro}", "{title}")'>
-                {TR_RUN}
+                onclick='extman_confirmMacro("{0}", "{1}")'>
+                {2}
             </button>
-            """
+            """.format(macro, title, TR_RUN)
     else:
         return ''
 
 def BtnInstallPkg(pkg, source):
     if not pkg.isInstalled():
-        return f"""
+        return """
         <a class="btn btn-sm btn-outline-danger btn-labeled extman-loading" 
-            href="action.show_install_info?pkg={quote(pkg.name)}&source={quote(source.name)}&channel={quote(source.channelId)}">
-            {TR_INSTALL}
+            href="action.show_install_info?pkg={0}&source={1}&channel={2}">
+            {3}
         </a>
-        """
+        """.format(quote(pkg.name), quote(source.name), quote(source.channelId), TR_INSTALL)
     else:
         return ''
 
 def BtnDoInstallOrUpdatePkg(pkg):
-    return f"""
-    <a class="btn btn-danger extman-loading" data-spinner-message="{TR_INSTALLING}"
-        href="action.install_package?pkg={quote(pkg.name)}&source={quote(pkg.sourceName)}&channel={quote(pkg.channelId)}">
-        {TR_UPDATE if pkg.isInstalled() else TR_INSTALL}
+    return """
+    <a class="btn btn-danger extman-loading" data-spinner-message="{0}"
+        href="action.install_package?pkg={1}&source={2}&channel={3}">
+        {4}
     </a>
-    """
+    """.format(
+        TR_INSTALLING, 
+        quote(pkg.name), 
+        quote(pkg.sourceName), 
+        quote(pkg.channelId), 
+        TR_UPDATE if pkg.isInstalled() else TR_INSTALL)
 
 def BtnUpdatePackage(pkg, source):
     if pkg.isInstalled() and (not pkg.isCore) and pkg.channelId and pkg.sourceName:
-        return f"""
+        return """
         <a class="btn btn-sm btn-outline-primary btn-labeled extman-loading" 
-            href="action.show_install_info?pkg={quote(pkg.name)}&source={quote(pkg.sourceName)}&channel={quote(pkg.channelId)}">
-            {TR_UPDATE}
+            href="action.show_install_info?pkg={0}&source={1}&channel={2}">
+            {3}
         </a>
-        """
+        """.format(
+            quote(pkg.name), 
+            quote(pkg.sourceName), 
+            quote(pkg.channelId), 
+            TR_UPDATE)
     else:
         return ''
 
 def BtnActivateWB(pkg):
     if pkg.type == 'Workbench' and pkg.isInstalled():
         key = pkg.key.replace('"', r'\"')
-        return f"""
+        return """
         <a class="btn btn-sm btn-outline-primary btn-labeled extman-ajax" 
-            href="action.open_workbench?workbenchKey={quote(key)}">
-            {TR_ACTIVATE}
+            href="action.open_workbench?workbenchKey={0}">
+            {1}
         </a>
-        """
+        """.format(quote(key), TR_ACTIVATE)
     else:
         return ''
 
@@ -170,7 +181,7 @@ def PkgAllBadges(pkg, showInstalled=True, showCore=True, withText=False, layout=
     ]
     if layout == 'list':
         return "".join((
-            f'<li class="list-group-item pkg-badge-list-item">{b}</li>'
+            '<li class="list-group-item pkg-badge-list-item">{0}</li>'.format(b)
             for b in badges if b != ''
         ))
     else:
@@ -189,7 +200,7 @@ def PkgCoreBadge(pkg, withText=False):
         text = TR_COMMUNITY_PACKAGE
     
     if withText:
-        return f"{icon} <span>{text}</span>"
+        return "{0} <span>{1}</span>".format(icon, text)
     else:
         return icon
 
@@ -208,7 +219,7 @@ def PkgTypeBadge(pkg, withText=False):
         return ''
 
     if withText:
-        return f"{icon} <span>{text}</span>"
+        return "{0} <span>{1}</span>".format(icon, text)
     else:
         return icon
 
@@ -222,7 +233,7 @@ def PkgInstalledBadge(pkg, withText=False):
         return ''
 
     if withText:
-        return f"{icon} <span>{text}</span>"
+        return "{0} <span>{1}</span>".format(icon, text)
     else:
         return icon
 
@@ -235,7 +246,7 @@ def PkgGitBadge(pkg, withText=False):
         return ''
 
     if withText:
-        return f"{icon} <span>{text}</span>"
+        return "{0} <span>{1}</span>".format(icon, text)
     else:
         return icon
 
@@ -248,22 +259,27 @@ def PkgWikiBadge(pkg, withText=False):
         return ''
 
     if withText:
-        return f"{icon} <span>{text}</span>"
+        return "{0} <span>{1}</span>".format(icon, text)
     else:
         return icon
 
 def PackageViewModeSelect(mode):
-    return f"""
-    <div class="btn-group btn-group-sm float-right" role="group" aria-label="{tr('View Mode')}" 
-        style="margin-top: 10px; margin-right:10px; position: absolute; right: 20px;">
-        <a href="action.set_package_viewmode?vm=rows" class="btn btn-sm btn-outline-secondary {'active' if mode == 'rows' else ''}" title="{tr('List View')}">
-            <img src="img/bootstrap/list.svg" />
-        </a>
-        <a href="action.set_package_viewmode?vm=cards" class="btn btn-sm btn-outline-secondary {'active' if mode == 'cards' else ''}" title="{tr('Card View')}">
-            <img src="img/bootstrap/grid.svg" />
-        </a>
-    </div>
-    """
+    return """
+        <div class="btn-group btn-group-sm float-right" role="group" aria-label="{0}" 
+            style="margin-top: 10px; margin-right:10px; position: absolute; right: 20px;">
+            <a href="action.set_package_viewmode?vm=rows" class="btn btn-sm btn-outline-secondary {1}" title="{2}">
+                <img src="img/bootstrap/list.svg" />
+            </a>
+            <a href="action.set_package_viewmode?vm=cards" class="btn btn-sm btn-outline-secondary {3}" title="{4}">
+                <img src="img/bootstrap/grid.svg" />
+            </a>
+        </div>
+        """.format(
+            TR_VIEWMODE, 
+            'active' if mode == 'rows' else '', 
+            TR_VIEWMODE_LIST,
+            'active' if mode == 'cards' else '',
+            TR_VIEWMODE_CARD)
 
 @lru_cache()
 def PkgFlags(pkg, withText=False, layout=None):
@@ -280,13 +296,13 @@ def PkgFlags(pkg, withText=False, layout=None):
             icons.append((text, icon))
     
     if withText:
-        out = (f'{icon} <span>{text}</span>' for (text,icon) in icons)
+        out = ('{0} <span>{1}</span>'.format(icon, text) for (text, icon) in icons)
     else:
-        out = (f'{icon}' for (text,icon) in icons)
+        out = (icon for (text,icon) in icons)
     
     if layout == 'list':
         return "".join((
-            f'<li class="list-group-item pkg-flag-list-item">{b}</li>'
+            '<li class="list-group-item pkg-flag-list-item">{0}</li>'.format(b)
             for b in out if b != ''
         ))
     else:
@@ -295,16 +311,22 @@ def PkgFlags(pkg, withText=False, layout=None):
 @lru_cache()
 def PkgReadmeLink(pkg, cssClass=""):
     if pkg.readmeUrl:
-        return f"""
-        <a class="{cssClass or 'readme-link'}" 
+        return """
+        <a class="{0}" 
             href="#" 
             onclick="extman_readmeDlg(this, event)"
-            data-readme="{pkg.readmeUrl}"
-            data-readmeformat="{pkg.readmeFormat}"
-            data-title="{pkg.title}">
-            {TR_README}
+            data-readme="{1}"
+            data-readmeformat="{2}"
+            data-title="{3}">
+            {4}
         </a>
-        """
+        """.format(
+            cssClass or 'readme-link',
+            pkg.readmeUrl, 
+            pkg.readmeFormat, 
+            pkg.title,
+            TR_README
+        )
     else:
         return ''
 
