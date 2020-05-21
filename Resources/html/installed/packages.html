@@ -1,0 +1,51 @@
+@{macro:categoryCards cat installed}
+    <div class="container-fluid package-category" style="padding: 10px 30px 10px 10px">
+        <ul class="nav nav-tabs" style="margin-bottom: 20px; border-bottom: solid 3px #222222;">
+            <li class="nav-item" >
+                <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-dark text-light">${e: tr(cat.name) }</a>
+            </li>
+        </ul>
+        <div class="row row-cols-2 row-cols-md-4 package-items">
+            <py>
+                for pkg in cat.packages:
+                    hprint(include('installed', 'package_card.html', pkg=pkg, installed=installed, pkgSource=installed))
+            </py>
+        </div>
+    </div>
+@{/macro}
+
+@{macro:categoryRows cat installed}
+    <div class="container-fluid package-category" style="padding: 10px 30px 10px 10px">
+        <ul class="nav nav-tabs" style="margin-bottom: 20px; border-bottom: solid 3px #222222;">
+            <li class="nav-item" >
+                <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-dark text-light">${e: tr(cat.name) }</a>
+            </li>
+        </ul>
+        <table class="table table-striped table-sm">
+            <tbody class="package-items">
+                <py>
+                    for pkg in cat.packages:
+                        hprint(include('installed', 'package_row.html', pkg=pkg, installed=installed, pkgSource=installed))
+                </py>
+            </tbody>
+        </table>
+    </div>
+@{/macro}
+
+<py>
+
+    from freecad.extman.source_installed import InstalledPackageSource
+    from freecad.extman.preferences import ExtManParameters
+    
+    mode = ExtManParameters.packagesViewMode
+    hprint(comp.PackageViewModeSelect(mode))
+
+    installed = InstalledPackageSource()
+    if mode == 'cards':
+        for c in installed.getCategories(): 
+            hprint(categoryCards(cat=c, installed=installed))
+    else:
+        for c in installed.getCategories(): 
+            hprint(categoryRows(cat=c, installed=installed))
+
+</py>

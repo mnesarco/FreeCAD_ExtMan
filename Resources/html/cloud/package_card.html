@@ -1,0 +1,41 @@
+<div class="col mb-4 pr-md-1 package-item">
+    <a class="pkg-anchor" name="${e: sha256(params.pkg.name) }"></a>
+    <div class="card h-100" >
+        <div class="pkgcard-header">
+            <table>
+                <tr>
+                    <td>
+                        ${e: comp.PackageIcon(params.pkg)}
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <h6>${e: params.pkg.title }</h6>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <div style="overflow: hidden; max-height: 74px;" class="pkgcard-descr">
+                <small style="line-height: 1.1em; opacity: 0.8;">
+                    ${e: params.pkg.description } <span class="badge">${e: params.pkg.date }</span>    
+                </small>                
+            </div>
+            <small>${e: comp.PkgReadmeLink(params.pkg) }</small>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">               
+                <py>
+                    hprint(comp.PkgFlags(params.pkg))
+                    hprint(comp.PkgAllBadges(params.pkg, showCore=False))
+                </py>
+            </li>
+            <li class="list-group-item">
+                <py>
+                    pkg = params.pkg
+                    hprint( comp.BtnInstallPackage(pkg, pkgSource) )
+                    hprint( comp.BtnUpdatePackage(pkg, pkgSource) )
+                </py>
+            </li>
+        </ul>
+    </div>
+</div>
+

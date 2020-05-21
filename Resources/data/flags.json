@@ -1,0 +1,32 @@
+{
+    "obsolete" : {
+        "name": "Obsolete",
+        "Mod": [
+            "assembly2",
+            "drawing_dimensioning",
+            "cura_engine"            
+        ]
+    },
+    "banned" : {
+        "name": "Blacklist",
+        "Macro": [
+            "BOLTS",
+            "WorkFeatures",
+            "how to install",
+            "PartsLibrary",
+            "FCGear"            
+        ]
+    },
+    "py2only" : {
+        "name": "Python 2 Only",
+        "Mod": [
+            "geodata",
+            "GDT",
+            "timber",
+            "flamingo",
+            "reconstruction",
+            "animation"
+        ]
+    }
+
+}

@@ -1,0 +1,39 @@
+@{macro:renderChannel channel}
+<div class="container-fluid package-channel" style="padding: 10px 30px 10px 10px">
+    <ul class="nav nav-tabs border-secondary" style="margin-bottom: 20px; border-bottom: solid 3px;">
+        <li class="nav-item" >
+            <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-secondary text-light">${e: channel.name }</a>
+        </li>
+    </ul>
+    <div style="padding: 10px;">
+        <py>
+            for source in channel.sources:
+                hprint(renderSource(source=source, channel=channel))
+        </py>
+    </div>
+</div>
+@{/macro}
+
+@{macro:renderSource source channel}
+<div class="package-channel-source border-secondary border-bottom" style="margin-bottom: 10px;">
+    <div class="media" >
+        <img class="mr-3" src="${e:source.getIcon()}" onerror="this.src='img/package_source.svg'; this.onerror=null" alt="icon" />
+        <div class="media-body">
+            <h5 class="mt-0">
+                <a class="extman-loading"
+                    href="action.open_cloud_source?channel=${e:channel.id}&name=${e:source.name}">
+                    ${e:source.getTitle()}
+                </a>
+            </h5>
+            ${e:source.getDescription()}
+        </div>
+    </div>
+</div>
+@{/macro}
+
+<py>
+from freecad.extman.source_cloud import findCloudChannels
+for channel in findCloudChannels():
+    print()
+    hprint(renderChannel(channel=channel))
+</py>

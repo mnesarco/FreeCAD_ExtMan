@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/extman.css" />
+
+    <title>${t:Extension Manager}</title>
+
+    <script type="text/javascript">
+        // Import QT Translations
+        window._TR_DISABLED = "${t:Disabled}";
+        window._TR_LOADING = "${t:Loading...}";
+        window._TR_RUN = "${t:Run}";
+        window._TR_CLOSE = "${t:Close}";
+        window._TR_Confirm = "${t:Confirm}";
+        window._TR_ConfirmBody = "${t:Are you sure?}";
+        window._TR_CONFIRM_MACRO_RUN = "${t:Confirm unsafe run?}";
+        window._TR_CONFIRM_MACRO_RUN_MSG = "${t:This Macro comes from an external source. It executes code on your computer and it is potentially dangerous.}";
+        window._TR_CONFIRM_UPDATE_META_MSG = "${t:This action will download metadata from extenal sources. It can take a while to complete.}";
+        window._TR_README_ERROR = "${t:Readme info not available or unsupported}";
+    </script>
+
+    <!-- Scripts: jquery, extman_base, extman. Order is important and must be included in head. -->
+    <script src="js/jquery.slim.min.js"></script>
+    <script src="js/extman_base.js"></script>
+    <script src="js/extman.js"></script>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top justify-content-between">
+        <a class="navbar-brand" href="#">${t:Extension Manager}</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item ${e: 'active' if route.isInstalledPackages() else '' }">
+                <a class="nav-link" href="action.open_installed">
+                    <img src="img/source_installed.svg" style="height: 1em;" />
+                    ${t:Installed}
+                </a>
+            </li>
+            <li class="nav-item ${e: 'active' if route.isCloudSources() else '' }">                
+                <a class="nav-link" href="action.open_cloud">
+                    <img src="img/source_cloud.svg" style="height: 1em;" />
+                    ${t:Cloud}
+                </a>
+            </li>
+        </ul>
+        <div class="form-inline">
+            <input class="form-control form-control-sm mr-sm-2" type="search" name="search" placeholder="${t:Search}..."
+                onkeyup="extman_filterPackages(this.value)" 
+                onclick="extman_filterPackages(this.value)"
+                onblur="extman_filterPackages(this.value)"
+                onchange="extman_filterPackages(this.value)"
+                oninput="extman_filterPackages(this.value)"
+                aria-label="${t:Search}">
+            <div id="globalSpinner" class="spinner-border text-light spinner-border-sm" style="display: none;" role="status">
+                <span class="sr-only">${t:Loading...}</span>
+            </div>        
+        </div>
+    </nav>
+
+    <div style="height: 56px;"></div>
+
+    <py> 
+
+        if route.isInstalledPackages():
+            hprint(include('installed', 'packages.html'))
+
+        if route.isCloudSources():
+            hprint(include('cloud', 'index.html'))
+            
+    </py>
+
+    <!-- Modal -->
+    <div class="modal fade" id="extman_confirmModalDlg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header  text-white bg-dark">
+                    <h5 class="modal-title">${t:Confirm}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="${t:Close}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-white bg-danger">
+                    
+                </div>
+                <div class="modal-footer text-white bg-dark">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">${t:Close}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bloking loading -->
+    <div class="modal fade" id="globalModalSpinner" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-white bg-info">
+                    <div class="d-flex align-items-center">
+                        <strong id="globalModalSpinnerText">${t:Loading...}</strong>
+                        <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Readme Modal Viewer -->
+    <div class="modal fade" id="extman_ReadmeDlg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-primary">
+                    <h6 class="modal-title">
+                        ${t:Readme} 
+                        <span class="pkg-title"></span>
+                        <span id="readmeSpinner" class="spinner-border text-light spinner-border-sm" style="display: none;" role="status">                           
+                        </span>        
+                    </h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="${t:Close}">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" >
+                    
+                </div>                
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="js/bootstrap.min.js" defer async></script>
+
+    <!-- Markdown parser JavaScript -->
+    <script src="js/marked.min.js" defer async></script>
+
+    <!-- <script src="js/popper.min.js"></script> -->
+
+</body>
+
+</html>

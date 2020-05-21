@@ -1,0 +1,112 @@
+<div class="container-fluid" style="padding: 10px 30px 10px 10px">
+
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="media">
+                        ${e: comp.PackageIcon(installPkg, style="height: 64px;", cssClass="mr-3 img-thumbnail") }
+                        <div class="media-body">
+                            <h5 class="mt-0">${e: installPkg.title }</h5>
+                            <p>${e: installPkg.description}</p>
+
+                            <div class="input-group mb-3" style="display: ${e:'visible' if installPkg.git else 'none'}; margin-top: 10px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">git:</span>
+                                </div>
+                                <input type="text" class="form-control" readonly="readonly" value="${e:installPkg.git}" />
+                            </div>
+        
+                        </div>
+                    </div>
+
+                    <hr />
+                    <a class="btn btn-secondary extman-loading"
+                        href="action.open_cloud_source?channel=${e:pkgSource.channelId}&name=${e:pkgSource.name}#${e:sha256(installPkg.name)}">
+                        &#8592; ${t:Back}
+                    </a>
+
+                    ${e:comp.PkgReadmeLink(installPkg, cssClass="btn btn-info text-uppercase")}
+                    ${e:comp.BtnDoInstallOrUpdatePkg(installPkg)}
+
+                </div>
+                <div class="card-footer">
+                    ${t:Source}: 
+                    <a class="extman-loading"
+                        href="action.open_cloud_source?channel=${e:pkgSource.channelId}&name=${e:pkgSource.name}#${e:sha256(installPkg.name)}">
+                        ${e:pkgSource.getTitle()}
+                    </a>
+                </div>
+            </div>
+
+            <py>
+                if installResult is not None:
+                    if installResult.ok:
+                        hprint(resultOk())
+                    else:
+                        hprint(resultError())
+            </py>
+
+        </div>
+
+        <div class="col-4">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    ${e:comp.PkgFlags(installPkg, withText=True, layout='list')}
+                    ${e:comp.PkgAllBadges(installPkg, withText=True, layout='list')}
+                </ul>
+            </div>
+
+            <py>
+                if installPkg.author:
+                    hprint(authors())
+            </py>
+
+        </div>
+    </div>
+
+</div>
+
+@{macro:authors}
+<div class="card" style="margin-top: 10px;">
+    <div class="card-header">
+        ${t:Authors}
+    </div>
+    <div class="card-body">
+        <p class="card-text">
+            ${e:installPkg.author}
+        </p>
+    </div>
+</div>
+@{/macro}
+
+@{macro:resultError}
+    <div class="card text-white bg-danger" style="margin-top: 10px;">
+        <div class="card-header">
+            ${t:Install error}
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                ${e: installResult.message or tr('There was an unexpected error while installing this package') }
+            </p>
+        </div>
+    </div>
+@{/macro}
+
+@{macro:resultOk}
+    <div class="card" style="margin-top: 10px;">
+        <div class="card-header  text-white bg-success">
+            ${t:Install Ok}
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                <py>
+                    hprint('<p class="card-text">', tr("Package installed."), '</p>')
+                    if installPkg.type in ('Mod', 'Workbench'):
+                        hprint('<p class="card-text">', tr("Now you must restart FreeCAD to load the changes"), '</p>')
+                        hprint('<a class="btn btn-danger" href="action.restart">', tr("Restart"), '</a>')
+                </py>
+            </p>
+        </div>
+    </div>
+@{/macro}

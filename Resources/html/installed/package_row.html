@@ -1,0 +1,30 @@
+<tr class="package-item">
+    <td style="width: 64px;">
+        <a class="pkg-anchor" name="${e: sha256(params.pkg.name) }"></a>
+        ${e: comp.PackageIcon(params.pkg, style="height: 48px;") }
+    </td>
+    <td>
+        <strong>
+            ${e: params.pkg.title }
+        </strong>
+        <div style="max-height: 74px; overflow: hidden; line-height: 1.1em; opacity: 0.8;">
+            <small>
+                ${e: params.pkg.description } <span class="badge">${e: params.pkg.date }</span>
+            </small>
+        </div>
+    </td>
+    <td style="white-space: nowrap; text-align: right;">
+        <py>
+            pkg = params.pkg
+            hprint(comp.PkgFlags(pkg))
+            hprint(comp.PkgAllBadges(pkg, showInstalled=False, showCore=False))
+            hprint(comp.BtnRunMacro(pkg) )
+            hprint(comp.BtnOpenMacro(pkg) )
+            hprint(comp.BtnActivateWB(pkg) )
+            hprint(comp.BtnUpdatePackage(pkg, params.installed) )
+        </py>
+        <div>
+            <small>${e: comp.PkgReadmeLink(params.pkg) }</small>
+        </div>
+    </td>
+</tr>

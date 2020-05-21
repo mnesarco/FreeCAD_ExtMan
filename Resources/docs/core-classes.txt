@@ -1,0 +1,10 @@
+@startuml
+Protocol <|-- GithubProtocol
+Protocol <|-- FCWikiProtocol
+PackageSource <|-- InstalledPackageSource
+PackageSource <|-- CloudPackageSource
+PackageSource -- Protocol
+PackageSource o-- PackageCategory
+PackageCategory o-- PackageInfo
+CloudPackageChannel o-- CloudPackageSource
+@enduml

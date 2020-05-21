@@ -1,0 +1,40 @@
+[
+    {
+        "id": "FreeCAD",
+        "name": "FreeCAD Community Extensions",
+        "sources": [
+            {
+                "name": "Addons",
+                "title": "Addons",
+                "description": "This repository is a collection of useful additional workbenches and modules for FreeCAD made by its community members, conveniently available for seamless integration in to the application itself.",
+                "icon": "html/img/freecad_cloud.svg",
+                "protocol": "github",
+                "type": "Mod",
+                "index_type": "wiki",
+                "index_url": "https://wiki.freecadweb.org/api.php?action=query&prop=revisions&titles=External_workbench_list&rvslots=%2A&rvprop=content&formatversion=2&format=json",
+                "git": "https://github.com/FreeCAD/FreeCAD-addons.git",
+                "git_submodules": "https://raw.githubusercontent.com/FreeCAD/FreeCAD-addons/master/.gitmodules",
+                "wiki": "https://wiki.freecadweb.org"
+            },
+            {
+                "name": "GithubMacros",
+                "title": "Macros (Github)",
+                "description": "This repository hosts FreeCAD macros that volunteers have vetted and added for use to the whole community in general.",
+                "icon": "html/img/freecad_cloud.svg",
+                "protocol": "github",
+                "type": "Macro",
+                "git": "https://github.com/FreeCAD/FreeCAD-macros.git"
+            },
+            {
+                "name": "WikiMacros",
+                "title": "Macro Recipes (Wiki)",
+                "description": "Contains macros that add functionality to a FreeCAD installation.",
+                "icon": "html/img/freecad_cloud.svg",
+                "protocol": "fcwiki",
+                "type": "Macro",
+                "url": "https://wiki.freecadweb.org/api.php?action=query&prop=revisions&titles=Macros_recipes&rvslots=%2A&rvprop=content&formatversion=2&format=json",
+                "wiki": "https://wiki.freecadweb.org"
+            }
+        ]
+    }
+]

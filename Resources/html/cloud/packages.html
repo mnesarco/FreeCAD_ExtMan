@@ -1,0 +1,76 @@
+@{macro:categoryCards cat}
+    <div class="container-fluid package-category" style="padding: 10px 30px 10px 10px">
+        <ul class="nav nav-tabs" style="margin-bottom: 20px; border-bottom: solid 3px #222222;">
+            <li class="nav-item" >
+                <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-dark text-light">${e: tr(cat.name) }</a>
+            </li>
+        </ul>
+        <div class="row row-cols-2 row-cols-md-4 package-items">
+            <py>
+                for pkg in cat.packages:
+                    hprint(include('cloud', 'package_card.html', pkg=pkg))
+            </py>
+        </div>
+    </div>
+@{/macro}
+
+@{macro:categoryRows cat}
+    <div class="container-fluid package-category" style="padding: 10px 30px 10px 10px">
+        <ul class="nav nav-tabs" style="margin-bottom: 20px; border-bottom: solid 3px #222222;">
+            <li class="nav-item" >
+                <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-dark text-light">${e: tr(cat.name) }</a>
+            </li>
+        </ul>
+        <table class="table table-striped table-sm">
+            <tbody class="package-items">
+                <py>
+                    for pkg in cat.packages:
+                        hprint(include('cloud', 'package_row.html', pkg=pkg))
+                </py>
+            </tbody>
+        </table>
+    </div>
+@{/macro}
+
+<div class="container-fluid" style="padding: 10px 30px 10px 10px">
+    <div class="card" >
+        <div class="card-body">
+            <div class="media">
+                <img class="mr-3" src="${e:pkgSource.getIcon()}" onerror="this.src='img/package_source.svg'; this.onerror=null" alt="icon" />
+                <div class="media-body">
+                    <h5 class="mt-0">${e: pkgSource.getTitle() }</h5>
+                    ${e: pkgSource.getDescription() }
+                </div>
+            </div>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <a class="btn btn-sm btn-secondary" href="action.open_cloud">
+                    ${t:Close}
+                </a>
+                <a class="btn btn-sm btn-primary extman-loading" 
+                    href="action.update_cloud_source?channel=${e:pkgSource.channelId}&name=${e:pkgSource.name}">
+                    ${t:Update list}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<py>
+
+    from freecad.extman.preferences import ExtManParameters
+    
+    mode = ExtManParameters.packagesViewMode
+
+    hprint(comp.PackageViewModeSelect(mode))
+
+    if mode == 'cards':
+        for c in pkgSource.getCategories(True): 
+            hprint(categoryCards(cat=c))
+    else:
+        for c in pkgSource.getCategories(True): 
+            hprint(categoryRows(cat=c))
+
+</py>
+

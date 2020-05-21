@@ -1,0 +1,6 @@
+__pycache__/
+notes.ipynb
+.env
+build/
+.vscode
+Resources/cache/

@@ -1,0 +1,10 @@
+<py>
+    if route.isInstall():
+        hprint(include('cloud', 'install.html'))
+
+    elif route.isCloudSourcesPackages():
+        hprint(include('cloud', 'packages.html'))
+    
+    elif route.isCloudSources():
+        hprint(include('cloud', 'sources.html'))    
+</py>

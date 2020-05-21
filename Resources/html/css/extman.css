@@ -1,0 +1,77 @@
+.pkgcard-header {
+    background: rgb(255,255,255);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(144,144,144,1) 100%);
+    height: 64px;
+    overflow: hidden;
+    padding: 4px;
+    border-top-right-radius: 3px;
+    border: 1px solid #ffffff;
+    margin: 1px;
+}
+
+.pkgcard-header td {
+    height: 64px;
+    overflow: hidden;
+    vertical-align: top;
+ }
+
+.pkgcard-header img {
+    height: 52px;
+    margin-right: 10px;
+}
+
+.pkgcard-descr {
+    max-height: 100px;
+    overflow: hidden;
+}
+
+.icon-sm {
+    height: 24px;
+}
+
+.icon-xs {
+    height: 24px;
+}
+
+.card {
+    border-color: #999999;
+}
+
+.btn-sm .btn-label img {
+    height: 16px;
+    margin: 0px;
+}
+
+.btn-sm .btn-label {
+    position: relative;
+    left: -8px;
+    display: inline-block;
+    padding: 1px 6px 1px 6px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 3px 0 0 3px;
+    margin: 0px;
+    line-height: 20px;
+}
+
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.nav-link img {
+    opacity: 0.5;
+}
+
+.active .nav-link img,
+.nav-link:hover img {
+    opacity: 1.0;
+}
+
+#extman_ReadmeDlg .modal-body {
+    padding: 1px !important;
+}
+
+.pkg-anchor {
+    margin-top: -64px;
+    position: absolute;
+}

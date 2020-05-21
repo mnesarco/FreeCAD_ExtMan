@@ -1,0 +1,9 @@
+@startuml
+WebView -> controller.py: action request
+controller.py -> Core: Execute action logic
+controller.py <-- Core: Response
+controller.py -> controller.py: Update State
+controller.py -> html.py: Render
+controller.py <-- html.py: Html Response
+WebView <-- controller.py: Update
+@enduml
