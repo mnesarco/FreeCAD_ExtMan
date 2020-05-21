@@ -31,7 +31,6 @@ import freecad.extman.utils as utils
 import freecad.extman.flags as flags
 from urllib.parse import quote
 
-#------------------------------------------------------------------------------
 # mediawiki Mod table row
 # Very permisive because mediawiki is very permissive
 MODTABLEITEM = re.compile(r"""
@@ -46,7 +45,6 @@ MODTABLEITEM = re.compile(r"""
         (\s+\|+(?!-)(?P<flag>.*))?
     """, re.X | re.I | re.M)
 
-#------------------------------------------------------------------------------
 # Macro Metadata from mediawiki
 # * {{MacroLink|Icon=<icon>|Macro <name>/<lang>|Macro <label>}}: <description>
 MACROLINK = re.compile(r"""
@@ -61,7 +59,6 @@ MACROLINK = re.compile(r"""
     (?P<description>.*?)$
     """, re.X | re.I | re.M)
 
-#------------------------------------------------------------------------------
 # Macro Code from mediawiki
 MACROCODE = re.compile(r"""
     \{\{MacroCode\s*\|\s*(code=)?
@@ -69,14 +66,12 @@ MACROCODE = re.compile(r"""
     \n\s*\}\}
     """, re.X | re.S)
 
-#------------------------------------------------------------------------------
 def getPageContentFormJson(jsonObj):
     try:
         return jsonObj['query']['pages'][0]['revisions'][0]['slots']['main']['content']
     except:
         return None
 
-#------------------------------------------------------------------------------
 class FCWikiProtocol(Protocol):
 
     def __init__(self, url, wiki):
@@ -158,7 +153,6 @@ class FCWikiProtocol(Protocol):
         
         return result
 
-#------------------------------------------------------------------------------
 def getModIndex(url, wiki):
     index = {}
     content = httpGet(url)

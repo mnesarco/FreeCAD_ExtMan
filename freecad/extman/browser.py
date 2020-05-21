@@ -32,20 +32,17 @@ from freecad.extman.html import render
 from freecad.extman.worker import Worker, runInMainThread
 from freecad.extman.webview import WebView, Response
 
-#------------------------------------------------------------------------------
-_browser_instance = None
-_browser_session = {}
-_browser_base_path = getResourcePath('html')
-_router = None
+_browser_instance = None                      # Singleton: WebView
+_browser_session = {}                         # Singleton: State
+_browser_base_path = getResourcePath('html')  # Constant:  Base dir for templates
+_router = None                                # Singleton: Router configuration
 
-#------------------------------------------------------------------------------
 def pathToExtmanUrl(path):
     if isWindowsPlatform:
         return 'extman://' + path.replace('\\', '/')
     else:
         return 'extman://' + path
 
-#------------------------------------------------------------------------------
 class BrowserSession:
 
     def __init__(self, model, router):
@@ -61,7 +58,6 @@ class BrowserSession:
     def getRouter(self):
         return self.model['route']
 
-#------------------------------------------------------------------------------
 def getUpdatedBrowserSession(**model):
     global _browser_session, _router
     if not _browser_session:
@@ -71,25 +67,22 @@ def getUpdatedBrowserSession(**model):
     return _browser_session
 
 @QtCore.Slot(object)
-def onWebViewColose(event):
+def onWebViewClose(event):
     global _browser_instance
     _browser_instance = None    
 
-#------------------------------------------------------------------------------
 def startBrowser():
     global _browser_instance
     if not _browser_instance:
         ma = Gui.getMainWindow().findChild(QtGui.QMdiArea)
         _browser_instance = WebView(tr('Extension Manager'), getResourcePath('cache'), requestHandler, ma)
-        _browser_instance.closed.connect(onWebViewColose)
+        _browser_instance.closed.connect(onWebViewClose)
         ma.addSubWindow(_browser_instance)
-        #_browser_instance.show()
         index = pathToExtmanUrl(getResourcePath('html', 'index.html'))
         _browser_instance.load(index)
         _browser_instance.show()
     return _browser_instance
 
-#------------------------------------------------------------------------------
 class TemplateResponseWrapper:
 
     def __init__(self, response):
@@ -124,7 +117,6 @@ class TemplateResponseWrapper:
         </html>
         """, True)
 
-#------------------------------------------------------------------------------
 def requestHandler(path, action, params, request, response):
 
     """
@@ -155,7 +147,6 @@ def requestHandler(path, action, params, request, response):
         response.write(html)
         response.send()
 
-#------------------------------------------------------------------------------
 def installRouter(router):
     global _router
     _router = router

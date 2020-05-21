@@ -23,7 +23,6 @@ import functools, itertools
 import json
 from freecad.extman import tr, getResourcePath
 
-#------------------------------------------------------------------------------
 @functools.lru_cache()
 def getFlagsDatabase():
 
@@ -46,7 +45,6 @@ def getFlagsDatabase():
                 db[key] = mod
     return db
 
-#------------------------------------------------------------------------------
 def applyPredefinedFlags(pkg):
     ptype = pkg.type
     if ptype == 'Workbench':

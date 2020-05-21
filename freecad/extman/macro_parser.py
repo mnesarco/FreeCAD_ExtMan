@@ -26,7 +26,6 @@ from freecad.extman.sources import PackageInfo
 from freecad.extman import getResourcePath, tr
 import freecad.extman.utils as utils
 
-#------------------------------------------------------------------------------
 MACRO_TAG_PATTERN = re.compile(r'''
     ^\s*
     __(?P<tag>\w+?)__
@@ -48,7 +47,6 @@ MACRO_TAG_FILTER = [
 
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)
 
-#------------------------------------------------------------------------------
 def getMacroTags(code, path):   
     tags = { k:None for k in MACRO_TAG_FILTER }
     for m in MACRO_TAG_PATTERN.finditer(code):       
@@ -58,7 +56,6 @@ def getMacroTags(code, path):
             tags[tag] = utils.SanitizedHtml(val)
     return tags
 
-#------------------------------------------------------------------------------
 def Macro(path, pfile, isCore=False, isGit=False, isWiki=False, installPath=None, basePath=""):
     with open(path, 'r', encoding='utf-8') as f:
         tags = getMacroTags(f.read(), path)

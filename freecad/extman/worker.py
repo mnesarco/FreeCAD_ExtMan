@@ -23,7 +23,6 @@ import traceback, sys
 from PySide import QtCore as qt
 
 
-#------------------------------------------------------------------------------
 class InvokeEvent(qt.QEvent):
 
     EVENT_TYPE = qt.QEvent.Type(qt.QEvent.registerEventType())
@@ -34,26 +33,22 @@ class InvokeEvent(qt.QEvent):
         self.args = args
         self.kwargs = kwargs
 
-#------------------------------------------------------------------------------
 class Invoker(qt.QObject):
 
     def event(self, event):
         event.fn(*event.args, **event.kwargs)
         return True
 
-#------------------------------------------------------------------------------
 def runInMainThread(fn, *args, **kwargs):
     qt.QCoreApplication.postEvent(
         UIThreadInvoker, 
         InvokeEvent(fn, *args, **kwargs)
     )
 
-#------------------------------------------------------------------------------
 class WorkerSignals(qt.QObject):
     started = qt.Signal(tuple)
     finished = qt.Signal(tuple)
 
-#------------------------------------------------------------------------------
 class Worker(qt.QRunnable):
 
     def __init__(self, fn, *args, **kwargs):
@@ -110,5 +105,4 @@ class Worker(qt.QRunnable):
                 else:
                     return self.result
 
-#------------------------------------------------------------------------------
 UIThreadInvoker = Invoker()

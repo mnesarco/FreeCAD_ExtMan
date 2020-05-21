@@ -29,7 +29,6 @@ import hashlib
 from PySide import QtGui, QtCore
 from freecad.extman import getResourcePath, isWindowsPlatform, tr
 
-#------------------------------------------------------------------------------
 thumbnailsDir = tempfile.mkdtemp(prefix="xpm_thumbnails")
 xmpCache = {}
 
@@ -61,7 +60,6 @@ if isWindowsPlatform:
                 pass
         os.symlink = symlink_ms
 
-#------------------------------------------------------------------------------
 nonStandardNamedWorkbenches = {
     "flamingo"        : "flamingoToolsWorkbench",
     "geodata"         : "GeodatWorkbench",
@@ -79,7 +77,6 @@ nonStandardNamedWorkbenches = {
     "None"            : None
 }
 
-#------------------------------------------------------------------------------
 predefinedCategories = {
     "ArchWorkbench" : [tr("Architecture")],
     "CompleteWorkbench" : [tr("Other")],
@@ -110,7 +107,6 @@ predefinedCategories = {
     "KiCadStepUpWB" : [tr("PCB/EDA")]
 }
 
-#------------------------------------------------------------------------------
 def pathToUrl(path):
 
     if path.startswith('file://'):
@@ -121,7 +117,6 @@ def pathToUrl(path):
 
     return 'file://' + path
 
-#------------------------------------------------------------------------------
 def extractIcon(src, default='freecad.svg'):
     if "XPM" in src:
         try:
@@ -147,19 +142,16 @@ def extractIcon(src, default='freecad.svg'):
         except:
             return src
 
-#------------------------------------------------------------------------------
 def getWorkbenchKey(name):
     if name.endswith("Workbench"): name = name[:-9]
     return nonStandardNamedWorkbenches.get(name, f"{name}Workbench")
 
-#------------------------------------------------------------------------------
 def getWorkbenchCategories(wb):
     if wb and hasattr(wb, 'Categories'):
         return wb.Categories
     else:
         return predefinedCategories.get(wb.__class__.__name__, [tr('Uncategorized')])
 
-#------------------------------------------------------------------------------
 def getWorkbenchCategoriesFromString(name, cats):
     if cats:
         if isinstance(cats, str):
@@ -169,7 +161,6 @@ def getWorkbenchCategoriesFromString(name, cats):
     
     return predefinedCategories.get(name, [tr('Uncategorized')])
 
-#------------------------------------------------------------------------------
 _CORE_RES_DIR_   = '_CORE_RES_DIR_'
 _CORE_RES_URL_   = '_CORE_RES_URL_'
 
@@ -179,7 +170,6 @@ _USER_DATA_URL_  = '_USER_DATA_URL_'
 _USER_MACRO_DIR_ = '_USER_MACRO_DIR_'
 _USER_MACRO_URL_ = '_USER_MACRO_URL_'
 
-#------------------------------------------------------------------------------
 #! I don't like this code, improve later
 # This is used to store data in files as cache without hard references to
 # FreeCAD directories because directories can be different at restore time
@@ -203,7 +193,6 @@ def removeAbsolutePaths(content):
 
     return content
 
-#------------------------------------------------------------------------------
 #! See: removeAbsolutePaths
 def restoreAbsolutePaths(content):
     
@@ -223,7 +212,6 @@ def restoreAbsolutePaths(content):
 
     return content
 
-#------------------------------------------------------------------------------
 def getWorkbenchIconCandidates(workbenchName, baseUrl, iconPath, localDir, cacheDir):
     # Legacy icon compiled inside FreeCAD
     sources = ["qrc:/icons/" + workbenchName + "_workbench_icon.svg"]
@@ -240,22 +228,18 @@ def getWorkbenchIconCandidates(workbenchName, baseUrl, iconPath, localDir, cache
         sources.append(baseUrl + '/' + iconPath)
     return sources
 
-#------------------------------------------------------------------------------
 def CommaStringList(content):
     return COMMA_SEP_LIST_PATTERN.split(content)
 
-#------------------------------------------------------------------------------
 def SanitizedHtml(html):
     if html:
         return STRIP_TAGS_PATTERN.sub('', html)
 
-#------------------------------------------------------------------------------
 def symlink(source, link):
     if os.path.exists(source):
         if not (os.path.exists(link) or os.path.lexists(link)):
             os.symlink(source, link)
 
-#------------------------------------------------------------------------------
 def pathRel(path):
     m = ABS_PATH_PATTERN.match(path)
     if m:
@@ -263,13 +247,11 @@ def pathRel(path):
     else:
         return None
 
-#------------------------------------------------------------------------------
 def restartFreeCAD():
     args = QtGui.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
         QtCore.QProcess.startDetached(QtGui.QApplication.applicationFilePath(), args)
 
-#------------------------------------------------------------------------------
 def extractWorkbenchClassName(path):
     with open(path, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -277,7 +259,6 @@ def extractWorkbenchClassName(path):
         if m:
             return m.group('class')
 
-#------------------------------------------------------------------------------
 def analyseInstalledWorkbench(pkg):
     
     # Check Legacy InitGui.py

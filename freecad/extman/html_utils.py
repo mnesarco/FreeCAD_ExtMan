@@ -22,13 +22,11 @@
 import os
 from freecad.extman import getResourcePath, isWindowsPlatform
 
-#------------------------------------------------------------------------------
 class Components:
     def __init__(self, **comps):
         for k, v in comps.items():
             setattr(self, k, v)
 
-#------------------------------------------------------------------------------
 def getResourceUrl(*path):
     
     """

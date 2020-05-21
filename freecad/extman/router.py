@@ -19,7 +19,6 @@
 #*                                                                         *
 #***************************************************************************
 
-#------------------------------------------------------------------------------
 def Route(exact=None, prefix=None, func=None, pattern=None, anyOf=None):
     if exact:
         return lambda x: x == exact
@@ -34,7 +33,6 @@ def Route(exact=None, prefix=None, func=None, pattern=None, anyOf=None):
     else:
         return lambda x: False
 
-#------------------------------------------------------------------------------
 class Router:
 
     def __init__(self, **routes):

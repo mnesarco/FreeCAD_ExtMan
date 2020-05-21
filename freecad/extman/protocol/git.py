@@ -30,10 +30,7 @@ from freecad.extman import getResourcePath, log
 from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman.protocol.http import httpGet
 
-#------------------------------------------------------------------------------
 MIN_VERSION = StrictVersion('2.14.99')
-
-#------------------------------------------------------------------------------
 class SubModulesParser:
 
     """
@@ -60,14 +57,12 @@ class SubModulesParser:
                 module[var] = value
         self.modules = modules
 
-#------------------------------------------------------------------------------
 def getCacheDir():
     path = getResourcePath('cache')
     if not os.path.exists(path):
         os.mkdir(path)
     return path
 
-#------------------------------------------------------------------------------
 def getSubModules(url):
     content = httpGet(url)
     if content:
@@ -76,7 +71,6 @@ def getSubModules(url):
     else:
         return []
 
-#------------------------------------------------------------------------------
 class GitRepo:
 
     def __init__(self, url):
@@ -112,7 +106,6 @@ class GitRepo:
         pass
 
 
-#------------------------------------------------------------------------------
 def install_info():
     
     """
@@ -150,7 +143,6 @@ def install_info():
     installed = bool(version)
     return (installed, executable, version, git, (version and version >= MIN_VERSION))
 
-#------------------------------------------------------------------------------
 def updateLocal(path):
 
     # Get git
@@ -174,7 +166,6 @@ def updateLocal(path):
 
     return None
 
-#------------------------------------------------------------------------------
 def cloneLocal(repoUrl, path = None, **kwargs):
     
     # Get git
@@ -206,7 +197,6 @@ def cloneLocal(repoUrl, path = None, **kwargs):
     
     return (None, None)
 
-#------------------------------------------------------------------------------
 def configSet(pyGitRepo, section, option, value):
 
     cw = None

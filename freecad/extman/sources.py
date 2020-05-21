@@ -24,7 +24,6 @@ import json
 import freecad.extman.utils as utils
 from freecad.extman import getResourcePath, tr
 
-#------------------------------------------------------------------------------
 class PackageCategory:
     
     def __init__(self, name, packages=None):
@@ -32,7 +31,6 @@ class PackageCategory:
         self.name = name
 
 
-#------------------------------------------------------------------------------
 class PackageInfo:
 
     def __init__(self, **kw):
@@ -91,7 +89,6 @@ class PackageInfo:
         elif isinstance(self.icon, list) and len(self.icon) > 0:
             return self.icon[0]
 
-#------------------------------------------------------------------------------
 class PackageSource:
 
     def __init__(self, sourceType):
@@ -134,11 +131,9 @@ class PackageSource:
                 return pkg
 
 
-#------------------------------------------------------------------------------
 class UnsupportedSourceException(Exception):
     pass
 
-#------------------------------------------------------------------------------
 class InstallResult:
 
     def __init__(self, **kwargs):
@@ -154,7 +149,6 @@ class InstallResult:
         for k,v in kwargs.items():
             setattr(self, k, v)
 
-#------------------------------------------------------------------------------
 def groupPackagesInCategories(packages):
     
     nocategory = tr('Uncategorized').lower()
@@ -179,7 +173,6 @@ def groupPackagesInCategories(packages):
     categories.sort(key=lambda c: c.name.lower() if c.name != nocategory and c.name != libcategory and c.name != othercategory else 'zzzz')
     return categories   
 
-#------------------------------------------------------------------------------
 def savePackageMetadata(pkg):
 
     if pkg.type == 'Macro':
@@ -200,7 +193,6 @@ def savePackageMetadata(pkg):
         f.write(content)
         return None
 
-#------------------------------------------------------------------------------
 def loadPackageMetadata(pkg):
 
     if pkg.type == 'Macro':

@@ -28,7 +28,6 @@ from freecad.extman.sources import PackageInfo, PackageSource, PackageCategory, 
 from freecad.extman import getResourcePath, tr
 from freecad.extman import utils
 
-#------------------------------------------------------------------------------
 class CloudPackageSource(PackageSource):
 
     def __init__(self, data, channelId):
@@ -188,21 +187,18 @@ class CloudPackageSource(PackageSource):
         return result
 
 
-#------------------------------------------------------------------------------
 class CloudPackageChannel:  
     def __init__(self, cid, name, sources):
         self.id = cid
         self.name = name
         self.sources = sources
 
-#------------------------------------------------------------------------------
 def getSourcesData():
     path = getResourcePath('data', 'sources.json')
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
         return data
 
-#------------------------------------------------------------------------------
 def findCloudChannels():
     channels = []
     data = getSourcesData()
@@ -215,7 +211,6 @@ def findCloudChannels():
         channels.append(CloudPackageChannel(channelId, channelName, sources))
     return channels
 
-#------------------------------------------------------------------------------
 def findSource(channelId, name):
     data = getSourcesData()
     for channel in data:

@@ -19,12 +19,10 @@
 #*                                                                         *
 #***************************************************************************
 
-#------------------------------------------------------------------------------
 def restart(path, session, params, request, response):
     from freecad.extman import utils
     utils.restartFreeCAD()
 
-#------------------------------------------------------------------------------
 def show_install_info(path, session, params, request, response):
 
     """
@@ -50,7 +48,6 @@ def show_install_info(path, session, params, request, response):
     Worker(job).start()
 
 
-#------------------------------------------------------------------------------
 def install_package(path, session, params, request, response):
 
     """
@@ -76,7 +73,6 @@ def install_package(path, session, params, request, response):
     Worker(job).start()
 
 
-#------------------------------------------------------------------------------
 def update_cloud_source(path, session, params, request, response):
 
     """
@@ -90,7 +86,6 @@ def update_cloud_source(path, session, params, request, response):
     
     open_cloud_source(path, session, params, request, response)
 
-#------------------------------------------------------------------------------
 def open_cloud_source(path, session, params, request, response):
 
     """
@@ -107,7 +102,6 @@ def open_cloud_source(path, session, params, request, response):
     from freecad.extman.worker import Worker
     Worker(job).start()
 
-#------------------------------------------------------------------------------
 def open_cloud(path, session, params, request, response):
 
     """
@@ -117,7 +111,6 @@ def open_cloud(path, session, params, request, response):
     session.routeTo('/CloudSources')
     response.renderTemplate('index.html')
 
-#------------------------------------------------------------------------------
 def open_installed(path, session, params, request, response):
 
     """
@@ -127,13 +120,11 @@ def open_installed(path, session, params, request, response):
     session.routeTo('/InstalledPackages')
     response.renderTemplate('index.html')
 
-#------------------------------------------------------------------------------
 def set_package_viewmode(path, session, params, request, response):
     from freecad.extman.preferences import ExtManParameters
     ExtManParameters.packagesViewMode = params['vm']
     response.renderTemplate('index.html')
 
-#------------------------------------------------------------------------------
 def open_macro(path, session, params, request, response):
 
     """
@@ -149,7 +140,6 @@ def open_macro(path, session, params, request, response):
         Gui.open(fcpath)
     response.htmlOk()
 
-#------------------------------------------------------------------------------
 def open_workbench(path, session, params, request, response):
 
     """
@@ -160,7 +150,6 @@ def open_workbench(path, session, params, request, response):
     Gui.activateWorkbench(params['workbenchKey'])    
     response.htmlOk()
 
-#------------------------------------------------------------------------------
 def run_macro(path, session, params, request, response):
 
     """
@@ -174,7 +163,6 @@ def run_macro(path, session, params, request, response):
         Gui.doCommandGui(f"exec(open(\"{path}\").read())")  
     response.htmlOk()
             
-#------------------------------------------------------------------------------
 def createRouter():
 
     """

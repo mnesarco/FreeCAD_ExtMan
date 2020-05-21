@@ -19,50 +19,39 @@
 #*                                                                         *
 #***************************************************************************
 
-
 import os
 import FreeCADGui as Gui
 import FreeCAD as App
 import functools
 from PySide import QtGui
 
-#------------------------------------------------------------------------------
+ADDON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+isWindowsPlatform = os.path.sep == '\\'
+
 def log(*msg):
     App.Console.PrintLog(f"[ExtMan] {' '.join(msg)}\n")
 
-#------------------------------------------------------------------------------
-try:
-    Gui.addLanguagePath(":/translations")
-    Gui.updateLocale()
-except:
-    log('Translation loading error')
-
-#------------------------------------------------------------------------------
-ADDON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-
-#------------------------------------------------------------------------------
 def getResourcePath(*paths, createDir=False):
     path = os.path.join(ADDON_DIR, 'Resources', *paths)
     if createDir and not os.path.exists(path):
         os.makedirs(path)
     return path
 
-#------------------------------------------------------------------------------
+try:
+    Gui.addLanguagePath(":/translations")
+    Gui.updateLocale()
+except:
+    log('Translation loading error')
+
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
     @functools.lru_cache()
     def tr(text):
         u = QtGui.QApplication.translate('extman', text, None, _encoding)
         return u.replace(chr(39), "&rsquo;")       
-
 except:
-
     @functools.lru_cache()
     def tr(text):
         u = QtGui.QApplication.translate('extman', text, None)
         return u.replace(chr(39), "&rsquo;")       
-
-#------------------------------------------------------------------------------
-isWindowsPlatform = os.path.sep == '\\'
 

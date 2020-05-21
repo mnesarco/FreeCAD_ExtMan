@@ -19,7 +19,6 @@
 #*                                                                         *
 #***************************************************************************
 
-#------------------------------------------------------------------------------
 def installPackageFromLocal(pkg, localpath):
 
     if pkg.type == 'Macro':
@@ -27,10 +26,8 @@ def installPackageFromLocal(pkg, localpath):
     elif pkg.type in ('Workbench', 'Mod'):
         installModFromLocal(pkg, localpath)
 
-#------------------------------------------------------------------------------
 def installMacroFromLocal(pkg, localpath):
     pass
 
-#------------------------------------------------------------------------------
 def installModFromLocal(pkg, localpath):
     pass

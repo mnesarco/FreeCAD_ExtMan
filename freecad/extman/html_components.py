@@ -28,7 +28,6 @@ from functools import lru_cache
 import hashlib
 from urllib.parse import quote
 
-#------------------------------------------------------------------------------
 TR_RUN = tr('Run')
 TR_CLOSE = tr('Close')
 TR_EDIT = tr('Edit')
@@ -48,7 +47,6 @@ TR_README = tr('readme')
 TR_INSTALL = tr('Install')
 TR_INSTALLING = tr('Installing...')
 
-#------------------------------------------------------------------------------
 def PackageIcon(pkg, cssClass="icon", style=""):
     
     icon = pkg.getIcon()
@@ -69,7 +67,6 @@ def PackageIcon(pkg, cssClass="icon", style=""):
     <img src="{icon}" {fallback} class="{cssClass}" style="{style}" {onerror} />
     """
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def IconComponent(name, fallback='img/freecad.svg', title="", cssClass="icon"):
     url, ctx, absPath = getResourceUrl('img', name)
@@ -85,7 +82,6 @@ def IconComponent(name, fallback='img/freecad.svg', title="", cssClass="icon"):
     else:
         return f"???{name}???"
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def BtnOpenMacro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled(): 
@@ -99,7 +95,6 @@ def BtnOpenMacro(pkg):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def BtnRunMacro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled(): 
@@ -122,7 +117,6 @@ def BtnRunMacro(pkg):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 def BtnInstallPkg(pkg, source):
     if not pkg.isInstalled():
         return f"""
@@ -134,7 +128,6 @@ def BtnInstallPkg(pkg, source):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 def BtnDoInstallOrUpdatePkg(pkg):
     return f"""
     <a class="btn btn-danger extman-loading" data-spinner-message="{TR_INSTALLING}"
@@ -143,7 +136,6 @@ def BtnDoInstallOrUpdatePkg(pkg):
     </a>
     """
 
-#------------------------------------------------------------------------------
 def BtnUpdatePackage(pkg, source):
     if pkg.isInstalled() and (not pkg.isCore) and pkg.channelId and pkg.sourceName:
         return f"""
@@ -155,7 +147,6 @@ def BtnUpdatePackage(pkg, source):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 def BtnActivateWB(pkg):
     if pkg.type == 'Workbench' and pkg.isInstalled():
         key = pkg.key.replace('"', r'\"')
@@ -168,7 +159,6 @@ def BtnActivateWB(pkg):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgAllBadges(pkg, showInstalled=True, showCore=True, withText=False, layout=None):
     badges = [
@@ -188,7 +178,6 @@ def PkgAllBadges(pkg, showInstalled=True, showCore=True, withText=False, layout=
 
 
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgCoreBadge(pkg, withText=False):
 
@@ -204,7 +193,6 @@ def PkgCoreBadge(pkg, withText=False):
     else:
         return icon
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgTypeBadge(pkg, withText=False):
     if pkg.type == 'Workbench':
@@ -225,7 +213,6 @@ def PkgTypeBadge(pkg, withText=False):
         return icon
 
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgInstalledBadge(pkg, withText=False):
     if pkg.isInstalled():
@@ -239,7 +226,6 @@ def PkgInstalledBadge(pkg, withText=False):
     else:
         return icon
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgGitBadge(pkg, withText=False):
     if pkg.isGit:
@@ -253,7 +239,6 @@ def PkgGitBadge(pkg, withText=False):
     else:
         return icon
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgWikiBadge(pkg, withText=False):
     if pkg.isWiki:
@@ -267,7 +252,6 @@ def PkgWikiBadge(pkg, withText=False):
     else:
         return icon
 
-#------------------------------------------------------------------------------
 def PackageViewModeSelect(mode):
     return f"""
     <div class="btn-group btn-group-sm float-right" role="group" aria-label="{tr('View Mode')}" 
@@ -281,7 +265,6 @@ def PackageViewModeSelect(mode):
     </div>
     """
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgFlags(pkg, withText=False, layout=None):
     icons = []
@@ -309,7 +292,6 @@ def PkgFlags(pkg, withText=False, layout=None):
     else:
         return "".join(out)
 
-#------------------------------------------------------------------------------
 @lru_cache()
 def PkgReadmeLink(pkg, cssClass=""):
     if pkg.readmeUrl:
@@ -326,9 +308,7 @@ def PkgReadmeLink(pkg, cssClass=""):
     else:
         return ''
 
-#------------------------------------------------------------------------------
 # Components visible in all templates
-#------------------------------------------------------------------------------
 components = Components(
     icon = IconComponent,
     BtnOpenMacro = BtnOpenMacro,

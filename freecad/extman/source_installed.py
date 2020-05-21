@@ -32,7 +32,6 @@ from freecad.extman.macro_parser import Macro
 from freecad.extman import flags
 from freecad.extman.protocol.manifest import ExtensionManifest
 
-#------------------------------------------------------------------------------
 class InstalledPackageSource(PackageSource):
 
     def __init__(self):
@@ -134,7 +133,6 @@ class InstalledPackageSource(PackageSource):
     def install(self, pkg):
         return None
 
-#------------------------------------------------------------------------------
 def analyseInstalledMod(pkg):
 
     # Return cache if available
@@ -150,7 +148,6 @@ def analyseInstalledMod(pkg):
     savePackageMetadata(pkg)    
     return pkg
 
-#------------------------------------------------------------------------------
 def analyseGit(pkg):
     gitDir = os.path.join(pkg.installDir, '.git')
     if os.path.exists(gitDir):
@@ -162,7 +159,6 @@ def analyseGit(pkg):
                 pkg.git = url
                 pkg.isGit = True
 
-#------------------------------------------------------------------------------
 def analyseManifest(pkg):
     
     mfile = os.path.join(pkg.installDir, 'manifest.ini')
@@ -178,7 +174,6 @@ def analyseManifest(pkg):
             for k,v in data.items():
                 setattr(pkg, k, v)
 
-#------------------------------------------------------------------------------
 def analyseReadme(pkg):
     mfile = os.path.join(pkg.installDir, 'README.md')
     if os.path.exists(mfile) and pkg.git:
@@ -188,15 +183,12 @@ def analyseReadme(pkg):
             pkg.readmeUrl = ghr.getRawFileUrl('README.md')
             pkg.readmeFormat = 'markdown'
 
-#------------------------------------------------------------------------------
 def analyseInit(pkg):
     pass
 
-#------------------------------------------------------------------------------
 def analyseInitGui(pkg):
     utils.analyseInstalledWorkbench(pkg)
     
-#------------------------------------------------------------------------------
 def analyseInstalledMacro(pkg):
     if not loadPackageMetadata(pkg):
         savePackageMetadata(pkg)

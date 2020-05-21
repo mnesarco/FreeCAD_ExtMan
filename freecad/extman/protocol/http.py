@@ -24,7 +24,6 @@ import FreeCAD as App
 from freecad.extman import log
 import traceback
 
-#------------------------------------------------------------------------------
 # <Start Legacy urllib code>
 #   Can be replaced by modern request lib but
 #   I leave it with urllib to avoid dependency problems
@@ -45,7 +44,6 @@ import urllib.error as errors
 
 request_initialized = False
 
-#------------------------------------------------------------------------------
 def getProxyConf():
     pref = App.ParamGet("User parameter:BaseApp/Preferences/Addons")
     if pref.GetBool("NoProxyCheck", True):
@@ -59,14 +57,12 @@ def getProxyConf():
             proxies = {"http": proxy, "https": proxy}                         
     return request.ProxyHandler(proxies)
 
-#------------------------------------------------------------------------------
 def getSslHandler():
     if ssl_ctx:
         return request.HTTPSHandler(context=ssl_ctx)
     else:
         return {}
 
-#------------------------------------------------------------------------------
 def urllibInit():
     global request_initialized
     if not request_initialized:
@@ -78,7 +74,6 @@ def urllibInit():
 
 # <End Legacy urllib code>
 
-#------------------------------------------------------------------------------
 def httpGet(url, headers=None, timeout=30, decode='utf-8'):
     urllibInit()
     data = None
@@ -102,7 +97,6 @@ def httpGet(url, headers=None, timeout=30, decode='utf-8'):
 
     return data
 
-#------------------------------------------------------------------------------
 def httpDownload(url, path, headers=None, timeout=30):
     urllibInit()
     try:

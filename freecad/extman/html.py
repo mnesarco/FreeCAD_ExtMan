@@ -41,21 +41,17 @@ from freecad.extman.html_components import components
 from freecad.extman.html_utils import getResourceUrl
 from freecad.extman.html_cache import useCacheArea
 
-#------------------------------------------------------------------------------
 # ${t:text}                          => Translate text
 # ${e:expression}                    => eval expression
 # ${x:statememt}                     => exec statement
 # ${e:include(*template, **params)}  => inckude template with params
-#------------------------------------------------------------------------------
 TEMPLATE_EXPR_PATTERN = re.compile(r'\${([tex]:)?\s*([^}]+)}', flags=re.S)
 TEMPLATE_EXEC_PATTERN = re.compile(r'<py>(.*?)</py>', flags=re.S)
 TEMPLATE_MACRO_PATTERN = re.compile(r'@{macro:\s*(\w+)\b[^}]*}(.*?)@{/macro}', flags=re.S)
 
-#------------------------------------------------------------------------------
 def sha256(input):
     return hashlib.sha256(input.encode()).hexdigest()
 
-#------------------------------------------------------------------------------
 class DictObject:
     
     def __init__(self, data, errorOnMissing=False):
@@ -68,7 +64,6 @@ class DictObject:
         else:
             return None
 
-#------------------------------------------------------------------------------
 def TemplateMacro(name, code, path):
 
     """
@@ -84,7 +79,6 @@ def TemplateMacro(name, code, path):
         return macroImpl
     return macroDef
 
-#------------------------------------------------------------------------------
 class HtmlPrint:
     
     def __init__(self):
@@ -100,7 +94,6 @@ class HtmlPrint:
         del self.out
         return output
 
-#------------------------------------------------------------------------------
 def TemplateExpressionEvaluator(path, model):
 
     """
@@ -146,7 +139,6 @@ def TemplateExpressionEvaluator(path, model):
             
     return evalExpr
 
-#------------------------------------------------------------------------------
 def TemplateMapper(*basePath, model=None):
 
     """
@@ -162,7 +154,6 @@ def TemplateMapper(*basePath, model=None):
         return processTemplate(absPath, scope)
     return mapTemplate
 
-#------------------------------------------------------------------------------
 def processTemplate(path, model):
 
     """
@@ -177,7 +168,6 @@ def processTemplate(path, model):
     evaluator = TemplateExpressionEvaluator(path, scope)
     return TEMPLATE_EXPR_PATTERN.sub(evaluator, html)
 
-#------------------------------------------------------------------------------
 def parseMacros(code, path):
 
     """
@@ -193,7 +183,6 @@ def parseMacros(code, path):
     parsed = TEMPLATE_MACRO_PATTERN.sub(saveMacro, code)
     return (parsed, macros)
 
-#------------------------------------------------------------------------------
 def parseBlocks(code, path):
 
     """
@@ -209,7 +198,6 @@ def parseBlocks(code, path):
     parsed = TEMPLATE_EXEC_PATTERN.sub(compileBlock, code)
     return (parsed, blocks)
 
-#------------------------------------------------------------------------------
 def getTemplate(path):
 
     """
@@ -227,7 +215,6 @@ def getTemplate(path):
         macros.update(blocks)
         return (code, macros)
 
-#------------------------------------------------------------------------------
 def render(*path, model):
 
     """

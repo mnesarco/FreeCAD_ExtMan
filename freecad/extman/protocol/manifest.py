@@ -23,7 +23,6 @@ import configparser
 from freecad.extman import utils
 from freecad.extman import log
 
-#------------------------------------------------------------------------------
 class ManifestSection:
 
     def __init__(self, items):
@@ -36,10 +35,6 @@ class ManifestSection:
     def getValues(self):
         return self.__dict__.items()
 
-#------------------------------------------------------------------------------
-EMPTY_SECTION = ManifestSection([])
-
-#------------------------------------------------------------------------------
 class ExtensionManifest:
 
     def __init__(self, content):
@@ -52,7 +47,7 @@ class ExtensionManifest:
             log("Invalid manifest file")
             
     def __getattr__(self, attr):
-        return EMPTY_SECTION
+        return ManifestSection([])
 
     def getSections(self):
         return self.__dict__.items()

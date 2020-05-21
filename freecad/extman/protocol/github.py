@@ -41,7 +41,6 @@ from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman import getResourcePath, tr, log
 from freecad.extman import flags
 
-#------------------------------------------------------------------------------
 class ReadmeParser(HTMLParser):
 
     def __init__(self, meta_filter = None):
@@ -82,7 +81,6 @@ class ReadmeParser(HTMLParser):
         if self.inContent:
             self.html += unescape(data).replace(b'\xc2\xa0'.decode("utf-8"), ' ')
 
-#------------------------------------------------------------------------------
 class GithubRepo(egit.GitRepo):
 
     def __init__(self, url):
@@ -113,7 +111,6 @@ class GithubRepo(egit.GitRepo):
         return url.strip('/') + "/archive/master.zip"
 
 
-#------------------------------------------------------------------------------
 class GithubProtocol(Protocol):
 
     def __init__(self, url, submodulesUrl, indexType, indexUrl, wikiUrl):

@@ -23,10 +23,8 @@ import os, shutil, re
 
 import FreeCADGui as Gui
 
-#------------------------------------------------------------------------------
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)
 
-#------------------------------------------------------------------------------
 def isPythonLibAvailable(name):
     try:
         __import__(name.strip())
@@ -34,18 +32,15 @@ def isPythonLibAvailable(name):
     except:
         return False
 
-#------------------------------------------------------------------------------
 def isWorkbenchAvailable(name, keys=None):
     if not keys:
         keys = Gui.listWorkbenches().keys()
     name = name.strip()
     return name in keys or f"{name}Workbench" in keys
 
-#------------------------------------------------------------------------------
 def isExecutableAvailable(name):
     return bool(shutil.which(name))
 
-#------------------------------------------------------------------------------
 def checkDependencies(manifest):
 
     """

@@ -35,12 +35,10 @@ from PySide.QtCore import Qt
 from urllib.parse import unquote
 from freecad.extman.worker import Worker
 
-#------------------------------------------------------------------------------
 EXTMAN_URL_SCHEME = b'extman'                           # extman://...
 WINDOWS_PATH_PATTERN = re.compile(r'^/([a-zA-Z]\\:.*)') # /C:...
 ACTION_URL_PATTERN = re.compile(r'.*/action\.(\w+)$')   # action.<name>
 
-#------------------------------------------------------------------------------
 class UrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
 
     """Intercepts extman://... links"""
@@ -62,7 +60,6 @@ class UrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
             if url.scheme() == 'extman':
                 self.owner.interseptLink(info)
 
-#------------------------------------------------------------------------------
 class Response(QtCore.QObject):
     
     def __init__(self, parent, buffer, request):
@@ -78,7 +75,6 @@ class Response(QtCore.QObject):
         self.buffer.close()
         self.request.reply(contentType.encode(), self.buffer)
 
-#------------------------------------------------------------------------------
 class SchemeHandler(QWebEngineUrlSchemeHandler):
 
     """
@@ -144,7 +140,6 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
             else:
                 print("Path does not exists: " + path)
 
-#------------------------------------------------------------------------------
 class Page(QWebEnginePage):
 
     def __init__(self, *args, **kwargs):
@@ -153,7 +148,6 @@ class Page(QWebEnginePage):
     def javaScriptConsoleMessage(self, *args, **kwargs):
         pass
 
-#------------------------------------------------------------------------------
 class WebView(QtGui.QMdiSubWindow):
 
     closed = QtCore.Signal(object)
@@ -213,7 +207,6 @@ class WebView(QtGui.QMdiSubWindow):
     def load(self, url):
         self.webView.load(url)
 
-#------------------------------------------------------------------------------
 #! Call as soon as possible
 def registerCustomSchemes():
     scheme = EXTMAN_URL_SCHEME

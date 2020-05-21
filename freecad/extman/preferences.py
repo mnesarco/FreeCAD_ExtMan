@@ -21,7 +21,6 @@
 
 import FreeCAD as App
 
-#------------------------------------------------------------------------------
 # Parameter type and default mapping. 
 # str parameter mapping required only if default value
 __PARAMETER_OPTIONS__ = {
@@ -32,7 +31,6 @@ __PARAMETER_OPTIONS__ = {
 
 __PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan"
 
-#------------------------------------------------------------------------------
 class ParametersProxy:
 
     def __getattribute__(self, name):
@@ -69,11 +67,9 @@ class ParametersProxy:
         if ptype == float:
             return group.SetFloat(name, value)
 
-#------------------------------------------------------------------------------
 # ExtMan Parameters Proxy
 ExtManParameters = ParametersProxy()
 
-#------------------------------------------------------------------------------
 def setPluginParam(plugin, name, value):
     param = App.ParamGet(f'User parameter:Plugins/{plugin}')
     if isinstance(value, str):
