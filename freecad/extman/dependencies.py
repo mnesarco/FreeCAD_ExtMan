@@ -20,7 +20,6 @@
 #***************************************************************************
 
 import os, shutil, re
-
 import FreeCADGui as Gui
 
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)

@@ -23,13 +23,14 @@ import FreeCAD as App
 
 # Parameter type and default mapping. 
 # str parameter mapping required only if default value
+# Constant
 __PARAMETER_OPTIONS__ = {
     'updateCheck': (bool, True),
     'proxyCheck': (int, 0), 
     'packagesViewMode': (str, 'rows')
 }
 
-__PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan"
+__PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan" # Constant
 
 class ParametersProxy:
 
@@ -67,9 +68,6 @@ class ParametersProxy:
         if ptype == float:
             return group.SetFloat(name, value)
 
-# ExtMan Parameters Proxy
-ExtManParameters = ParametersProxy()
-
 def setPluginParam(plugin, name, value):
     param = App.ParamGet(f'User parameter:Plugins/{plugin}')
     if isinstance(value, str):
@@ -82,3 +80,6 @@ def setPluginParam(plugin, name, value):
         param.SetInt(name, value)                
     else:
         raise ValueError(f'Unsupported param type [{type(value)}] {name}')
+
+# ExtMan Parameters Proxy (Constant/Singleton)
+ExtManParameters = ParametersProxy()

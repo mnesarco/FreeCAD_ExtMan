@@ -31,6 +31,7 @@ from freecad.extman import utils
 from freecad.extman.macro_parser import Macro
 from freecad.extman import flags
 from freecad.extman.protocol.manifest import ExtensionManifest
+import freecad.extman.protocol.github as gh
 
 class InstalledPackageSource(PackageSource):
 
@@ -178,7 +179,6 @@ def analyseReadme(pkg):
     mfile = os.path.join(pkg.installDir, 'README.md')
     if os.path.exists(mfile) and pkg.git:
         if 'github.com' in pkg.git:
-            import freecad.extman.protocol.github as gh
             ghr = gh.GithubRepo(pkg.git)
             pkg.readmeUrl = ghr.getRawFileUrl('README.md')
             pkg.readmeFormat = 'markdown'

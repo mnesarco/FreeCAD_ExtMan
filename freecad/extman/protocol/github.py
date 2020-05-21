@@ -25,13 +25,16 @@ import traceback
 from html.parser import HTMLParser
 from html import unescape
 import hashlib
-
+import traceback
+import tempfile
 import FreeCAD as App
 from PySide.QtCore import QFile
 
 import freecad.extman.protocol.git as egit
 import freecad.extman.protocol.zip as zlib
 import freecad.extman.dependencies as deps
+import freecad.extman.preferences as pref
+
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import httpGet, httpDownload
 from freecad.extman.sources import PackageInfo, InstallResult
@@ -40,6 +43,8 @@ from freecad.extman.worker import Worker
 from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman import getResourcePath, tr, log
 from freecad.extman import flags
+import freecad.extman.protocol.fcwiki as fcw
+from freecad.extman.macro_parser import Macro
 
 class ReadmeParser(HTMLParser):
 
@@ -126,7 +131,6 @@ class GithubProtocol(Protocol):
         # Get index
         index = {}
         if self.indexType == 'wiki' and self.indexUrl and self.wikiUrl:
-            import freecad.extman.protocol.fcwiki as fcw
             index = fcw.getModIndex(self.indexUrl, self.wikiUrl)
 
         # Get modules
@@ -137,8 +141,6 @@ class GithubProtocol(Protocol):
             return []
 
     def downloadMacroList(self):
-
-        from freecad.extman.macro_parser import Macro
         
         localDir = getResourcePath('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()), createDir=True)
 
@@ -150,7 +152,6 @@ class GithubProtocol(Protocol):
 
         # Try zip/http
         if zlib.isZipAvailable():
-            import tempfile
             gh = GithubRepo(self.url)
             zippath = tempfile.mktemp(suffix=".zip")
             if httpDownload(gh.getZipUrl(), zippath):
@@ -166,7 +167,6 @@ class GithubProtocol(Protocol):
     def getMacroList(self):
         installDir = App.getUserMacroDir(True)
         macros = []
-        from freecad.extman.macro_parser import Macro
         path = self.downloadMacroList()
         if path:
             workers = []
@@ -318,7 +318,6 @@ class GithubProtocol(Protocol):
                 return result
             
             # Download mater zip
-            import tempfile
             zippath = tempfile.mktemp(suffix=".zip")
             if httpDownload(gh.getZipUrl(), zippath):
                 exploded = tempfile.mktemp(suffix="_zip")
@@ -333,7 +332,6 @@ class GithubProtocol(Protocol):
                 result.ok = True         
 
         except:
-            import traceback
             log(traceback.format_exc())
             result.ok = False
 
@@ -367,7 +365,6 @@ class GithubProtocol(Protocol):
                 result.ok = True         
 
             except:
-                import traceback
                 log(traceback.format_exc())
                 result.ok = False
         
@@ -412,7 +409,6 @@ class GithubProtocol(Protocol):
                 result.ok = True         
 
             except:
-                import traceback
                 log(traceback.format_exc())
                 result.ok = False
         
@@ -512,7 +508,6 @@ class GithubProtocol(Protocol):
 
         # Search and link
         if os.path.exists(pkg.installDir):
-            import freecad.extman.preferences as pref
             for f in os.listdir(pkg.installDir):
                 if f.lower().endswith(".fcmacro"):
                     utils.symlink(os.path.join(pkg.installDir, f), os.path.join(macros, f))

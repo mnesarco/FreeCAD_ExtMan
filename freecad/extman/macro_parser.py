@@ -26,6 +26,7 @@ from freecad.extman.sources import PackageInfo
 from freecad.extman import getResourcePath, tr
 import freecad.extman.utils as utils
 
+# Regex for tags __tag__ = value
 MACRO_TAG_PATTERN = re.compile(r'''
     ^\s*
     __(?P<tag>\w+?)__
@@ -38,6 +39,7 @@ MACRO_TAG_PATTERN = re.compile(r'''
     ''', 
     re.I | re.S | re.M | re.X)
 
+# Allowed tags (Constant)
 MACRO_TAG_FILTER = [
     'name', 'title', 'author', 'version', 'date', 'comment', 
     'web', 'wiki', 'icon', 'license', 'iconw', 'help', 'status', 
@@ -45,6 +47,7 @@ MACRO_TAG_FILTER = [
     'description', 'readme'
 ]
 
+# Regex to split comma separated string list
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)
 
 def getMacroTags(code, path):   

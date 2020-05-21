@@ -24,8 +24,12 @@ import os
 import json
 import re
 import xml
+import tempfile
+import traceback
 
+from shutil import which
 from distutils.version import StrictVersion
+
 from freecad.extman import getResourcePath, log
 from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman.protocol.http import httpGet
@@ -118,7 +122,6 @@ def install_info():
     """
 
     # Find git executable
-    from shutil import which
     executable = which('git')
 
     # Check git version
@@ -174,7 +177,6 @@ def cloneLocal(repoUrl, path = None, **kwargs):
     if gitAvailable and pygit and gitVersionOk:
 
         if path is None:
-            import tempfile
             path = tempfile.mkdtemp()
     
         # If exists, reset+pull
@@ -183,7 +185,6 @@ def cloneLocal(repoUrl, path = None, **kwargs):
                 repo = updateLocal(path)
                 return (repo, path)
             except:
-                import traceback
                 traceback.print_exc(file=sys.stderr)
 
         # Clone
@@ -192,7 +193,6 @@ def cloneLocal(repoUrl, path = None, **kwargs):
                 repo = pygit.Repo.clone_from(repoUrl, path, **kwargs)
                 return (repo, path)
             except:
-                import traceback
                 traceback.print_exc(file=sys.stderr)
     
     return (None, None)

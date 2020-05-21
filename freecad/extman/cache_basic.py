@@ -21,7 +21,7 @@
 
 import FreeCADGui as Gui
 
-__CACHE__ = {}
+__CACHE__ = {} # Singleton
 
 def clearCacheArea(name):
     global __CACHE__

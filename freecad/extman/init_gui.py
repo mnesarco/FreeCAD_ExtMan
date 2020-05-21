@@ -23,6 +23,8 @@ import os
 import FreeCADGui as Gui
 from FreeCAD import Console, GuiUp
 from freecad.extman import ADDON_DIR
+from freecad.extman.browser import installRouter, startBrowser
+from freecad.extman.controller import createRouter
 
 #***************************************************************************
 #* ExtManWorkbench class                                                   *
@@ -41,8 +43,6 @@ class ExtManWorkbench( Gui.Workbench ):
         pass
     
     def Activated(self):
-        from freecad.extman.browser import installRouter, startBrowser
-        from freecad.extman.controller import createRouter
         installRouter(createRouter())
         startBrowser()
 
@@ -60,6 +60,6 @@ if GuiUp:
     #! Important: 
     #!   Call this as soon as possible
     #!   before any WebEngineView is created in FreeCAD
-    from .webview import registerCustomSchemes
+    from .webview import registerCustomSchemes # Shuld not be imported before
     registerCustomSchemes()
 

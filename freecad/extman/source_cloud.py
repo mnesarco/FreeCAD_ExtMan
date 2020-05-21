@@ -27,6 +27,8 @@ import FreeCADGui as Gui
 from freecad.extman.sources import PackageInfo, PackageSource, PackageCategory, UnsupportedSourceException, groupPackagesInCategories, savePackageMetadata
 from freecad.extman import getResourcePath, tr
 from freecad.extman import utils
+from freecad.extman.protocol.github import GithubProtocol
+from freecad.extman.protocol.fcwiki import FCWikiProtocol
 
 class CloudPackageSource(PackageSource):
 
@@ -48,7 +50,6 @@ class CloudPackageSource(PackageSource):
             self.icon = icon
     
         if data['protocol'] == 'github':
-            from freecad.extman.protocol.github import GithubProtocol
             self.protocol = GithubProtocol(
                 data['git'], 
                 data.get('git_submodules'),
@@ -58,7 +59,6 @@ class CloudPackageSource(PackageSource):
             )
 
         elif data['protocol'] == 'fcwiki':
-            from freecad.extman.protocol.fcwiki import FCWikiProtocol
             self.protocol = FCWikiProtocol(data['url'], data['wiki'])
 
         else:

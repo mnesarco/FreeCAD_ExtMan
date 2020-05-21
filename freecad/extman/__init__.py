@@ -25,8 +25,8 @@ import FreeCAD as App
 import functools
 from PySide import QtGui
 
-ADDON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-isWindowsPlatform = os.path.sep == '\\'
+ADDON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')) # Constant
+isWindowsPlatform = os.path.sep == '\\' # Constant
 
 def log(*msg):
     App.Console.PrintLog(f"[ExtMan] {' '.join(msg)}\n")

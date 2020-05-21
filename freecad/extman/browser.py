@@ -31,6 +31,7 @@ from freecad.extman import tr, isWindowsPlatform, getResourcePath
 from freecad.extman.html import render
 from freecad.extman.worker import Worker, runInMainThread
 from freecad.extman.webview import WebView, Response
+import freecad.extman.controller as actions
 
 _browser_instance = None                      # Singleton: WebView
 _browser_session = {}                         # Singleton: State
@@ -128,11 +129,10 @@ def requestHandler(path, action, params, request, response):
 
     # Call action logic if any
     if action:
-        import freecad.extman.controller as actions
         responseWrapper = TemplateResponseWrapper(response)
         eval(
             f'actions.{action}(path, session, params, request, responseWrapper)', 
-            {}, 
+            {'actions': actions}, 
             locals()
         )
 

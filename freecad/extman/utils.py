@@ -48,7 +48,7 @@ if isWindowsPlatform:
     if not callable(wsl):
         #! See: https://stackoverflow.com/a/28382515/1524027
         def symlink_ms(source, link_name):
-            import ctypes
+            import ctypes # Import here as a special case for windows only
             csl = ctypes.windll.kernel32.CreateSymbolicLinkW
             csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
             csl.restype = ctypes.c_ubyte

@@ -23,11 +23,14 @@ import sys
 import FreeCAD as App
 from freecad.extman import log
 import traceback
+import urllib.request as request
+import urllib.error as errors
 
 # <Start Legacy urllib code>
 #   Can be replaced by modern request lib but
 #   I leave it with urllib to avoid dependency problems
 ssl_ctx = None
+request_initialized = False
 
 try:
     import ssl
@@ -38,11 +41,6 @@ else:
         ssl_ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
     except AttributeError:
         pass
-
-import urllib.request as request
-import urllib.error as errors
-
-request_initialized = False
 
 def getProxyConf():
     pref = App.ParamGet("User parameter:BaseApp/Preferences/Addons")
