@@ -70,6 +70,20 @@ MACRO_CODE = re.compile(r"""
     \n\s*\}\}
     """, re.X | re.S)
 
+# Macro Code from mediawiki legacy <pre> block
+LEGACY_MACRO_CODE = re.compile(r"""
+    \n<pre>
+    (?P<code>.*?)
+    \n</pre>
+    """, re.X | re.S)
+
+# Macro Code from mediawiki Codeextralink
+MACRO_CODE_EXTLINK = re.compile(r"""
+    \{\{
+    Codeextralink
+    \s*\|\s*(?P<link>.*?)
+    \}\}
+    """, re.X | re.S)
 
 def get_page_content_from_json(jsonObj):
     try:
@@ -154,11 +168,30 @@ class FCWikiProtocol(Protocol):
         content = http_get(url)
         if content:
             wikitext = get_page_content_from_json(json.loads(content))
+
+            # Try {{MacroCode ...}}
             m = MACRO_CODE.search(wikitext)
+            if not m:
+                # Try <pre> ... </pre>
+                m = LEGACY_MACRO_CODE.search(wikitext)
+
+            # Code in wiki
             if m:
                 with open(pkg.installFile, 'w', encoding='utf-8') as f:
                     f.write(m.group('code'))
                     result.ok = True
+
+            # Try external source
+            else:
+                m = MACRO_CODE_EXTLINK.search(wikitext)
+                if m:
+                    pre = tr("This macro must be downloaded from this link")
+                    pos = tr("""Copy the link, download it and install it manually 
+                        or follow instructions from the external resource""")
+                    result.message = """{0}: 
+                        <textarea class="form-control" style="min-height: 100px; margin: 5px;" readonly>{1}
+                        </textarea>
+                        {2}""".format(pre, m.group('link'), pos)
 
         return result
 
