@@ -18,6 +18,7 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -30,8 +31,9 @@ from freecad.extman import get_resource_path, tr
 from freecad.extman import utils
 from freecad.extman.protocol.fcwiki import FCWikiProtocol
 from freecad.extman.protocol.github import GithubProtocol
-from freecad.extman.sources import PackageInfo, PackageSource, PackageCategory, UnsupportedSourceException, \
-    groupPackagesInCategories, savePackageMetadata
+from freecad.extman.sources import (
+    PackageInfo, PackageSource, PackageCategory, UnsupportedSourceException,
+    groupPackagesInCategories, savePackageMetadata)
 
 
 class CloudPackageSource(PackageSource):

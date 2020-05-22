@@ -18,11 +18,11 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
 
 import FreeCAD as App
 import FreeCADGui as Gui
 import configparser as cp
-import json
 import os
 
 import freecad.extman.protocol.github as gh
@@ -31,8 +31,9 @@ from freecad.extman import get_resource_path, tr
 from freecad.extman import utils
 from freecad.extman.macro_parser import build_macro_package
 from freecad.extman.protocol.manifest import ExtensionManifest
-from freecad.extman.sources import PackageInfo, PackageSource, PackageCategory, groupPackagesInCategories, \
-    savePackageMetadata, loadPackageMetadata
+from freecad.extman.sources import (
+    PackageInfo, PackageSource, groupPackagesInCategories,
+    savePackageMetadata, loadPackageMetadata)
 
 
 class InstalledPackageSource(PackageSource):
@@ -75,27 +76,27 @@ class InstalledPackageSource(PackageSource):
     def importMods(self, path, isCore=False):
         packages = []
         if os.path.exists(path):
-            for pdir in os.listdir(path):
-                if pdir != 'ExtMan':
-                    pkg = self.importMod(path, pdir, isCore)
+            for pkg_dir in os.listdir(path):
+                if pkg_dir != 'ExtMan':
+                    pkg = self.importMod(path, pkg_dir, isCore)
                     if pkg: packages.append(pkg)
         return packages
 
     def importMacros(self, path, isCore=False):
         packages = []
         if os.path.exists(path):
-            for pfile in os.listdir(path):
-                ppath = os.path.join(path, pfile)
-                if os.path.isfile(ppath):
-                    pkg = self.importMacro(ppath, pfile, isCore)
+            for file_name in os.listdir(path):
+                macro_path = os.path.join(path, file_name)
+                if os.path.isfile(macro_path):
+                    pkg = self.importMacro(macro_path, file_name, isCore)
                     if pkg:
                         packages.append(pkg)
         return packages
 
-    def importMacro(self, path, pfile, isCore=False):
-        lname = pfile.lower()
+    def importMacro(self, path, file_name, isCore=False):
+        lname = file_name.lower()
         if lname.endswith('.fcmacro'):
-            macro = build_macro_package(path, pfile, isCore)
+            macro = build_macro_package(path, file_name, isCore, install_path=path)
             flags.apply_predefined_flags(macro)
             analyseInstalledMacro(macro)
             return macro
