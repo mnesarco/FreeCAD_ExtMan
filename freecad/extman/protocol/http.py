@@ -1,30 +1,31 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
-import sys
 import FreeCAD as App
-from freecad.extman import log
+import sys
 import traceback
-import urllib.request as request
 import urllib.error as errors
+import urllib.request as request
+
+from freecad.extman import log
 
 # <Start Legacy urllib code>
 #   Can be replaced by modern request lib but
@@ -42,18 +43,20 @@ else:
     except AttributeError:
         pass
 
+
 def getProxyConf():
     pref = App.ParamGet("User parameter:BaseApp/Preferences/Addons")
     if pref.GetBool("NoProxyCheck", True):
-        proxies = {}  
+        proxies = {}
     else:
         if pref.GetBool("SystemProxyCheck", False):
-            proxy = request.getproxies()  
+            proxy = request.getproxies()
             proxies = {"http": proxy.get('http'), "https": proxy.get('http')}
         elif pref.GetBool("UserProxyCheck", False):
-            proxy = pref.GetString("ProxyUrl", "")   
-            proxies = {"http": proxy, "https": proxy}                         
+            proxy = pref.GetString("ProxyUrl", "")
+            proxies = {"http": proxy, "https": proxy}
     return request.ProxyHandler(proxies)
+
 
 def getSslHandler():
     if ssl_ctx:
@@ -61,14 +64,16 @@ def getSslHandler():
     else:
         return {}
 
+
 def urllibInit():
     global request_initialized
     if not request_initialized:
         proxy_support = getProxyConf()
         handler = getSslHandler()
         opener = request.build_opener(proxy_support, handler)
-        request.install_opener(opener) 
+        request.install_opener(opener)
         request_initialized = True
+
 
 # <End Legacy urllib code>
 
@@ -95,6 +100,7 @@ def httpGet(url, headers=None, timeout=30, decode='utf-8'):
 
     return data
 
+
 def httpDownload(url, path, headers=None, timeout=30):
     urllibInit()
     try:
@@ -110,5 +116,5 @@ def httpDownload(url, path, headers=None, timeout=30):
         log(url, str(ex.reason))
     except:
         log(traceback.format_exc())
-        
+
     return False

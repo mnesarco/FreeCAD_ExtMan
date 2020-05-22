@@ -1,54 +1,54 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
+import FreeCAD as App
+import hashlib
 import os
 import shutil
-import traceback
-from html.parser import HTMLParser
-from html import unescape
-import hashlib
-import traceback
 import tempfile
-import FreeCAD as App
+import traceback
+import traceback
 from PySide.QtCore import QFile
+from html import unescape
+from html.parser import HTMLParser
 
-import freecad.extman.protocol.git as egit
-import freecad.extman.protocol.zip as zlib
 import freecad.extman.dependencies as deps
 import freecad.extman.preferences as pref
-
+import freecad.extman.protocol.fcwiki as fcw
+import freecad.extman.protocol.git as egit
+import freecad.extman.protocol.zip as zlib
+from freecad.extman import flags
+from freecad.extman import get_resource_path, tr, log
+from freecad.extman import utils
+from freecad.extman.macro_parser import build_macro_package
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import httpGet, httpDownload
-from freecad.extman.sources import PackageInfo, InstallResult
-from freecad.extman import utils
-from freecad.extman.worker import Worker
 from freecad.extman.protocol.manifest import ExtensionManifest
-from freecad.extman import getResourcePath, tr, log
-from freecad.extman import flags
-import freecad.extman.protocol.fcwiki as fcw
-from freecad.extman.macro_parser import Macro
+from freecad.extman.sources import PackageInfo, InstallResult
+from freecad.extman.worker import Worker
+
 
 class ReadmeParser(HTMLParser):
 
-    def __init__(self, meta_filter = None):
+    def __init__(self, meta_filter=None):
         super().__init__()
         self.html = None
         self.meta = {}
@@ -85,6 +85,7 @@ class ReadmeParser(HTMLParser):
     def handle_data(self, data):
         if self.inContent:
             self.html += unescape(data).replace(b'\xc2\xa0'.decode("utf-8"), ' ')
+
 
 class GithubRepo(egit.GitRepo):
 
@@ -131,23 +132,24 @@ class GithubProtocol(Protocol):
         # Get index
         index = {}
         if self.indexType == 'wiki' and self.indexUrl and self.wikiUrl:
-            index = fcw.getModIndex(self.indexUrl, self.wikiUrl)
+            index = fcw.get_mod_index(self.indexUrl, self.wikiUrl)
 
         # Get modules
         if self.submodulesUrl:
             modules = egit.getSubModules(self.submodulesUrl)
-            return [ self.modFromSubModule(subm, index) for subm in modules ]
+            return [self.modFromSubModule(subm, index) for subm in modules]
         else:
             return []
 
     def downloadMacroList(self):
-        
-        localDir = getResourcePath('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()), createDir=True)
+
+        localDir = get_resource_path('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()),
+                                     create_dir=True)
 
         # Try Git
         (gitAvailable, gitExe, gitVersion, gitPython, gitVersionOk) = egit.install_info()
         if gitAvailable and gitPython and gitVersionOk:
-            repo, path = egit.cloneLocal(self.url, path = localDir)
+            repo, path = egit.cloneLocal(self.url, path=localDir)
             return path
 
         # Try zip/http
@@ -176,21 +178,21 @@ class GithubProtocol(Protocol):
                 basePath = dirpath.replace(path + os.pathsep, '')
                 for filename in filenames:
                     if filename.lower().endswith('.fcmacro'):
-                        worker = Worker(Macro, 
-                            os.path.join(dirpath, filename), 
-                            filename[:-8], 
-                            isGit=True, 
-                            installPath=os.path.join(installDir, filename),
-                            basePath=basePath)
+                        worker = Worker(build_macro_package,
+                                        os.path.join(dirpath, filename),
+                                        filename[:-8],
+                                        is_git=True,
+                                        install_path=os.path.join(installDir, filename),
+                                        base_path=basePath)
                         worker.start()
                         workers.append(worker)
-            macros = [ flags.applyPredefinedFlags(w.get()) for w in workers ]
-        return macros                 
-    
+            macros = [flags.apply_predefined_flags(w.get()) for w in workers]
+        return macros
+
     def modFromSubModule(self, subm, index, syncManifest=False, syncReadme=False):
 
         repo = GithubRepo(subm['url'])
-        
+
         if syncManifest:
             repo.syncManifestHttp()
 
@@ -211,13 +213,13 @@ class GithubProtocol(Protocol):
             general = repo.manifest.general
             if general and general.iconPath:
                 iconPath = repo.manifest.iconPath
-    
+
         installDir = os.path.join(App.getUserAppDataDir(), 'Mod', subm['name'])
 
-        iconSources = utils.getWorkbenchIconCandidates(
-            subm['name'], 
-            repo.getRawFileUrl(), 
-            iconPath, 
+        iconSources = utils.get_workbench_icon_candidates(
+            subm['name'],
+            repo.getRawFileUrl(),
+            iconPath,
             installDir,
             egit.getCacheDir())
 
@@ -249,19 +251,19 @@ class GithubProtocol(Protocol):
 
         # Override some things
         pkgInfo.update(dict(
-            key = subm['name'],
-            type = 'Workbench',
-            isCore = False,
-            installDir = installDir,
-            icon = iconSources[0],
-            categories = utils.getWorkbenchCategoriesFromString(subm['name'], pkgInfo['categories']),
-            isGit = True,
-            git = subm['url']
-            ))
+            key=subm['name'],
+            type='Workbench',
+            isCore=False,
+            installDir=installDir,
+            icon=iconSources[0],
+            categories=utils.get_workbench_categories_from_string(subm['name'], pkgInfo['categories']),
+            isGit=True,
+            git=subm['url']
+        ))
 
         pkg = PackageInfo(**pkgInfo)
-        flags.applyPredefinedFlags(pkg)
-        return pkg        
+        flags.apply_predefined_flags(pkg)
+        return pkg
 
     def installMod(self, pkg):
 
@@ -270,18 +272,19 @@ class GithubProtocol(Protocol):
 
         # Get zip info
         zipAvailable = zlib.isZipAvailable()
-        
+
         # Initialize result
         result = InstallResult(
-            gitAvailable = gitAvailable,
-            gitPythonAvailable = gitPython is not None,
-            zipAvailable = zipAvailable,
-            gitVersionOk = gitVersionOk,
-            gitVersion = gitVersion
+            gitAvailable=gitAvailable,
+            gitPythonAvailable=gitPython is not None,
+            zipAvailable=zipAvailable,
+            gitVersionOk=gitVersionOk,
+            gitVersion=gitVersion
         )
-        
+
         # Check valid install dir
-        if not pkg.installDir.startswith(App.getUserAppDataDir()) and not pkg.installDir.startswith(App.getUserMacroDir(True)):
+        if not pkg.installDir.startswith(App.getUserAppDataDir()) and not pkg.installDir.startswith(
+                App.getUserMacroDir(True)):
             log('Invalid install dir: {0}'.format(pkg.installDir))
             result.ok = False
             result.invalidInstallDir = True
@@ -290,7 +293,7 @@ class GithubProtocol(Protocol):
         # Try Git install
         if gitAvailable and gitVersionOk and gitPython:
             result = self.installModFromGit(pkg, result)
-        
+
         # Try zip/http install
         elif zipAvailable:
             result = self.installModFromHttpZip(pkg, result)
@@ -299,7 +302,7 @@ class GithubProtocol(Protocol):
             try:
                 self.linkMacrosFromMod(pkg)
             except:
-                #! TODO: Rollback everything if macro links fail?
+                # ! TODO: Rollback everything if macro links fail?
                 pass
 
         return result
@@ -312,11 +315,11 @@ class GithubProtocol(Protocol):
             gh.syncManifestHttp()
 
             # Check dependencies based on manifets.ini or metadata.txt
-            (depsOk, failedDependencies) = deps.checkDependencies(gh.manifest)
+            (depsOk, failedDependencies) = deps.check_dependencies(gh.manifest)
             if not depsOk:
                 result.failedDependencies = failedDependencies
                 return result
-            
+
             # Download mater zip
             zippath = tempfile.mktemp(suffix=".zip")
             if httpDownload(gh.getZipUrl(), zippath):
@@ -329,7 +332,7 @@ class GithubProtocol(Protocol):
 
                 # Move exloded dir to install dir
                 shutil.move(exploded, pkg.installDir)
-                result.ok = True         
+                result.ok = True
 
         except:
             log(traceback.format_exc())
@@ -338,7 +341,7 @@ class GithubProtocol(Protocol):
         return result
 
     def installModFromGit(self, pkg, result):
-        
+
         # Update instead if already exists
         if os.path.exists(pkg.installDir):
             return self.updateModFromGit(pkg, result)
@@ -352,22 +355,22 @@ class GithubProtocol(Protocol):
                 gh.syncManifestHttp()
 
                 # Check dependencies based on manifets.ini or metadata.txt
-                (depsOk, failedDependencies) = deps.checkDependencies(gh.manifest)
+                (depsOk, failedDependencies) = deps.check_dependencies(gh.manifest)
                 if not depsOk:
                     result.failedDependencies = failedDependencies
                     return result
-                
+
                 # Clone and update submudules
                 repo, repoPath = egit.cloneLocal(pkg.git, pkg.installDir, branch='master')
                 if repo.submodules:
                     repo.submodule_update(recursive=True)
 
-                result.ok = True         
+                result.ok = True
 
             except:
                 log(traceback.format_exc())
                 result.ok = False
-        
+
         return result
 
     def updateModFromGit(self, pkg, result):
@@ -385,37 +388,37 @@ class GithubProtocol(Protocol):
                 gh.syncManifestHttp()
 
                 # Check dependencies based on manifets.ini or metadata.txt
-                (depsOk, failedDependencies) = deps.checkDependencies(gh.manifest)
+                (depsOk, failedDependencies) = deps.check_dependencies(gh.manifest)
                 if not depsOk:
                     result.failedDependencies = failedDependencies
                     return result
-                
+
                 # Upgrade to git if necessary
                 import git
                 barePath = os.path.join(pkg.installDir, '.git')
                 if not os.path.exists(barePath):
-                    bare, _ = gh.clone(barePath, bare = True)
+                    bare, _ = gh.clone(barePath, bare=True)
                     egit.configSet(bare, 'core', 'bare', False)
                     repo = git.Repo(pkg.installDir)
-                    repo.head.reset('--hard')                    
+                    repo.head.reset('--hard')
 
-                # Pull
+                    # Pull
                 repo = git.Git(pkg.installDir)
                 repo.pull()
                 repo = git.Repo(pkg.installDir)
                 for subm in repo.submodules:
                     subm.update(init=True, recursive=True)
 
-                result.ok = True         
+                result.ok = True
 
             except:
                 log(traceback.format_exc())
                 result.ok = False
-        
+
         return result
 
     def updateMod(self, pkg):
-        return self.installMod(pkg) # Install handles both cases
+        return self.installMod(pkg)  # Install handles both cases
 
     def installMacro(self, pkg):
 
@@ -423,11 +426,11 @@ class GithubProtocol(Protocol):
 
         # Initialize result
         result = InstallResult(
-            gitAvailable = gitAvailable,
-            gitPythonAvailable = gitPython is not None,
-            zipAvailable = zlib.isZipAvailable(),
-            gitVersionOk = gitVersionOk,
-            gitVersion = gitVersion
+            gitAvailable=gitAvailable,
+            gitPythonAvailable=gitPython is not None,
+            zipAvailable=zlib.isZipAvailable(),
+            gitVersionOk=gitVersionOk,
+            gitVersion=gitVersion
         )
 
         # Get path of source macro file
@@ -445,23 +448,23 @@ class GithubProtocol(Protocol):
 
             shutil.copy2(srcFile, pkg.installFile)
             files.append(pkg.installFile)
-            
+
             # Copy files
             if pkg.files:
                 for f in pkg.files:
 
-                    fpath = utils.pathRel(f)
+                    fpath = utils.path_relative(f)
                     dst = os.path.abspath(os.path.join(pkg.installDir, fpath))
                     src = os.path.abspath(os.path.join(pkg.basePath, fpath))
 
                     log('Installing ', dst)
 
                     if not dst.startswith(pkg.installDir):
-                        result.message = tr('Macro package attempts to install files outside of permitted path') 
+                        result.message = tr('Macro package attempts to install files outside of permitted path')
                         raise Exception('')
 
                     if not src.startswith(pkg.basePath):
-                        result.message = tr('Macro package attempts to access files outside of permitted path') 
+                        result.message = tr('Macro package attempts to access files outside of permitted path')
                         raise Exception('')
 
                     dstDir = os.path.dirname(dst)
@@ -511,4 +514,4 @@ class GithubProtocol(Protocol):
             for f in os.listdir(pkg.installDir):
                 if f.lower().endswith(".fcmacro"):
                     utils.symlink(os.path.join(pkg.installDir, f), os.path.join(macros, f))
-                    pref.setPluginParam(pkg.name, 'destination', pkg.installDir)
+                    pref.set_plugin_parameter(pkg.name, 'destination', pkg.installDir)

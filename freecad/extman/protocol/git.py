@@ -1,42 +1,42 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
-import sys
-import os
 import json
+import os
 import re
-import xml
+import sys
 import tempfile
 import traceback
-
-from shutil import which
+import xml
 from distutils.version import StrictVersion
+from shutil import which
 
-from freecad.extman import getResourcePath, log
-from freecad.extman.protocol.manifest import ExtensionManifest
+from freecad.extman import get_resource_path, log
 from freecad.extman.protocol.http import httpGet
+from freecad.extman.protocol.manifest import ExtensionManifest
 
 MIN_VERSION = StrictVersion('2.14.99')
-class SubModulesParser:
 
+
+class SubModulesParser:
     """
     Parses standard .gitmodules files
     """
@@ -55,17 +55,19 @@ class SubModulesParser:
             var = m.group('var')
             value = m.group('value')
             if modg:
-                module = { 'name': modg }
+                module = {'name': modg}
                 modules.append(module)
             elif var and module:
                 module[var] = value
         self.modules = modules
 
+
 def getCacheDir():
-    path = getResourcePath('cache')
+    path = get_resource_path('cache')
     if not os.path.exists(path):
         os.mkdir(path)
     return path
+
 
 def getSubModules(url):
     content = httpGet(url)
@@ -74,6 +76,7 @@ def getSubModules(url):
         return parser.modules
     else:
         return []
+
 
 class GitRepo:
 
@@ -111,7 +114,6 @@ class GitRepo:
 
 
 def install_info():
-    
     """
     Returns info about git (installed, executable, version, pygit, git_version_check)
         installed: bool
@@ -136,7 +138,7 @@ def install_info():
         result = re.search(r'(\d+\.\d+\.\d+)', versionStr)
         if result:
             version = StrictVersion(result.group(1))
-    
+
     # Get python git module
     try:
         import git
@@ -146,8 +148,8 @@ def install_info():
     installed = bool(version)
     return (installed, executable, version, git, (version and version >= MIN_VERSION))
 
-def updateLocal(path):
 
+def updateLocal(path):
     # Get git
     (gitAvailable, executable, version, pygit, gitVersionOk) = install_info()
 
@@ -156,7 +158,7 @@ def updateLocal(path):
 
             # Reset
             repo = pygit.Repo(path)
-            repo.head.reset('--hard')                    
+            repo.head.reset('--hard')
 
             # Pull
             repo = pygit.Git(path)
@@ -169,8 +171,8 @@ def updateLocal(path):
 
     return None
 
-def cloneLocal(repoUrl, path = None, **kwargs):
-    
+
+def cloneLocal(repoUrl, path=None, **kwargs):
     # Get git
     (gitAvailable, executable, version, pygit, gitVersionOk) = install_info()
 
@@ -178,7 +180,7 @@ def cloneLocal(repoUrl, path = None, **kwargs):
 
         if path is None:
             path = tempfile.mkdtemp()
-    
+
         # If exists, reset+pull
         if os.path.exists(os.path.join(path, '.git')):
             try:
@@ -194,11 +196,11 @@ def cloneLocal(repoUrl, path = None, **kwargs):
                 return (repo, path)
             except:
                 traceback.print_exc(file=sys.stderr)
-    
+
     return (None, None)
 
-def configSet(pyGitRepo, section, option, value):
 
+def configSet(pyGitRepo, section, option, value):
     cw = None
     try:
         cw = pyGitRepo.config_writer()

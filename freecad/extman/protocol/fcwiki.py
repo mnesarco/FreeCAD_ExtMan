@@ -1,39 +1,42 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
-
-import re, json, os, traceback, sys
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
 import FreeCAD as App
+import json
+import os
+import re
+import sys
+import traceback
+from urllib.parse import quote
 
-from freecad.extman import tr, getResourcePath
+import freecad.extman.flags as flags
+import freecad.extman.utils as utils
+from freecad.extman import tr, get_resource_path
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import httpGet
 from freecad.extman.sources import PackageInfo, InstallResult
-import freecad.extman.utils as utils
-import freecad.extman.flags as flags
-from urllib.parse import quote
 
 # mediawiki Mod table row
-# Very permisive because mediawiki is very permissive
-MODTABLEITEM = re.compile(r"""
+# Very permissive because mediawiki is very permissive
+MOD_TABLE_ITEM = re.compile(r"""
         \n\|+-
         \s+\|+(\[\[(File|Image):(?P<icon>.*?)(\|.*?)\]\])?
         \s+\|+\[\[(?P<name>.*?)(\|(?P<title>.*?))?\]\]
@@ -47,7 +50,7 @@ MODTABLEITEM = re.compile(r"""
 
 # Macro Metadata from mediawiki
 # * {{MacroLink|Icon=<icon>|Macro <name>/<lang>|Macro <label>}}: <description>
-MACROLINK = re.compile(r"""
+MACRO_LINK = re.compile(r"""
     \{\{
         MacroLink                  \s*\|
         ((Icon=(?P<icon>[^|]+))       \|)?
@@ -60,17 +63,19 @@ MACROLINK = re.compile(r"""
     """, re.X | re.I | re.M)
 
 # Macro Code from mediawiki
-MACROCODE = re.compile(r"""
+MACRO_CODE = re.compile(r"""
     \{\{MacroCode\s*\|\s*(code=)?
     (?P<code>.*?)
     \n\s*\}\}
     """, re.X | re.S)
 
-def getPageContentFormJson(jsonObj):
+
+def get_page_content_from_json(jsonObj):
     try:
         return jsonObj['query']['pages'][0]['revisions'][0]['slots']['main']['content']
     except:
         return None
+
 
 class FCWikiProtocol(Protocol):
 
@@ -86,15 +91,15 @@ class FCWikiProtocol(Protocol):
 
         macros = []
         installDir = App.getUserMacroDir(True)
-        defaultIcon = utils.pathToUrl(getResourcePath('html', 'img', 'package_macro.svg'))
+        defaultIcon = utils.path_to_url(get_resource_path('html', 'img', 'package_macro.svg'))
 
         try:
             content = httpGet(self.url, timeout=45)
             if content:
                 data = json.loads(content)
-                wiki = getPageContentFormJson(data)
+                wiki = get_page_content_from_json(data)
 
-                for mlink in MACROLINK.finditer(wiki):
+                for mlink in MACRO_LINK.finditer(wiki):
 
                     name = mlink.group('name').replace(' ', '_')
                     label = mlink.group('label')
@@ -107,34 +112,35 @@ class FCWikiProtocol(Protocol):
                         icon = defaultIcon
 
                     pkg = PackageInfo(
-                        key = name,
-                        installDir = installDir,
-                        installFile = os.path.join(installDir, name + '.FCMacro'),
-                        name = name,
-                        title = label,
-                        description = description,
-                        icon = icon,
-                        isCore = False,
-                        type = 'Macro',
-                        isGit = False,
-                        isWiki = True,
-                        markedAsSafe = False,
-                        categories = [tr('Uncategorized')],
-                        date = None,
-                        version = None,
-                        readmeUrl = '{0}/Macro_{1}?origin=*'.format(self.wiki, name),
-                        readmeFormat = 'html'              
+                        key=name,
+                        installDir=installDir,
+                        installFile=os.path.join(installDir, name + '.FCMacro'),
+                        name=name,
+                        title=label,
+                        description=description,
+                        icon=icon,
+                        isCore=False,
+                        type='Macro',
+                        isGit=False,
+                        isWiki=True,
+                        markedAsSafe=False,
+                        categories=[tr('Uncategorized')],
+                        date=None,
+                        version=None,
+                        readmeUrl='{0}/Macro_{1}?origin=*'.format(self.wiki, name),
+                        readmeFormat='html'
                     )
-                    flags.applyPredefinedFlags(pkg)
+                    flags.apply_predefined_flags(pkg)
                     macros.append(pkg)
 
         except:
             traceback.print_exc(file=sys.stderr)
-    
+
         return macros
 
     def getWikiPageUrlJson(self, name):
-        return '{0}/api.php?action=query&prop=revisions&titles={1}&rvslots=%2A&rvprop=content&formatversion=2&format=json'.format(self.wiki, name)
+        return '{0}/api.php?action=query&prop=revisions&titles={1}&rvslots=%2A&rvprop=content&formatversion=2&format=json'.format(
+            self.wiki, name)
 
     def installMacro(self, pkg):
 
@@ -142,21 +148,22 @@ class FCWikiProtocol(Protocol):
         url = self.getWikiPageUrlJson("Macro_{0}".format(quote(pkg.name)))
         content = httpGet(url)
         if content:
-            wikitext = getPageContentFormJson(json.loads(content))
-            m = MACROCODE.search(wikitext)
+            wikitext = get_page_content_from_json(json.loads(content))
+            m = MACRO_CODE.search(wikitext)
             if m:
                 with open(pkg.installFile, 'w', encoding='utf-8') as f:
                     f.write(m.group('code'))
                     result.ok = True
-        
+
         return result
 
-def getModIndex(url, wiki):
+
+def get_mod_index(url, wiki):
     index = {}
     content = httpGet(url)
     if content:
-        data = getPageContentFormJson(json.loads(content))
-        for row in MODTABLEITEM.finditer(data):
+        data = get_page_content_from_json(json.loads(content))
+        for row in MOD_TABLE_ITEM.finditer(data):
             repo = row.group('code')
             if repo.endswith('/'):
                 repo = repo[:-1]
@@ -168,7 +175,7 @@ def getModIndex(url, wiki):
                 'author': row.group('authors'),
                 'repo': repo,
                 'flag': row.group('flag')
-            }            
+            }
             icon = row.group('icon')
             if icon:
                 item['icon'] = wiki + '/Special:Redirect/file/' + icon.replace(' ', '_')

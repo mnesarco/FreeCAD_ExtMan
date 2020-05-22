@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
 import FreeCAD as App
 
@@ -26,60 +26,66 @@ import FreeCAD as App
 # Constant
 __PARAMETER_OPTIONS__ = {
     'updateCheck': (bool, True),
-    'proxyCheck': (int, 0), 
+    'proxyCheck': (int, 0),
     'packagesViewMode': (str, 'rows')
 }
 
-__PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan" # Constant
+__PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan"  # Constant
+
 
 class ParametersProxy:
+
+    def __init__(self):
+        pass
 
     def __getattribute__(self, name):
 
         group = App.ParamGet(__PARAMETER_GROUP__)
-        (ptype, pdefault) = __PARAMETER_OPTIONS__.get(name, (str, ''))        
+        (param_type, param_default) = __PARAMETER_OPTIONS__.get(name, (str, ''))
 
-        if ptype == str:
-            return group.GetString(name, pdefault)
+        if param_type == str:
+            return group.GetString(name, param_default)
 
-        if ptype == bool:
-            return group.GetBool(name, pdefault)            
+        if param_type == bool:
+            return group.GetBool(name, param_default)
 
-        if ptype == int:
-            return group.GetInt(name, pdefault)                        
+        if param_type == int:
+            return group.GetInt(name, param_default)
 
-        if ptype == float:
-            return group.GetFloat(name, pdefault)
+        if param_type == float:
+            return group.GetFloat(name, param_default)
 
     def __setattr__(self, name, value):
-        
-        group = App.ParamGet(__PARAMETER_GROUP__)
-        (ptype, _) = __PARAMETER_OPTIONS__.get(name, (str, ''))        
 
-        if ptype == str:
+        group = App.ParamGet(__PARAMETER_GROUP__)
+        (param_type, _) = __PARAMETER_OPTIONS__.get(name, (str, ''))
+
+        if param_type == str:
             return group.SetString(name, value)
 
-        if ptype == bool:
-            return group.SetBool(name, value)            
+        if param_type == bool:
+            return group.SetBool(name, value)
 
-        if ptype == int:
-            return group.SetInt(name, value)                        
+        if param_type == int:
+            return group.SetInt(name, value)
 
-        if ptype == float:
+        if param_type == float:
             return group.SetFloat(name, value)
 
-def setPluginParam(plugin, name, value):
+
+def set_plugin_parameter(plugin, name, value):
     param = App.ParamGet('User parameter:Plugins/{0}'.format(plugin))
     if isinstance(value, str):
         param.SetString(name, value)
     elif isinstance(value, bool):
-        param.SetBool(name, value)        
+        param.SetBool(name, value)
     elif isinstance(value, float):
-        param.SetFloat(name, value)                        
+        param.SetFloat(name, value)
     elif isinstance(value, int):
-        param.SetInt(name, value)                
+        param.SetInt(name, value)
     else:
         raise ValueError('Unsupported param type [{0}] {1}'.format(type(value), name))
+
 
 # ExtMan Parameters Proxy (Constant/Singleton)
 ExtManParameters = ParametersProxy()

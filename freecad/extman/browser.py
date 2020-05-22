@@ -1,48 +1,49 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
-
-import os, time
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
 import FreeCADGui as Gui
 import WebGui
+import os
+import time
 from PySide import QtGui, QtCore
-
 from PySide2.QtWebEngineWidgets import QWebEngineView
 
-from freecad.extman import tr, isWindowsPlatform, getResourcePath
-from freecad.extman.html import render
-from freecad.extman.worker import Worker, runInMainThread
-from freecad.extman.webview import WebView, Response
 import freecad.extman.controller as actions
+from freecad.extman import tr, isWindowsPlatform, get_resource_path
+from freecad.extman.html import render
+from freecad.extman.webview import WebView, Response
+from freecad.extman.worker import Worker, run_in_main_thread
 
-_browser_instance = None                      # Singleton: WebView
-_browser_session = {}                         # Singleton: State
-_browser_base_path = getResourcePath('html')  # Constant:  Base dir for templates
-_router = None                                # Singleton: Router configuration
+__browser_instance__ = None  # Singleton: WebView
+__browser_session__ = {}  # Singleton: State
+__browser_base_path__ = get_resource_path('html')  # Constant:  Base dir for templates
+__router__ = None  # Singleton: Router configuration
 
-def pathToExtmanUrl(path):
+
+def path_to_extman_url(path):
     if isWindowsPlatform:
         return 'extman://' + path.replace('\\', '/')
     else:
         return 'extman://' + path
+
 
 class BrowserSession:
 
@@ -50,39 +51,43 @@ class BrowserSession:
         self.model = model
         self.model['route'] = router
 
-    def setState(self, **kw):
+    def set_state(self, **kw):
         self.model.update(kw)
 
-    def routeTo(self, route):
-        self.model['route'].setRoute(route)
+    def route_to(self, route):
+        self.model['route'].set_route(route)
 
-    def getRouter(self):
+    def get_router(self):
         return self.model['route']
 
-def getUpdatedBrowserSession(**model):
-    global _browser_session, _router
-    if not _browser_session:
-        _browser_session = BrowserSession(model, _router)
+
+def get_updated_browser_session(**model):
+    global __browser_session__, __router__
+    if not __browser_session__:
+        __browser_session__ = BrowserSession(model, __router__)
     else:
-        _browser_session.setState(**model)
-    return _browser_session
+        __browser_session__.set_state(**model)
+    return __browser_session__
+
 
 @QtCore.Slot(object)
-def onWebViewClose(event):
-    global _browser_instance
-    _browser_instance = None    
+def on_web_view_close(event):
+    global __browser_instance__
+    __browser_instance__ = None
 
-def startBrowser():
-    global _browser_instance
-    if not _browser_instance:
+
+def start_browser():
+    global __browser_instance__
+    if not __browser_instance__:
         ma = Gui.getMainWindow().findChild(QtGui.QMdiArea)
-        _browser_instance = WebView(tr('Extension Manager'), getResourcePath('cache'), requestHandler, ma)
-        _browser_instance.closed.connect(onWebViewClose)
-        ma.addSubWindow(_browser_instance)
-        index = pathToExtmanUrl(getResourcePath('html', 'index.html'))
-        _browser_instance.load(index)
-        _browser_instance.show()
-    return _browser_instance
+        __browser_instance__ = WebView(tr('Extension Manager'), get_resource_path('cache'), request_handler, ma)
+        __browser_instance__.closed.connect(on_web_view_close)
+        ma.addSubWindow(__browser_instance__)
+        index = path_to_extman_url(get_resource_path('html', 'index.html'))
+        __browser_instance__.load(index)
+        __browser_instance__.show()
+    return __browser_instance__
+
 
 class TemplateResponseWrapper:
 
@@ -92,25 +97,25 @@ class TemplateResponseWrapper:
     def write(self, data):
         self.delegate.write(data)
 
-    def send(self, contentType = 'text/html'):
-        self.delegate.send(contentType)
+    def send(self, content_type='text/html'):
+        self.delegate.send(content_type)
 
-    def renderTemplate(self, template, send=True, contentType='text/html'):
+    def render_template(self, template, send=True, content_type='text/html'):
         if isinstance(template, str):
-            template = getResourcePath('html', template)
+            template = get_resource_path('html', template)
         else:
-            template = getResourcePath('html', *template)
-        html, url = render(template, model = _browser_session.model)
+            template = get_resource_path('html', *template)
+        html, url = render(template, model=__browser_session__.model)
         self.delegate.write(html)
         if send:
-            self.delegate.send(contentType)
+            self.delegate.send(content_type)
 
-    def render(self, content, send=True, contentType='text/html'):
+    def render(self, content, send=True, content_type='text/html'):
         self.delegate.write(content)
         if send:
-            self.delegate.send(contentType)
+            self.delegate.send(content_type)
 
-    def htmlOk(self):
+    def html_ok(self):
         self.render("""
         <html>
             <head><title>Extman</title></head>
@@ -118,35 +123,30 @@ class TemplateResponseWrapper:
         </html>
         """, True)
 
-def requestHandler(path, action, params, request, response):
 
+def request_handler(path, action, params, request, response):
     """
     Process extman:// requests
     """
-    
+
     # Restore state
-    session = getUpdatedBrowserSession()
+    session = get_updated_browser_session()
 
     # Call action logic if any
     if action:
-        responseWrapper = TemplateResponseWrapper(response)
-        eval(
-            'actions.{0}(path, session, params, request, responseWrapper)'.format(action), 
-            {'actions': actions}, 
-            locals()
-        )
+        response_wrapper = TemplateResponseWrapper(response)
+        cmd = 'actions.{0}(path, session, params, request, response_wrapper)'.format(action)
+        eval(cmd, {'actions': actions}, locals())
 
     # Default action is render template.
     # Only templates inside html dir are allowed
-    elif path.startswith(_browser_base_path):
-
-        template = path[len(_browser_base_path)+1:]
-
-        # Render and send
+    elif path.startswith(__browser_base_path__):
+        template = path[len(__browser_base_path__) + 1:]
         html, url = render(template, model=session.model)
         response.write(html)
         response.send()
 
-def installRouter(router):
-    global _router
-    _router = router
+
+def install_router(router):
+    global __router__
+    __router__ = router

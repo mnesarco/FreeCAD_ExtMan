@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
-#***************************************************************************
-#*                                                                         *
-#*  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
-#*                                                                         *
-#*   This program is free software; you can redistribute it and/or modify  *
-#*   it under the terms of the GNU Lesser General Public License (LGPL)    *
-#*   as published by the Free Software Foundation; either version 2 of     *
-#*   the License, or (at your option) any later version.                   *
-#*   for detail see the LICENCE text file.                                 *
-#*                                                                         *
-#*  This program is distributed in the hope that it will be useful,        *
-#*  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
-#*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
-#*  GNU General Public License for more details.                           *
-#*                                                                         *
-#*  You should have received a copy of the GNU General Public License      *
-#*  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
-#*                                                                         *
-#***************************************************************************
+# ***************************************************************************
+# *                                                                         *
+# *  Copyright (c) 2020 Frank Martinez <mnesarco at gmail.com>              *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU Lesser General Public License (LGPL)    *
+# *   as published by the Free Software Foundation; either version 2 of     *
+# *   the License, or (at your option) any later version.                   *
+# *   for detail see the LICENCE text file.                                 *
+# *                                                                         *
+# *  This program is distributed in the hope that it will be useful,        *
+# *  but WITHOUT ANY WARRANTY; without even the implied warranty of         *
+# *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
+# *  GNU General Public License for more details.                           *
+# *                                                                         *
+# *  You should have received a copy of the GNU General Public License      *
+# *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
+# *                                                                         *
+# ***************************************************************************
 
-import traceback, sys
+import sys
+import traceback
 from PySide import QtCore as qt
 
 
 class InvokeEvent(qt.QEvent):
-
     EVENT_TYPE = qt.QEvent.Type(qt.QEvent.registerEventType())
 
     def __init__(self, fn, *args, **kwargs):
@@ -33,21 +33,25 @@ class InvokeEvent(qt.QEvent):
         self.args = args
         self.kwargs = kwargs
 
+
 class Invoker(qt.QObject):
 
     def event(self, event):
         event.fn(*event.args, **event.kwargs)
         return True
 
-def runInMainThread(fn, *args, **kwargs):
+
+def run_in_main_thread(fn, *args, **kwargs):
     qt.QCoreApplication.postEvent(
-        UIThreadInvoker, 
+        UIThreadInvoker,
         InvokeEvent(fn, *args, **kwargs)
     )
+
 
 class WorkerSignals(qt.QObject):
     started = qt.Signal(tuple)
     finished = qt.Signal(tuple)
+
 
 class Worker(qt.QRunnable):
 
@@ -76,7 +80,7 @@ class Worker(qt.QRunnable):
             except Exception as ex:
                 self.error = ex
                 traceback.print_exc(file=sys.stderr)
-            except:
+            except:  # Catch everything else
                 self.error = BaseException(traceback.format_exc())
                 traceback.print_exc(file=sys.stderr)
             finally:
@@ -97,12 +101,13 @@ class Worker(qt.QRunnable):
         while self.isPending:
             if self._cancel:
                 return None
-        
+
         while True:
             if not self.isRunning:
                 if self.error:
                     raise self.error
                 else:
                     return self.result
+
 
 UIThreadInvoker = Invoker()
