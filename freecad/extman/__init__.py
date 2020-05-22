@@ -42,16 +42,17 @@ def get_resource_path(*paths, create_dir=False):
     return path
 
 
+# Setup translations
 try:
-    Gui.addLanguagePath(":/translations")
+    Gui.addLanguagePath(get_resource_path('translations'))
     Gui.updateLocale()
 except Exception as ex:
     log('Translation loading error')
 
+
+# Define tr
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     @functools.lru_cache()
     def tr(text):
         """Translate text"""
@@ -59,12 +60,12 @@ try:
         return u.replace(chr(39), "&rsquo;")
 
 except Exception as ex:
-
     @functools.lru_cache()
     def tr(text):
         """Translate text"""
         u = QtGui.QApplication.translate('extman', text, None)
         return u.replace(chr(39), "&rsquo;")
+
 
 # Ensure Mod dir
 if not os.path.exists(os.path.join(App.getUserAppDataDir(), 'Mod')):

@@ -18,9 +18,9 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
 
 import FreeCADGui as Gui
-import os
 from FreeCAD import Console, GuiUp
 
 from freecad.extman import get_resource_path, tr
@@ -30,12 +30,14 @@ from freecad.extman.webview import register_custom_schemes
 
 
 class ExtManWorkbench(Gui.Workbench):
-    """ExtMan Workbench"""
+    """Extension Manager Workbench"""
 
-    def __init__(self):
-        self.__class__.Icon = get_resource_path('icons', 'ExtManWorkbench.svg')
-        self.__class__.MenuText = tr("Extension Manager")
-        self.__class__.ToolTip = tr("Extension Manager")
+    Icon = get_resource_path('icons', 'ExtManWorkbench.svg')
+    MenuText = tr("Extension Manager")
+    ToolTip = tr("Extension Manager")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
@@ -51,12 +53,10 @@ class ExtManWorkbench(Gui.Workbench):
         pass
 
 
-# ***************************************************************************
-# * Add workbench to FreeCAD                                                *
-# ***************************************************************************
+# Load Workbench into FreeCAD
 Gui.addWorkbench(ExtManWorkbench)
 
-# Setup GUI
+# Setup WebView GUI
 if GuiUp:
 
     # ! Important:
