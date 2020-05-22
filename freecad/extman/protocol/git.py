@@ -35,6 +35,7 @@ from freecad.extman.protocol.http import http_get
 from freecad.extman.protocol.manifest import ExtensionManifest
 
 MIN_VERSION = StrictVersion('2.14.99')
+DISABLE_GIT = False
 
 
 class SubModulesParser:
@@ -125,6 +126,9 @@ def install_info():
         pygit: GitPython module
         git_version_check: bool
     """
+
+    if DISABLE_GIT:
+        return False, None, None, None, False
 
     # Find git executable
     executable = which('git')

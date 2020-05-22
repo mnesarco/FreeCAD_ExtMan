@@ -165,8 +165,11 @@ class GithubProtocol(Protocol):
                 if os.path.exists(local_dir):
                     shutil.rmtree(local_dir)
                 # Move exploded dir to install dir
-                shutil.move(exploded, local_dir)
-                return local_dir
+                for entry in os.listdir(exploded):
+                    entry_path = os.path.join(exploded, entry)
+                    if os.path.isdir(entry_path):
+                        shutil.move(entry_path, local_dir)
+                        return local_dir
 
     def getMacroList(self):
         install_dir = App.getUserMacroDir(True)
@@ -323,18 +326,22 @@ class GithubProtocol(Protocol):
                 return result
 
             # Download mater zip
-            zippath = tempfile.mktemp(suffix=".zip")
-            if http_download(gh.getZipUrl(), zippath):
+            zip_path = tempfile.mktemp(suffix=".zip")
+            if http_download(gh.getZipUrl(), zip_path):
                 exploded = tempfile.mktemp(suffix="_zip")
-                zlib.unzip(zippath, exploded)
+                zlib.unzip(zip_path, exploded)
 
                 # Remove old if exists
                 if os.path.exists(pkg.installDir):
                     shutil.rmtree(pkg.installDir)
 
-                # Move exloded dir to install dir
-                shutil.move(exploded, pkg.installDir)
-                result.ok = True
+                # Move exploded dir to install dir
+                for entry in os.listdir(exploded):
+                    entry_path = os.path.join(exploded, entry)
+                    if os.path.isdir(entry_path):
+                        shutil.move(entry_path, pkg.installDir)
+                        result.ok = True
+                        break  # Only one zip directory is expected
 
         except:
             log(traceback.format_exc())
@@ -436,19 +443,22 @@ class GithubProtocol(Protocol):
         )
 
         # Get path of source macro file
-        srcFile = os.path.join(pkg.basePath, os.path.basename(pkg.installFile))
+        src_file = os.path.join(pkg.basePath, os.path.basename(pkg.installFile))
+
+        # Ensure last version it available locally
+        self.downloadMacroList()
 
         # Copy Macro
         files = []
         try:
 
-            macrosDir = App.getUserMacroDir(True)
-            if not os.path.exists(macrosDir):
-                os.makedirs(macrosDir)
+            macros_dir = App.getUserMacroDir(True)
+            if not os.path.exists(macros_dir):
+                os.makedirs(macros_dir)
 
             log('Installing', pkg.installFile)
 
-            shutil.copy2(srcFile, pkg.installFile)
+            shutil.copy2(src_file, pkg.installFile)
             files.append(pkg.installFile)
 
             # Copy files
@@ -469,10 +479,10 @@ class GithubProtocol(Protocol):
                         result.message = tr('Macro package attempts to access files outside of permitted path')
                         raise Exception('')
 
-                    dstDir = os.path.dirname(dst)
-                    if dstDir != pkg.installDir and dstDir not in files:
-                        os.makedirs(dstDir)
-                        files.append(dstDir)
+                    dst_dir = os.path.dirname(dst)
+                    if dst_dir != pkg.installDir and dst_dir not in files:
+                        os.makedirs(dst_dir, 0o777, exist_ok=True)
+                        files.append(dst_dir)
 
                     shutil.copy2(src, dst)
                     files.append(dst)
