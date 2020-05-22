@@ -40,7 +40,7 @@ from freecad.extman import get_resource_path, tr, log
 from freecad.extman import utils
 from freecad.extman.macro_parser import build_macro_package
 from freecad.extman.protocol import Protocol
-from freecad.extman.protocol.http import httpGet, httpDownload
+from freecad.extman.protocol.http import http_get, http_download
 from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman.sources import PackageInfo, InstallResult
 from freecad.extman.worker import Worker
@@ -91,10 +91,11 @@ class GithubRepo(egit.GitRepo):
 
     def __init__(self, url):
         super().__init__(url)
+        self.description = None
 
     def getRawFile(self, path):
         url = self.getRawFileUrl(path)
-        return httpGet(url)
+        return http_get(url)
 
     def getRawFileUrl(self, path=""):
         url = self.url.replace('github.com', 'raw.githubusercontent.com')
@@ -136,7 +137,7 @@ class GithubProtocol(Protocol):
 
         # Get modules
         if self.submodulesUrl:
-            modules = egit.getSubModules(self.submodulesUrl)
+            modules = egit.get_submodules(self.submodulesUrl)
             return [self.modFromSubModule(subm, index) for subm in modules]
         else:
             return []
@@ -149,14 +150,14 @@ class GithubProtocol(Protocol):
         # Try Git
         (gitAvailable, gitExe, gitVersion, gitPython, gitVersionOk) = egit.install_info()
         if gitAvailable and gitPython and gitVersionOk:
-            repo, path = egit.cloneLocal(self.url, path=localDir)
+            repo, path = egit.clone_local(self.url, path=localDir)
             return path
 
         # Try zip/http
-        if zlib.isZipAvailable():
+        if zlib.is_zip_available():
             gh = GithubRepo(self.url)
             zippath = tempfile.mktemp(suffix=".zip")
-            if httpDownload(gh.getZipUrl(), zippath):
+            if http_download(gh.getZipUrl(), zippath):
                 exploded = tempfile.mktemp(suffix="_zip")
                 zlib.unzip(zippath, exploded)
                 # Remove old if exists
@@ -221,7 +222,7 @@ class GithubProtocol(Protocol):
             repo.getRawFileUrl(),
             iconPath,
             installDir,
-            egit.getCacheDir())
+            egit.get_cache_dir())
 
         pkgInfo = {
             'name': subm['name'],
@@ -271,7 +272,7 @@ class GithubProtocol(Protocol):
         (gitAvailable, gitExe, gitVersion, gitPython, gitVersionOk) = egit.install_info()
 
         # Get zip info
-        zipAvailable = zlib.isZipAvailable()
+        zipAvailable = zlib.is_zip_available()
 
         # Initialize result
         result = InstallResult(
@@ -322,7 +323,7 @@ class GithubProtocol(Protocol):
 
             # Download mater zip
             zippath = tempfile.mktemp(suffix=".zip")
-            if httpDownload(gh.getZipUrl(), zippath):
+            if http_download(gh.getZipUrl(), zippath):
                 exploded = tempfile.mktemp(suffix="_zip")
                 zlib.unzip(zippath, exploded)
 
@@ -361,7 +362,7 @@ class GithubProtocol(Protocol):
                     return result
 
                 # Clone and update submudules
-                repo, repoPath = egit.cloneLocal(pkg.git, pkg.installDir, branch='master')
+                repo, repoPath = egit.clone_local(pkg.git, pkg.installDir, branch='master')
                 if repo.submodules:
                     repo.submodule_update(recursive=True)
 
@@ -398,7 +399,7 @@ class GithubProtocol(Protocol):
                 barePath = os.path.join(pkg.installDir, '.git')
                 if not os.path.exists(barePath):
                     bare, _ = gh.clone(barePath, bare=True)
-                    egit.configSet(bare, 'core', 'bare', False)
+                    egit.config_set(bare, 'core', 'bare', False)
                     repo = git.Repo(pkg.installDir)
                     repo.head.reset('--hard')
 
@@ -428,7 +429,7 @@ class GithubProtocol(Protocol):
         result = InstallResult(
             gitAvailable=gitAvailable,
             gitPythonAvailable=gitPython is not None,
-            zipAvailable=zlib.isZipAvailable(),
+            zipAvailable=zlib.is_zip_available(),
             gitVersionOk=gitVersionOk,
             gitVersion=gitVersion
         )

@@ -31,7 +31,7 @@ import freecad.extman.flags as flags
 import freecad.extman.utils as utils
 from freecad.extman import tr, get_resource_path
 from freecad.extman.protocol import Protocol
-from freecad.extman.protocol.http import httpGet
+from freecad.extman.protocol.http import http_get
 from freecad.extman.sources import PackageInfo, InstallResult
 
 # mediawiki Mod table row
@@ -94,7 +94,7 @@ class FCWikiProtocol(Protocol):
         defaultIcon = utils.path_to_url(get_resource_path('html', 'img', 'package_macro.svg'))
 
         try:
-            content = httpGet(self.url, timeout=45)
+            content = http_get(self.url, timeout=45)
             if content:
                 data = json.loads(content)
                 wiki = get_page_content_from_json(data)
@@ -146,7 +146,7 @@ class FCWikiProtocol(Protocol):
 
         result = InstallResult()
         url = self.getWikiPageUrlJson("Macro_{0}".format(quote(pkg.name)))
-        content = httpGet(url)
+        content = http_get(url)
         if content:
             wikitext = get_page_content_from_json(json.loads(content))
             m = MACRO_CODE.search(wikitext)
@@ -160,7 +160,7 @@ class FCWikiProtocol(Protocol):
 
 def get_mod_index(url, wiki):
     index = {}
-    content = httpGet(url)
+    content = http_get(url)
     if content:
         data = get_page_content_from_json(json.loads(content))
         for row in MOD_TABLE_ITEM.finditer(data):

@@ -30,7 +30,7 @@ from distutils.version import StrictVersion
 from shutil import which
 
 from freecad.extman import get_resource_path, log
-from freecad.extman.protocol.http import httpGet
+from freecad.extman.protocol.http import http_get
 from freecad.extman.protocol.manifest import ExtensionManifest
 
 MIN_VERSION = StrictVersion('2.14.99')
@@ -51,31 +51,15 @@ class SubModulesParser:
         modules = []
         module = {}
         for m in SubModulesParser.PATTERN.finditer(content):
-            modg = m.group('module')
+            mod_group = m.group('module')
             var = m.group('var')
             value = m.group('value')
-            if modg:
-                module = {'name': modg}
+            if mod_group:
+                module = {'name': mod_group}
                 modules.append(module)
             elif var and module:
                 module[var] = value
         self.modules = modules
-
-
-def getCacheDir():
-    path = get_resource_path('cache')
-    if not os.path.exists(path):
-        os.mkdir(path)
-    return path
-
-
-def getSubModules(url):
-    content = httpGet(url)
-    if content:
-        parser = SubModulesParser(content)
-        return parser.modules
-    else:
-        return []
 
 
 class GitRepo:
@@ -98,7 +82,7 @@ class GitRepo:
         self.syncReadme()
 
     def clone(self, path, **kw):
-        return cloneLocal(self.url, path, **kw)
+        return clone_local(self.url, path, **kw)
 
     def getRawFile(self, path):
         pass
@@ -113,13 +97,31 @@ class GitRepo:
         pass
 
 
+def get_cache_dir():
+    path = get_resource_path('cache')
+    if not os.path.exists(path):
+        os.mkdir(path)
+    return path
+
+
+def get_submodules(url):
+    """Download and parse .gitmodules from git repository using http"""
+
+    content = http_get(url)
+    if content:
+        parser = SubModulesParser(content)
+        return parser.modules
+    else:
+        return []
+
+
 def install_info():
     """
     Returns info about git (installed, executable, version, pygit, git_version_check)
         installed: bool
         executable: path
         version: StrictVersion
-        pygit: python module
+        pygit: GitPython module
         git_version_check: bool
     """
 
@@ -127,15 +129,15 @@ def install_info():
     executable = which('git')
 
     # Check git version
-    versionStr = None
+    version_str = None
     if executable:
         with os.popen(executable + ' --version', 'r') as f:
-            versionStr = f.read()
+            version_str = f.read()
 
     # Get strict git version
     version = None
-    if versionStr:
-        result = re.search(r'(\d+\.\d+\.\d+)', versionStr)
+    if version_str:
+        result = re.search(r'(\d+\.\d+\.\d+)', version_str)
         if result:
             version = StrictVersion(result.group(1))
 
@@ -146,10 +148,11 @@ def install_info():
         git = None
 
     installed = bool(version)
-    return (installed, executable, version, git, (version and version >= MIN_VERSION))
+    git_version_check = (version and version >= MIN_VERSION)
+    return installed, executable, version, git, git_version_check
 
 
-def updateLocal(path):
+def update_local(path):
     # Get git
     (gitAvailable, executable, version, pygit, gitVersionOk) = install_info()
 
@@ -164,15 +167,15 @@ def updateLocal(path):
             repo = pygit.Git(path)
             repo.pull()
             repo = pygit.Repo(path)
-            for subm in repo.submodules:
-                subm.update(init=True, recursive=True)
+            for submodule in repo.submodules:
+                submodule.update(init=True, recursive=True)
 
             return repo
 
     return None
 
 
-def cloneLocal(repoUrl, path=None, **kwargs):
+def clone_local(repo_url, path=None, **kwargs):
     # Get git
     (gitAvailable, executable, version, pygit, gitVersionOk) = install_info()
 
@@ -184,23 +187,23 @@ def cloneLocal(repoUrl, path=None, **kwargs):
         # If exists, reset+pull
         if os.path.exists(os.path.join(path, '.git')):
             try:
-                repo = updateLocal(path)
-                return (repo, path)
+                repo = update_local(path)
+                return repo, path
             except:
                 traceback.print_exc(file=sys.stderr)
 
         # Clone
         else:
             try:
-                repo = pygit.Repo.clone_from(repoUrl, path, **kwargs)
-                return (repo, path)
+                repo = pygit.Repo.clone_from(repo_url, path, **kwargs)
+                return repo, path
             except:
                 traceback.print_exc(file=sys.stderr)
 
-    return (None, None)
+    return None, None
 
 
-def configSet(pyGitRepo, section, option, value):
+def config_set(pyGitRepo, section, option, value):
     cw = None
     try:
         cw = pyGitRepo.config_writer()

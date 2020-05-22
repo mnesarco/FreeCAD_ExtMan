@@ -22,6 +22,9 @@
 
 class Protocol:
 
+    def __init__(self):
+        pass
+
     def getModList(self):
         pass
 

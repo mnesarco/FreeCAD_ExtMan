@@ -44,7 +44,7 @@ else:
         pass
 
 
-def getProxyConf():
+def get_proxy_conf():
     pref = App.ParamGet("User parameter:BaseApp/Preferences/Addons")
     if pref.GetBool("NoProxyCheck", True):
         proxies = {}
@@ -58,18 +58,18 @@ def getProxyConf():
     return request.ProxyHandler(proxies)
 
 
-def getSslHandler():
+def get_ssh_handler():
     if ssl_ctx:
         return request.HTTPSHandler(context=ssl_ctx)
     else:
         return {}
 
 
-def urllibInit():
+def urllib_init():
     global request_initialized
     if not request_initialized:
-        proxy_support = getProxyConf()
-        handler = getSslHandler()
+        proxy_support = get_proxy_conf()
+        handler = get_ssh_handler()
         opener = request.build_opener(proxy_support, handler)
         request.install_opener(opener)
         request_initialized = True
@@ -77,8 +77,8 @@ def urllibInit():
 
 # <End Legacy urllib code>
 
-def httpGet(url, headers=None, timeout=30, decode='utf-8'):
-    urllibInit()
+def http_get(url, headers=None, timeout=30, decode='utf-8'):
+    urllib_init()
     data = None
     try:
         with request.urlopen(request.Request(url, headers=headers or {}), timeout=timeout) as f:
@@ -101,8 +101,8 @@ def httpGet(url, headers=None, timeout=30, decode='utf-8'):
     return data
 
 
-def httpDownload(url, path, headers=None, timeout=30):
-    urllibInit()
+def http_download(url, path, headers=None, timeout=30):
+    urllib_init()
     try:
         with request.urlopen(request.Request(url, headers=headers or {}), timeout=timeout) as stream:
             with open(path, 'wb') as localFile:
