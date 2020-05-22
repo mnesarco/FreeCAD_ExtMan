@@ -132,7 +132,6 @@ def open_macro(path, session, params, request, response):
     """
 
     macro = params['macro']
-    print(macro)
     if os.path.exists(macro):
         Gui.open(macro.replace('\\', '/'))
     response.html_ok()
