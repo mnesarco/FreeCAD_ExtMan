@@ -18,6 +18,7 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
 
 import FreeCAD as App
 import json
@@ -79,6 +80,10 @@ def get_page_content_from_json(jsonObj):
 
 class FCWikiProtocol(Protocol):
 
+    """
+    Implements api calls to https://wiki.freecadweb.org (MediaWiki)
+    """
+
     def __init__(self, url, wiki):
         super().__init__()
         self.url = url
@@ -90,8 +95,8 @@ class FCWikiProtocol(Protocol):
     def getMacroList(self):
 
         macros = []
-        installDir = App.getUserMacroDir(True)
-        defaultIcon = utils.path_to_url(get_resource_path('html', 'img', 'package_macro.svg'))
+        install_dir = App.getUserMacroDir(True)
+        default_icon = utils.path_to_url(get_resource_path('html', 'img', 'package_macro.svg'))
 
         try:
             content = http_get(self.url, timeout=45)
@@ -99,22 +104,22 @@ class FCWikiProtocol(Protocol):
                 data = json.loads(content)
                 wiki = get_page_content_from_json(data)
 
-                for mlink in MACRO_LINK.finditer(wiki):
+                for m_link in MACRO_LINK.finditer(wiki):
 
-                    name = mlink.group('name').replace(' ', '_')
-                    label = mlink.group('label')
-                    description = mlink.group('description')
+                    name = m_link.group('name').replace(' ', '_')
+                    label = m_link.group('label')
+                    description = m_link.group('description')
 
-                    icon = mlink.group('icon')
+                    icon = m_link.group('icon')
                     if icon:
                         icon = self.wiki + '/Special:Redirect/file/' + icon.replace(' ', '_')
                     else:
-                        icon = defaultIcon
+                        icon = default_icon
 
                     pkg = PackageInfo(
                         key=name,
-                        installDir=installDir,
-                        installFile=os.path.join(installDir, name + '.FCMacro'),
+                        installDir=install_dir,
+                        installFile=os.path.join(install_dir, name + '.FCMacro'),
                         name=name,
                         title=label,
                         description=description,

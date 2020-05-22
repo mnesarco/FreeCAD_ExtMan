@@ -18,6 +18,7 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
 
 import FreeCAD as App
 import hashlib
@@ -25,8 +26,6 @@ import os
 import shutil
 import tempfile
 import traceback
-import traceback
-from PySide.QtCore import QFile
 from html import unescape
 from html.parser import HTMLParser
 
@@ -41,12 +40,14 @@ from freecad.extman import utils
 from freecad.extman.macro_parser import build_macro_package
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import http_get, http_download
-from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman.sources import PackageInfo, InstallResult
 from freecad.extman.worker import Worker
 
 
 class ReadmeParser(HTMLParser):
+
+    def error(self, message):
+        pass
 
     def __init__(self, meta_filter=None):
         super().__init__()
@@ -144,13 +145,13 @@ class GithubProtocol(Protocol):
 
     def downloadMacroList(self):
 
-        localDir = get_resource_path('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()),
-                                     create_dir=True)
+        local_dir = get_resource_path('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()),
+                                      create_dir=True)
 
         # Try Git
         (gitAvailable, gitExe, gitVersion, gitPython, gitVersionOk) = egit.install_info()
         if gitAvailable and gitPython and gitVersionOk:
-            repo, path = egit.clone_local(self.url, path=localDir)
+            repo, path = egit.clone_local(self.url, path=local_dir)
             return path
 
         # Try zip/http
@@ -161,14 +162,14 @@ class GithubProtocol(Protocol):
                 exploded = tempfile.mktemp(suffix="_zip")
                 zlib.unzip(zippath, exploded)
                 # Remove old if exists
-                if os.path.exists(localDir):
-                    shutil.rmtree(localDir)
-                # Move exloded dir to install dir
-                shutil.move(exploded, localDir)
-                return localDir
+                if os.path.exists(local_dir):
+                    shutil.rmtree(local_dir)
+                # Move exploded dir to install dir
+                shutil.move(exploded, local_dir)
+                return local_dir
 
     def getMacroList(self):
-        installDir = App.getUserMacroDir(True)
+        install_dir = App.getUserMacroDir(True)
         macros = []
         path = self.downloadMacroList()
         if path:
@@ -176,15 +177,15 @@ class GithubProtocol(Protocol):
             for dirpath, _, filenames in os.walk(path):
                 if '.git' in dirpath:
                     continue
-                basePath = dirpath.replace(path + os.pathsep, '')
+                base_path = dirpath.replace(path + os.pathsep, '')
                 for filename in filenames:
                     if filename.lower().endswith('.fcmacro'):
                         worker = Worker(build_macro_package,
                                         os.path.join(dirpath, filename),
                                         filename[:-8],
                                         is_git=True,
-                                        install_path=os.path.join(installDir, filename),
-                                        base_path=basePath)
+                                        install_path=os.path.join(install_dir, filename),
+                                        base_path=base_path)
                         worker.start()
                         workers.append(worker)
             macros = [flags.apply_predefined_flags(w.get()) for w in workers]

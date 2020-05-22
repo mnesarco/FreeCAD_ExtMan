@@ -18,6 +18,8 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
+# noinspection PyPep8Naming
+
 
 import hashlib
 import json
@@ -52,9 +54,11 @@ TR_VIEWMODE_LIST = tr('List view')
 TR_VIEWMODE_CARD = tr('Card view')
 
 
-def PackageIcon(pkg, cssClass="icon", style=""):
+def comp_package_icon(pkg, cssClass="icon", style=""):
+
     icon = pkg.getIcon()
     fallback = None
+
     if hasattr(pkg, 'iconSources'):
         sources = pkg.iconSources + ['img/package_greyed.svg']
         fallback = "||".join((s for s in sources if s != icon))
@@ -71,10 +75,9 @@ def PackageIcon(pkg, cssClass="icon", style=""):
         .format(icon, fallback, cssClass, style, onerror)
 
 
-@lru_cache()
-def IconComponent(name, fallback='img/freecad.svg', title="", cssClass="icon"):
-    url, ctx, absPath = get_resource_url('img', name)
-    if os.path.exists(absPath):
+def comp_icon(name, fallback='img/freecad.svg', title="", cssClass="icon"):
+    url, ctx, abs_path = get_resource_url('img', name)
+    if os.path.exists(abs_path):
         return """
         <img 
             src="{0}" 
@@ -87,8 +90,7 @@ def IconComponent(name, fallback='img/freecad.svg', title="", cssClass="icon"):
         return "???{0}???".format(name)
 
 
-@lru_cache()
-def BtnOpenMacro(pkg):
+def comp_btn_open_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
         macro = pkg.key.replace('"', r'\"')
         return """
@@ -101,8 +103,7 @@ def BtnOpenMacro(pkg):
         return ''
 
 
-@lru_cache()
-def BtnRunMacro(pkg):
+def comp_btn_run_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
         macro = pkg.installFile.replace('"', r'\"')
         if pkg.markedAsSafe:
@@ -124,7 +125,7 @@ def BtnRunMacro(pkg):
         return ''
 
 
-def BtnInstallPkg(pkg, source):
+def comp_btn_install_package(pkg, source):
     if not pkg.isInstalled():
         return """
         <a class="btn btn-sm btn-outline-danger btn-labeled extman-loading" 
@@ -136,7 +137,7 @@ def BtnInstallPkg(pkg, source):
         return ''
 
 
-def BtnDoInstallOrUpdatePkg(pkg):
+def comp_btn_install_or_update_package(pkg):
     return """
     <a class="btn btn-danger extman-loading" data-spinner-message="{0}"
         href="action.install_package?pkg={1}&source={2}&channel={3}">
@@ -150,7 +151,7 @@ def BtnDoInstallOrUpdatePkg(pkg):
         TR_UPDATE if pkg.isInstalled() else TR_INSTALL)
 
 
-def BtnUpdatePackage(pkg, source):
+def comp_btn_update_package(pkg, source):
     if pkg.isInstalled() and (not pkg.isCore) and pkg.channelId and pkg.sourceName:
         return """
         <a class="btn btn-sm btn-outline-primary btn-labeled extman-loading" 
@@ -166,7 +167,7 @@ def BtnUpdatePackage(pkg, source):
         return ''
 
 
-def BtnActivateWB(pkg):
+def comp_btn_activate_wb(pkg):
     if pkg.type == 'Workbench' and pkg.isInstalled():
         key = pkg.key.replace('"', r'\"')
         return """
@@ -179,14 +180,13 @@ def BtnActivateWB(pkg):
         return ''
 
 
-@lru_cache()
-def PkgAllBadges(pkg, showInstalled=True, showCore=True, withText=False, layout=None):
+def comp_package_badges(pkg, showInstalled=True, showCore=True, withText=False, layout=None):
     badges = [
-        PkgCoreBadge(pkg, withText=withText) if showCore else "",
-        PkgTypeBadge(pkg, withText=withText),
-        PkgInstalledBadge(pkg, withText=withText) if showInstalled else '',
-        PkgGitBadge(pkg, withText=withText),
-        PkgWikiBadge(pkg, withText=withText)
+        comp_badge_core(pkg, withText=withText) if showCore else "",
+        comp_badge_type(pkg, withText=withText),
+        comp_badge_installed(pkg, withText=withText) if showInstalled else '',
+        comp_badge_git(pkg, withText=withText),
+        comp_badge_wiki(pkg, withText=withText)
     ]
     if layout == 'list':
         return "".join((
@@ -197,13 +197,12 @@ def PkgAllBadges(pkg, showInstalled=True, showCore=True, withText=False, layout=
         return "".join(badges)
 
 
-@lru_cache()
-def PkgCoreBadge(pkg, withText=False):
+def comp_badge_core(pkg, withText=False):
     if pkg.isCore:
-        icon = IconComponent('package_core.svg', title=TR_CORE_PACKAGE, cssClass='icon-sm')
+        icon = comp_icon('package_core.svg', title=TR_CORE_PACKAGE, cssClass='icon-sm')
         text = TR_CORE_PACKAGE
     else:
-        icon = IconComponent('package_community.svg', title=TR_COMMUNITY_PACKAGE, cssClass='icon-sm')
+        icon = comp_icon('package_community.svg', title=TR_COMMUNITY_PACKAGE, cssClass='icon-sm')
         text = TR_COMMUNITY_PACKAGE
 
     if withText:
@@ -212,17 +211,16 @@ def PkgCoreBadge(pkg, withText=False):
         return icon
 
 
-@lru_cache()
-def PkgTypeBadge(pkg, withText=False):
+def comp_badge_type(pkg, withText=False):
     if pkg.type == 'Workbench':
         text = TR_WORKBENCH
-        icon = IconComponent('package_workbench.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('package_workbench.svg', title=text, cssClass='icon-sm')
     elif pkg.type == 'Macro':
         text = TR_MACRO
-        icon = IconComponent('package_macro_badge.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('package_macro_badge.svg', title=text, cssClass='icon-sm')
     elif pkg.type == 'Mod':
         text = TR_MODULE
-        icon = IconComponent('package_mod.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('package_mod.svg', title=text, cssClass='icon-sm')
     else:
         return ''
 
@@ -232,11 +230,10 @@ def PkgTypeBadge(pkg, withText=False):
         return icon
 
 
-@lru_cache()
-def PkgInstalledBadge(pkg, withText=False):
+def comp_badge_installed(pkg, withText=False):
     if pkg.isInstalled():
         text = TR_INSTALLED
-        icon = IconComponent('package_installed.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('package_installed.svg', title=text, cssClass='icon-sm')
     else:
         return ''
 
@@ -246,11 +243,10 @@ def PkgInstalledBadge(pkg, withText=False):
         return icon
 
 
-@lru_cache()
-def PkgGitBadge(pkg, withText=False):
+def comp_badge_git(pkg, withText=False):
     if pkg.isGit:
         text = TR_GIT
-        icon = IconComponent('git.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('git.svg', title=text, cssClass='icon-sm')
     else:
         return ''
 
@@ -260,11 +256,10 @@ def PkgGitBadge(pkg, withText=False):
         return icon
 
 
-@lru_cache()
-def PkgWikiBadge(pkg, withText=False):
+def comp_badge_wiki(pkg, withText=False):
     if pkg.isWiki:
         text = TR_WIKI
-        icon = IconComponent('wiki.svg', title=text, cssClass='icon-sm')
+        icon = comp_icon('wiki.svg', title=text, cssClass='icon-sm')
     else:
         return ''
 
@@ -274,7 +269,7 @@ def PkgWikiBadge(pkg, withText=False):
         return icon
 
 
-def PackageViewModeSelect(mode):
+def comp_select_viewmode(mode):
     return """
         <div class="btn-group btn-group-sm float-right" role="group" aria-label="{0}" 
             style="margin-top: 10px; margin-right:10px; position: absolute; right: 20px;">
@@ -293,18 +288,17 @@ def PackageViewModeSelect(mode):
         TR_VIEWMODE_CARD)
 
 
-@lru_cache()
-def PkgFlags(pkg, withText=False, layout=None):
+def comp_package_flags(pkg, withText=False, layout=None):
     icons = []
     if hasattr(pkg, 'flags'):
         flags = pkg.flags
         if 'obsolete' in flags:
             text = TR_FLAG_OBSOLETE
-            icon = IconComponent('flag_obsolete.svg', title=text, cssClass='icon-sm')
+            icon = comp_icon('flag_obsolete.svg', title=text, cssClass='icon-sm')
             icons.append((text, icon))
         if 'py2only' in flags:
             text = TR_FLAG_PY2ONLY
-            icon = IconComponent('flag_py2only.svg', title=TR_FLAG_PY2ONLY, cssClass='icon-sm')
+            icon = comp_icon('flag_py2only.svg', title=TR_FLAG_PY2ONLY, cssClass='icon-sm')
             icons.append((text, icon))
 
     if withText:
@@ -321,8 +315,7 @@ def PkgFlags(pkg, withText=False, layout=None):
         return "".join(out)
 
 
-@lru_cache()
-def PkgReadmeLink(pkg, cssClass=""):
+def comp_link_readme(pkg, cssClass=""):
     if pkg.readmeUrl:
         return """
         <a class="{0}" 
@@ -346,21 +339,21 @@ def PkgReadmeLink(pkg, cssClass=""):
 
 # Components visible in all templates
 components = Components(
-    icon=IconComponent,
-    BtnOpenMacro=BtnOpenMacro,
-    BtnRunMacro=BtnRunMacro,
-    BtnActivateWB=BtnActivateWB,
-    BtnUpdatePackage=BtnUpdatePackage,
-    BtnInstallPackage=BtnInstallPkg,
-    PkgCoreBadge=PkgCoreBadge,
-    PkgTypeBadge=PkgTypeBadge,
-    PkgInstalledBadge=PkgInstalledBadge,
-    PkgGitBadge=PkgGitBadge,
-    PkgWikiBadge=PkgWikiBadge,
-    PackageViewModeSelect=PackageViewModeSelect,
-    PackageIcon=PackageIcon,
-    PkgAllBadges=PkgAllBadges,
-    PkgFlags=PkgFlags,
-    PkgReadmeLink=PkgReadmeLink,
-    BtnDoInstallOrUpdatePkg=BtnDoInstallOrUpdatePkg
+    Icon=comp_icon,
+    BtnOpenMacro=comp_btn_open_macro,
+    BtnRunMacro=comp_btn_run_macro,
+    BtnActivateWB=comp_btn_activate_wb,
+    BtnUpdatePackage=comp_btn_update_package,
+    BtnInstallPackage=comp_btn_install_package,
+    PkgCoreBadge=comp_badge_core,
+    PkgTypeBadge=comp_badge_type,
+    PkgInstalledBadge=comp_badge_installed,
+    PkgGitBadge=comp_badge_git,
+    PkgWikiBadge=comp_badge_wiki,
+    PackageViewModeSelect=comp_select_viewmode,
+    PackageIcon=comp_package_icon,
+    PkgAllBadges=comp_package_badges,
+    PkgFlags=comp_package_flags,
+    PkgReadmeLink=comp_link_readme,
+    BtnDoInstallOrUpdatePkg=comp_btn_install_or_update_package
 )

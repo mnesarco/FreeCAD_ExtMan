@@ -28,17 +28,17 @@ def is_zip_available():
         return False
 
 
-def unzip(zip, path):
+def unzip(zip_path, extract_path):
 
     if is_zip_available():
 
         import zipfile as zf  # Imported here because it can be not available
 
-        if not zf.is_zipfile(path):
+        if not zf.is_zipfile(zip_path):
             raise ValueError('Invalid zip file')
 
-        with zf.ZipFile(zip, 'r') as z:
-            z.extractall(path)
+        with zf.ZipFile(zip_path, 'r') as z:
+            z.extractall(extract_path)
 
     else:
         raise ValueError('zipfile not available')
