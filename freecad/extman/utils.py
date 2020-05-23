@@ -40,6 +40,8 @@ ABS_PATH_PATTERN = re.compile(r'^(\s|/|\\)*(?P<rel>.*)')
 
 WORKBENCH_CLASS_NAME_PATTERN = re.compile(r'addWorkbench\s*\(\s*(?P<class>\w+)')
 
+WINDOWS_PATH_FIX = re.compile(r"[\\]+|/+")
+
 _CORE_RES_DIR_ = '_CORE_RES_DIR_'
 _CORE_RES_URL_ = '_CORE_RES_URL_'
 
@@ -204,16 +206,23 @@ def restore_absolute_paths(content):
     """Replace placeholders with current absolute paths."""
 
     # ! See: remove_absolute_paths
+    sep = '/'
 
     core_res_dir = App.getResourceDir()
+    if not core_res_dir.endswith(sep):
+        core_res_dir += sep
     content = content.replace(_CORE_RES_DIR_, core_res_dir)
     content = content.replace(_CORE_RES_URL_, path_to_url(core_res_dir))
 
     user_data_dir = App.getUserAppDataDir()
+    if not user_data_dir.endswith(sep):
+        user_data_dir += sep
     content = content.replace(_USER_DATA_DIR_, user_data_dir)
     content = content.replace(_USER_DATA_URL_, path_to_url(user_data_dir))
 
     user_macro_dir = App.getUserMacroDir(True)
+    if not user_macro_dir.endswith(sep):
+        user_macro_dir += sep
     content = content.replace(_USER_MACRO_DIR_, user_macro_dir)
     content = content.replace(_USER_MACRO_URL_, path_to_url(user_macro_dir))
 
@@ -296,3 +305,8 @@ def analyse_installed_workbench(pkg):
                     if key:
                         pkg.key = key
                         return
+
+
+def fix_win_path(path):
+    return WINDOWS_PATH_FIX.sub('/', path)
+
