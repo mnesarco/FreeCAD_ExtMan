@@ -34,6 +34,11 @@ def log(*msg):
     App.Console.PrintLog("[ExtMan] {0}\n".format(' '.join(msg)))
 
 
+def log_err(*msg):
+    """Prints to FreeCAD Console"""
+    App.Console.PrintError("[ExtMan] {0}\n".format(' '.join(msg)))
+
+
 def get_resource_path(*paths, create_dir=False):
     """Returns a path inside Resources"""
     path = os.path.join(ADDON_DIR, 'Resources', *paths)

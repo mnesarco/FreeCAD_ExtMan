@@ -22,7 +22,7 @@
 import FreeCADGui as Gui
 import os
 
-from freecad.extman import utils
+from freecad.extman import utils, log_err, tr
 from freecad.extman.preferences import ExtManParameters
 from freecad.extman.router import Router, route
 from freecad.extman.source_cloud import findSource
@@ -153,7 +153,11 @@ def run_macro(path, session, params, request, response):
 
     path = params['macro']
     if os.path.exists(path):
-        Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))
+        try:
+            Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))
+        except Exception as ex:
+            log_err(tr("Error in macro:"), path, str(ex))
+
     response.html_ok()
 
 
