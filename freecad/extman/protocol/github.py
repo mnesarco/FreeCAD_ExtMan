@@ -471,13 +471,13 @@ class GithubProtocol(Protocol):
 
                     log('Installing ', dst)
 
-                    if not dst.startswith(pkg.installDir):
-                        result.message = tr('Macro package attempts to install files outside of permitted path')
-                        raise Exception('')
-
-                    if not src.startswith(pkg.basePath):
-                        result.message = tr('Macro package attempts to access files outside of permitted path')
-                        raise Exception('')
+                    # if not dst.startswith(pkg.installDir):
+                    #     result.message = tr('Macro package attempts to install files outside of permitted path')
+                    #     raise Exception('')
+                    #
+                    # if not src.startswith(pkg.basePath):
+                    #     result.message = tr('Macro package attempts to access files outside of permitted path')
+                    #     raise Exception('')
 
                     dst_dir = os.path.dirname(dst)
                     if dst_dir != pkg.installDir and dst_dir not in files:
