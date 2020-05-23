@@ -92,7 +92,8 @@ def comp_icon(name, fallback='img/freecad.svg', title="", cssClass="icon"):
 
 def comp_btn_open_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
-        macro = pkg.installFile.replace('"', r'\"')
+        macro = pkg.installFile.replace('\\', r'\\')
+        macro = macro.replace('"', r'\"')
         return """
         <a class="btn btn-sm btn-outline-success btn-labeled extman-ajax" 
             href="action.open_macro?macro={0}">
@@ -105,7 +106,8 @@ def comp_btn_open_macro(pkg):
 
 def comp_btn_run_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
-        macro = pkg.installFile.replace('"', r'\"')
+        macro = pkg.installFile.replace('\\', r'\\')
+        macro = macro.replace('"', r'\"')
         if pkg.markedAsSafe:
             return """
             <button class="btn btn-sm btn-outline-danger btn-labeled" 

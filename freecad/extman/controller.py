@@ -152,11 +152,10 @@ def run_macro(path, session, params, request, response):
     """
 
     path = params['macro']
-    if os.path.exists(path):
-        try:
-            Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))
-        except Exception as ex:
-            log_err(tr("Error in macro:"), path, str(ex))
+    try:
+        Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))
+    except Exception as ex:
+        log_err(tr("Error in macro:"), path, str(ex))
 
     response.html_ok()
 
