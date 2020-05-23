@@ -139,10 +139,8 @@ def request_handler(path, action, params, request, response):
         eval(cmd, {'actions': actions}, locals())
 
     # Default action is render template.
-    # Only templates inside html dir are allowed
-    elif path.startswith(__browser_base_path__):
-        template = path[len(__browser_base_path__) + 1:]
-        html, url = render(template, model=session.model)
+    else:
+        html, url = render(path, model=session.model)
         response.write(html)
         response.send()
 
