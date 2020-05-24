@@ -80,12 +80,12 @@ def comp_icon(name, fallback='img/freecad.svg', title="", cssClass="icon"):
     if os.path.exists(abs_path):
         return """
         <img 
-            src="{0}" 
+            src="img/{0}" 
             data-fallback="{1}"
             alt="{2}" 
             title="{2}" 
             class="{3}" />
-        """.format(url, fallback, title, cssClass)
+        """.format(name, fallback, title, cssClass)
     else:
         return "???{0}???".format(name)
 

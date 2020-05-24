@@ -26,12 +26,11 @@ from PySide import QtCore, QtGui
 from PySide.QtCore import Qt
 from PySide2.QtWebEngineCore import (QWebEngineUrlRequestInfo,
                                      QWebEngineUrlRequestInterceptor,
-                                     QWebEngineUrlScheme,
                                      QWebEngineUrlSchemeHandler)
 from PySide2.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView, QWebEnginePage
 from urllib.parse import unquote
 
-from freecad.extman import utils
+from freecad.extman import utils, log
 
 EXTMAN_URL_SCHEME = b'extman'                               # extman://...
 WINDOWS_PATH_PATTERN = re.compile(r'^/([a-zA-Z]\\:.*)')     # /C:...
@@ -210,13 +209,19 @@ class WebView(QtGui.QMdiSubWindow):
 
 # ! Call as soon as possible
 def register_custom_schemes():
-    scheme = EXTMAN_URL_SCHEME
-    scheme_reg = QWebEngineUrlScheme(scheme)
-    scheme_reg.setFlags(
-        QWebEngineUrlScheme.SecureScheme
-        | QWebEngineUrlScheme.LocalScheme
-        | QWebEngineUrlScheme.LocalAccessAllowed
-        | QWebEngineUrlScheme.ContentSecurityPolicyIgnored
-        | 0x80  # QWebEngineUrlScheme.CorsEnabled
-    )
-    QWebEngineUrlScheme.registerScheme(scheme_reg)
+    try:
+        from PySide2.QtWebEngineCore import QWebEngineUrlScheme
+    except ImportError:
+        log('Outdated QT version, some graphics will be not available')
+    else:
+        scheme = EXTMAN_URL_SCHEME
+        scheme_reg = QWebEngineUrlScheme(scheme)
+        scheme_reg.setFlags(
+            QWebEngineUrlScheme.SecureScheme
+            | QWebEngineUrlScheme.LocalScheme
+            | QWebEngineUrlScheme.LocalAccessAllowed
+            | QWebEngineUrlScheme.ContentSecurityPolicyIgnored
+            | 0x80  # QWebEngineUrlScheme.CorsEnabled
+        )
+        QWebEngineUrlScheme.registerScheme(scheme_reg)
+
