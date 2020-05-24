@@ -122,12 +122,12 @@ predefinedCategories = {
 
 def path_to_url(path):
     if path.startswith('file://'):
-        return path
+        path = path[7:]
 
     if isWindowsPlatform:
         path = path.replace('\\', '/')
 
-    return 'file://' + path
+    return 'extman://' + path
 
 
 def extract_icon(src, default='freecad.svg'):
@@ -136,8 +136,8 @@ def extract_icon(src, default='freecad.svg'):
             xmphash = hashlib.sha256(src.encode()).hexdigest()
             if xmphash in xmpCache:
                 return xmpCache[xmphash]
-            xpm = xpm.replace("\n        ", "\n")
-            r = [s[:-1].strip('"') for s in re.findall("(?s)\{(.*?)\};", xpm)[0].split("\n")[1:]]
+            xpm = src.replace("\n        ", "\n")
+            r = [s[:-1].strip('"') for s in re.findall(r"(?s)\{(.*?)\};", xpm)[0].split("\n")[1:]]
             p = QtGui.QPixmap(r)
             p = p.scaled(24, 24)
             img = tempfile.mkstemp(dir=thumbnailsDir, suffix='.png')[1]
@@ -145,19 +145,20 @@ def extract_icon(src, default='freecad.svg'):
             xmpCache[xmphash] = img
             return img
         except:
-            return get_resource_path('html', 'img', default)
+            return 'img' + '/' + default
     else:
         try:
             if os.path.exists(src):
                 return src
             else:
-                return get_resource_path('html', 'img', default)
+                return 'img' + '/' + default
         except:
             return src
 
 
 def get_workbench_key(name):
-    if name.endswith("Workbench"): name = name[:-9]
+    if name.endswith("Workbench"):
+        name = name[:-9]
     return nonStandardNamedWorkbenches.get(name, "{0}Workbench".format(name))
 
 
