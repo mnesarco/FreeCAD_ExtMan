@@ -89,7 +89,8 @@ def http_get(url, headers=None, timeout=30, decode='utf-8'):
                 data = []
             while True:
                 p = f.read(block)
-                if not p: break
+                if not p:
+                    break
                 if isinstance(p, bytes) and decode:
                     p = p.decode(decode)
                 data += p

@@ -22,7 +22,6 @@
 import FreeCADGui as Gui
 import os
 import re
-import sys
 from PySide import QtCore, QtGui
 from PySide.QtCore import Qt
 from PySide2.QtWebEngineCore import (QWebEngineUrlRequestInfo,
@@ -32,7 +31,7 @@ from PySide2.QtWebEngineCore import (QWebEngineUrlRequestInfo,
 from PySide2.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView, QWebEnginePage
 from urllib.parse import unquote
 
-from freecad.extman.worker import Worker
+from freecad.extman import utils
 
 EXTMAN_URL_SCHEME = b'extman'                               # extman://...
 WINDOWS_PATH_PATTERN = re.compile(r'^/([a-zA-Z]\\:.*)')     # /C:...
@@ -53,7 +52,8 @@ class UrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
             # Fix windows path
             if not url.host() and url.isLocalFile():
                 m = WINDOWS_PATH_PATTERN.match(url.path())  # "/C:/something" -> "C:/something"
-                if m: url.setPath(m.group(1))
+                if m:
+                    url.setPath(m.group(1))
 
             # Filter
             if url.scheme() == 'extman':
@@ -100,9 +100,9 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
 
         # Match Action
         action = None
-        actionMatch = ACTION_URL_PATTERN.match(path)
-        if actionMatch:
-            action = actionMatch.group(1)
+        action_match = ACTION_URL_PATTERN.match(path)
+        if action_match:
+            action = action_match.group(1)
 
         if path.endswith('.html') or action:
 
@@ -117,26 +117,26 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
             self.requestHandler(path, action, params, request, response)
 
         else:
-            filepath = path
-            if os.path.exists(filepath):
-                with open(filepath, 'rb') as f:
-                    filepath = path.lower()
+            file_path = utils.fix_win_path(path)
+            if os.path.exists(file_path):
+                with open(file_path, 'rb') as f:
+                    file_path = path.lower()
                     buf.write(f.read())
                     buf.seek(0)
                     buf.close()
-                    if filepath.endswith('.svg'):
-                        contentType = 'image/svg+xml'
-                    elif filepath.endswith('.png'):
-                        contentType = 'image/png'
-                    elif filepath.endswith('.jpg'):
-                        contentType = 'image/jpeg'
-                    elif filepath.endswith('.css'):
-                        contentType = 'text/css'
-                    elif filepath.endswith('.js'):
-                        contentType = 'text/javascript'
+                    if file_path.endswith('.svg'):
+                        content_type = 'image/svg+xml'
+                    elif file_path.endswith('.png'):
+                        content_type = 'image/png'
+                    elif file_path.endswith('.jpg'):
+                        content_type = 'image/jpeg'
+                    elif file_path.endswith('.css'):
+                        content_type = 'text/css'
+                    elif file_path.endswith('.js'):
+                        content_type = 'text/javascript'
                     else:
-                        contentType = 'text/plain'
-                    request.reply(contentType.encode(), buf)
+                        content_type = 'text/plain'
+                    request.reply(content_type.encode(), buf)
             else:
                 print("Path does not exists: " + path)
 

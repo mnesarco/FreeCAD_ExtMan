@@ -41,6 +41,7 @@ ABS_PATH_PATTERN = re.compile(r'^(\s|/|\\)*(?P<rel>.*)')
 WORKBENCH_CLASS_NAME_PATTERN = re.compile(r'addWorkbench\s*\(\s*(?P<class>\w+)')
 
 WINDOWS_PATH_FIX = re.compile(r"[\\]+|/+")
+WINDOWS_DRIVE = re.compile(r'^/?(?P<drive>[a-zA-Z]:).*')
 
 _CORE_RES_DIR_ = '_CORE_RES_DIR_'
 _CORE_RES_URL_ = '_CORE_RES_URL_'
@@ -308,5 +309,14 @@ def analyse_installed_workbench(pkg):
 
 
 def fix_win_path(path):
-    return WINDOWS_PATH_FIX.sub('/', path)
+    if isWindowsPlatform:
+        win_path = WINDOWS_PATH_FIX.sub('/', path)
+        if WINDOWS_DRIVE.match(win_path):
+            return win_path
+        else:
+            m = WINDOWS_DRIVE.search(App.getUserAppDataDir())
+            win_path = os.path.join(m.group('drive'), os.path.sep, path)
+            return win_path
+    else:
+        return path
 

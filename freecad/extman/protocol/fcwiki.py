@@ -30,7 +30,7 @@ from urllib.parse import quote
 
 import freecad.extman.flags as flags
 import freecad.extman.utils as utils
-from freecad.extman import tr, get_resource_path
+from freecad.extman import tr, get_resource_path, log_err
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import http_get
 from freecad.extman.sources import PackageInfo, InstallResult
@@ -84,6 +84,9 @@ MACRO_CODE_EXTLINK = re.compile(r"""
     \s*\|\s*(?P<link>.*?)
     \}\}
     """, re.X | re.S)
+
+# Mediawiki redirect
+REDIRECT = re.compile(r'#REDIRECT\s+\[\[\s*(?P<link>.*?)\s*\]\]')
 
 def get_page_content_from_json(jsonObj):
     try:
@@ -166,7 +169,22 @@ class FCWikiProtocol(Protocol):
         result = InstallResult()
         url = self.getWikiPageUrlJson("Macro_{0}".format(quote(pkg.name)))
         content = http_get(url)
-        if content:
+
+        # Manage mediawiki redirects
+        m = REDIRECT.search(content)
+        max_redirects = 3
+        while m:
+            url = self.getWikiPageUrlJson("{0}".format(quote(m.group('link'))))
+            content = http_get(url)
+            m = REDIRECT.search(content)
+            max_redirects -= 1
+            if max_redirects <= 0:
+                break
+
+        if not content:
+            result.message = tr("""This macro contains invalid content, it cannot be installed directly by the 
+                Extension Manager""")
+        else:
             wikitext = get_page_content_from_json(json.loads(content))
 
             # Try {{MacroCode ...}}
@@ -177,9 +195,18 @@ class FCWikiProtocol(Protocol):
 
             # Code in wiki
             if m:
-                with open(pkg.installFile, 'w', encoding='utf-8') as f:
-                    f.write(m.group('code'))
-                    result.ok = True
+                try:
+                    f = open(pkg.installFile, 'w', encoding='utf-8')
+                except IOError as ex:
+                    result.message = str(ex)
+                else:
+                    with f:
+                        try:
+                            f.write(m.group('code'))
+                            result.ok = True
+                        except:
+                            result.message = tr("""This macro contains invalid content, 
+                                it cannot be installed directly by the Extension Manager""")
 
             # Try external source
             else:

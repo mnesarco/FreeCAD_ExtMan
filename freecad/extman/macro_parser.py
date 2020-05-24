@@ -24,7 +24,7 @@ import os
 import re
 
 import freecad.extman.utils as utils
-from freecad.extman import get_resource_path, tr
+from freecad.extman import get_resource_path, tr, log_err
 from freecad.extman.sources import PackageInfo
 
 # Regex for tags __tag__ = value
@@ -62,9 +62,16 @@ def get_macro_tags(code, path):
     return tags
 
 
-def build_macro_package(path, pfile, is_core=False, is_git=False, is_wiki=False, install_path=None, base_path=""):
+def build_macro_package(path, macro_name, is_core=False, is_git=False, is_wiki=False, install_path=None, base_path=""):
+
     with open(path, 'r', encoding='utf-8') as f:
-        tags = get_macro_tags(f.read(), path)
+
+        try:
+            tags = get_macro_tags(f.read(), path)
+        except:  # !TODO: Handle encoding problems in old windows platforms
+            tags = {k: None for k in MACRO_TAG_FILTER}
+            log_err(tr('Macro {0} contains invalid characters').format(path))
+
         install_dir = App.getUserMacroDir(True)
         base = dict(
             key=install_path or path,
@@ -79,9 +86,9 @@ def build_macro_package(path, pfile, is_core=False, is_git=False, is_wiki=False,
         tags.update(base)
 
         if not tags['title']:
-            tags['title'] = tags['name'] or pfile
+            tags['title'] = tags['name'] or macro_name
 
-        tags['name'] = pfile  # Always override name with actual file name
+        tags['name'] = macro_name  # Always override name with actual file name
 
         if not tags['icon']:
             tags['icon'] = get_resource_path('html', 'img', 'package_macro.svg')
