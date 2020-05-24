@@ -15,68 +15,58 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/macro_parser.py" line="98"/>
+            <location filename="../../freecad/extman/macro_parser.py" line="73"/>
+            <source>Macro {0} contains invalid characters</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/macro_parser.py" line="105"/>
             <source>Warning! No description</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/macro_parser.py" line="104"/>
+            <location filename="../../freecad/extman/macro_parser.py" line="111"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils.py" line="90"/>
+            <location filename="../../freecad/extman/utils.py" line="93"/>
             <source>Architecture</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils.py" line="91"/>
-            <source>Other</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="92"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="93"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
             <location filename="../../freecad/extman/utils.py" line="94"/>
-            <source>Analysis</source>
+            <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="95"/>
-            <source>Other</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="96"/>
-            <source>Analysis</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="97"/>
-            <source>3D</source>
+            <source>Analysis</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="98"/>
-            <source>CAD/CAM</source>
+            <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="99"/>
-            <source>CAD/CAM</source>
+            <source>Analysis</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="100"/>
-            <source>CAD/CAM</source>
+            <source>3D</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -91,32 +81,32 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="103"/>
-            <source>3D</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="104"/>
-            <source>Engineering</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="105"/>
-            <source>Engineering</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="106"/>
             <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
+            <location filename="../../freecad/extman/utils.py" line="104"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="105"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="106"/>
+            <source>3D</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
             <location filename="../../freecad/extman/utils.py" line="107"/>
-            <source>Data</source>
+            <source>Engineering</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="108"/>
-            <source>Other</source>
+            <source>Engineering</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -126,7 +116,7 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="110"/>
-            <source>Other</source>
+            <source>Data</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -136,36 +126,51 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="112"/>
-            <source>Engineering</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils.py" line="113"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="114"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils.py" line="115"/>
             <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
+            <location filename="../../freecad/extman/utils.py" line="114"/>
+            <source>Other</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="115"/>
+            <source>Engineering</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
             <location filename="../../freecad/extman/utils.py" line="116"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="117"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="118"/>
+            <source>Other</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils.py" line="119"/>
             <source>PCB/EDA</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils.py" line="165"/>
+            <location filename="../../freecad/extman/utils.py" line="168"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils.py" line="175"/>
+            <location filename="../../freecad/extman/utils.py" line="178"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
@@ -315,6 +320,11 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
+            <location filename="../../freecad/extman/controller.py" line="164"/>
+            <source>Error in macro:</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
             <location filename="../../freecad/extman/protocol/github.py" line="475"/>
             <source>Macro package attempts to install files outside of permitted path</source>
             <translation type="unfinished"></translation>
@@ -330,18 +340,30 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="190"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="186"/>
+            <source>This macro contains invalid content, it cannot be installed directly by the 
+                Extension Manager</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="209"/>
+            <source>This macro contains invalid content, 
+                                it cannot be installed directly by the Extension Manager</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="217"/>
             <source>Copy the link, download it and install it manually 
                         or follow instructions from the external resource</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="146"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="149"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="188"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="215"/>
             <source>This macro must be downloaded from this link</source>
             <translation type="unfinished"></translation>
         </message>
