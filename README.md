@@ -9,6 +9,13 @@
 
 This project is an attempt to improve management of FreeCAD Extensions repositories.
 
+## Python Requirements
+
+* python3-pyside2.qtwebchannel
+* python3-pyside2.qtnetwork
+* python3-pyside2.qtwebenginecore
+* python3-pyside2.qtwebenginewidgets
+
 ## Core Classes
 
 ![Classes](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/Resources/docs/core-classes.png)
