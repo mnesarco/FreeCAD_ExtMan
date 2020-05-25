@@ -137,7 +137,7 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
                         content_type = 'text/plain'
                     request.reply(content_type.encode(), buf)
             else:
-                print("Path does not exists: " + path)
+                print("Path does not exists: " + file_path)
 
 
 class Page(QWebEnginePage):

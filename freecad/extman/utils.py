@@ -313,6 +313,8 @@ def fix_win_path(path):
     if isWindowsPlatform:
         win_path = WINDOWS_PATH_FIX.sub('/', path)
         if WINDOWS_DRIVE.match(win_path):
+            if win_path.startswith('/'):
+                win_path = win_path[1:]
             return win_path
         else:
             m = WINDOWS_DRIVE.search(App.getUserAppDataDir())
