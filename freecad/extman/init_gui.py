@@ -21,12 +21,12 @@
 # noinspection PyPep8Naming
 
 import FreeCADGui as Gui
-from FreeCAD import Console, GuiUp
+from FreeCAD import GuiUp
 
 from freecad.extman import get_resource_path, tr
-from freecad.extman.browser import install_router, start_browser
-from freecad.extman.controller import create_router
-from freecad.extman.webview import register_custom_schemes
+from freecad.extman.gui.browser import install_router, start_browser
+from freecad.extman.gui.controller import create_router
+from freecad.extman.gui.webview import register_custom_schemes
 
 
 class ExtManWorkbench(Gui.Workbench):

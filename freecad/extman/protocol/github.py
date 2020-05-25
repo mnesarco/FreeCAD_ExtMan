@@ -29,19 +29,18 @@ import traceback
 from html import unescape
 from html.parser import HTMLParser
 
-import freecad.extman.dependencies as deps
-import freecad.extman.preferences as pref
+import freecad.extman.protocol.dependencies as deps
+import freecad.extman.utils.preferences as pref
 import freecad.extman.protocol.fcwiki as fcw
 import freecad.extman.protocol.git as egit
 import freecad.extman.protocol.zip as zlib
-from freecad.extman import flags
 from freecad.extman import get_resource_path, tr, log
 from freecad.extman import utils
-from freecad.extman.macro_parser import build_macro_package
-from freecad.extman.protocol import Protocol
+from freecad.extman.protocol.macro_parser import build_macro_package
+from freecad.extman.protocol import Protocol, flags
 from freecad.extman.protocol.http import http_get, http_download
 from freecad.extman.sources import PackageInfo, InstallResult
-from freecad.extman.worker import Worker
+from freecad.extman.utils.worker import Worker
 
 
 class ReadmeParser(HTMLParser):

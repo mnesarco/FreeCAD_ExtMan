@@ -28,9 +28,9 @@ import sys
 import traceback
 from urllib.parse import quote
 
-import freecad.extman.flags as flags
+import freecad.extman.protocol.flags as flags
 import freecad.extman.utils as utils
-from freecad.extman import tr, get_resource_path, log_err
+from freecad.extman import tr, get_resource_path
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import http_get
 from freecad.extman.sources import PackageInfo, InstallResult

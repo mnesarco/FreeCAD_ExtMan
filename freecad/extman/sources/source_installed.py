@@ -26,10 +26,10 @@ import configparser as cp
 import os
 
 import freecad.extman.protocol.github as gh
-from freecad.extman import flags
+from freecad.extman.protocol import flags
 from freecad.extman import get_resource_path, tr
 from freecad.extman import utils
-from freecad.extman.macro_parser import build_macro_package
+from freecad.extman.protocol.macro_parser import build_macro_package
 from freecad.extman.protocol.manifest import ExtensionManifest
 from freecad.extman.sources import (
     PackageInfo, PackageSource, groupPackagesInCategories,

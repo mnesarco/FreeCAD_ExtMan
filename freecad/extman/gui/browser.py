@@ -20,17 +20,12 @@
 # ***************************************************************************
 
 import FreeCADGui as Gui
-import WebGui
-import os
-import time
 from PySide import QtGui, QtCore
-from PySide2.QtWebEngineWidgets import QWebEngineView
 
-import freecad.extman.controller as actions
+import freecad.extman.gui.controller as actions
 from freecad.extman import tr, isWindowsPlatform, get_resource_path
-from freecad.extman.html import render
-from freecad.extman.webview import WebView, Response
-from freecad.extman.worker import Worker, run_in_main_thread
+from freecad.extman.template.html import render
+from freecad.extman.gui.webview import WebView
 
 __browser_instance__ = None  # Singleton: WebView
 __browser_session__ = {}  # Singleton: State

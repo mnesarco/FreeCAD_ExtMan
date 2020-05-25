@@ -27,7 +27,7 @@ import re
 import tempfile
 from PySide import QtGui, QtCore
 
-from freecad.extman import get_resource_path, isWindowsPlatform, tr
+from freecad.extman import isWindowsPlatform, tr
 
 thumbnailsDir = tempfile.mkdtemp(prefix="xpm_thumbnails")
 xmpCache = {}

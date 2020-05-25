@@ -32,7 +32,7 @@
 @{/macro}
 
 <py>
-from freecad.extman.source_cloud import findCloudChannels
+from freecad.extman.sources.source_cloud import findCloudChannels
 for channel in findCloudChannels():
     print()
     hprint(renderChannel(channel=channel))

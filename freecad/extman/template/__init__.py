@@ -18,5 +18,3 @@
 # *  along with this program.  If not, see <https://www.gnu.org/licenses/>. *
 # *                                                                         *
 # ***************************************************************************
-
-from freecad.extman.cache_basic import use_cache_area

@@ -19,25 +19,18 @@
 # *                                                                         *
 # ***************************************************************************
 
-import FreeCADGui as Gui
-import WebGui
-import contextlib
 import hashlib
-import os
 import random
 import re
-import sys
 import textwrap
 import time
 import traceback
-from PySide import QtGui
 from io import StringIO
 from urllib.parse import quote
 
-from freecad.extman import tr, get_resource_path, isWindowsPlatform, log
-from freecad.extman.html_cache import use_cache_area
-from freecad.extman.html_components import components
-from freecad.extman.html_utils import get_resource_url
+from freecad.extman import tr, log
+from freecad.extman.template.html_components import components
+from freecad.extman.template.html_utils import get_resource_url
 
 # ${t:text}                          => Translate text
 # ${e:expression}                    => eval expression

@@ -23,10 +23,10 @@ import FreeCADGui as Gui
 import os
 
 from freecad.extman import utils, log_err, tr, isWindowsPlatform
-from freecad.extman.preferences import ExtManParameters
-from freecad.extman.router import Router, route
-from freecad.extman.source_cloud import findSource
-from freecad.extman.worker import Worker
+from freecad.extman.utils.preferences import ExtManParameters
+from freecad.extman.gui.router import Router, route
+from freecad.extman.sources.source_cloud import findSource
+from freecad.extman.utils.worker import Worker
 
 
 def restart(path, session, params, request, response):

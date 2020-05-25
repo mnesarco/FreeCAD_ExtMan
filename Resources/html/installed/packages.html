@@ -34,8 +34,8 @@
 
 <py>
 
-    from freecad.extman.source_installed import InstalledPackageSource
-    from freecad.extman.preferences import ExtManParameters
+    from freecad.extman.sources.source_installed import InstalledPackageSource
+    from freecad.extman.utils.preferences import ExtManParameters
     
     mode = ExtManParameters.packagesViewMode
     hprint(comp.PackageViewModeSelect(mode))

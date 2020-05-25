@@ -21,15 +21,11 @@
 # noinspection PyPep8Naming
 
 
-import hashlib
-import json
 import os
-import random
-from functools import lru_cache
 from urllib.parse import quote
 
 from freecad.extman import tr
-from freecad.extman.html_utils import get_resource_url, Components
+from freecad.extman.template.html_utils import get_resource_url, Components
 
 TR_RUN = tr('Run')
 TR_CLOSE = tr('Close')

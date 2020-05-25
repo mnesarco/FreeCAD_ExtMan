@@ -19,24 +19,4 @@
 # *                                                                         *
 # ***************************************************************************
 
-from setuptools import setup
-
-__version__ = "0.0.1"
-
-setup(
-    name='freecad.extman',
-    version=__version__,
-    packages=[
-        'freecad',
-        'freecad.extman',
-        'freecad.extman.protocol',
-        'freecad.extman.template',
-        'freecad.extman.utils',
-        'freecad.extman.gui',
-        'freecad.extman.sources',
-    ],
-    maintainer="mnesarco",
-    maintainer_email="mnesarco@gmail.com",
-    url="https://github.com/mnesarco/FreeCAD_ExtMan",
-    description="Extension Manager for FreeCAD"
-)
+from freecad.extman.utils.cache_basic import use_cache_area
