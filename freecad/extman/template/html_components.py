@@ -73,7 +73,7 @@ def comp_package_icon(pkg, cssClass="icon", style=""):
 
 def comp_icon(name, fallback='img/freecad.svg', title="", cssClass="icon"):
     url, ctx, abs_path = get_resource_url('img', name)
-    if os.path.exists(abs_path):
+    if abs_path.exists():
         return """
         <img 
             src="img/{0}" 
@@ -88,7 +88,7 @@ def comp_icon(name, fallback='img/freecad.svg', title="", cssClass="icon"):
 
 def comp_btn_open_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
-        macro = pkg.installFile.replace('\\', '/')
+        macro = pkg.installFile.as_posix()
         macro = macro.replace('"', r'\"')
         return """
         <a class="btn btn-sm btn-outline-success btn-labeled extman-ajax" 
@@ -102,7 +102,7 @@ def comp_btn_open_macro(pkg):
 
 def comp_btn_run_macro(pkg):
     if pkg.type == 'Macro' and pkg.isInstalled():
-        macro = pkg.installFile.replace('\\', '/')
+        macro = pkg.installFile.as_posix()
         macro = macro.replace('"', r'\"')
         if pkg.markedAsSafe:
             return """

@@ -26,6 +26,7 @@ import os
 import shutil
 import tempfile
 import traceback
+from pathlib import Path
 from html import unescape
 from html.parser import HTMLParser
 
@@ -34,7 +35,7 @@ import freecad.extman.utils.preferences as pref
 import freecad.extman.protocol.fcwiki as fcw
 import freecad.extman.protocol.git as egit
 import freecad.extman.protocol.zip as zlib
-from freecad.extman import get_resource_path, tr, log
+from freecad.extman import get_resource_path, tr, log, get_cache_path, get_macro_path, get_mod_path
 from freecad.extman import utils
 from freecad.extman.protocol.macro_parser import build_macro_package
 from freecad.extman.protocol import Protocol, flags
@@ -144,8 +145,11 @@ class GithubProtocol(Protocol):
 
     def downloadMacroList(self):
 
-        local_dir = get_resource_path('cache', 'git', str(hashlib.sha256(self.url.encode()).hexdigest()),
-                                      create_dir=True)
+        local_dir = Path(
+            get_cache_path(),
+            'git',
+            str(hashlib.sha256(self.url.encode()).hexdigest()),
+            create_dir=True)
 
         # Try Git
         (gitAvailable, gitExe, gitVersion, gitPython, gitVersionOk) = egit.install_info()
@@ -156,40 +160,37 @@ class GithubProtocol(Protocol):
         # Try zip/http
         if zlib.is_zip_available():
             gh = GithubRepo(self.url)
-            zippath = tempfile.mktemp(suffix=".zip")
+            zippath = Path(tempfile.mktemp(suffix=".zip"))
             if http_download(gh.getZipUrl(), zippath):
-                exploded = tempfile.mktemp(suffix="_zip")
+                exploded = Path(tempfile.mktemp(suffix="_zip"))
                 zlib.unzip(zippath, exploded)
                 # Remove old if exists
-                if os.path.exists(local_dir):
-                    shutil.rmtree(local_dir)
+                if local_dir.exists():
+                    shutil.rmtree(local_dir, ignore_errors=True)
                 # Move exploded dir to install dir
-                for entry in os.listdir(exploded):
-                    entry_path = os.path.join(exploded, entry)
-                    if os.path.isdir(entry_path):
+                for entry_path in exploded.iterdir():
+                    if entry_path.is_dir():
                         shutil.move(entry_path, local_dir)
                         return local_dir
 
     def getMacroList(self):
-        install_dir = App.getUserMacroDir(True)
+        install_dir = get_macro_path()
         macros = []
         path = self.downloadMacroList()
         if path:
             workers = []
-            for dirpath, _, filenames in os.walk(path):
-                if '.git' in dirpath:
+            for entry in path.glob('**/*'):
+                if '.git' in entry.name.lower():
                     continue
-                base_path = dirpath.replace(path + os.pathsep, '')
-                for filename in filenames:
-                    if filename.lower().endswith('.fcmacro'):
-                        worker = Worker(build_macro_package,
-                                        os.path.join(dirpath, filename),
-                                        filename[:-8],
-                                        is_git=True,
-                                        install_path=os.path.join(install_dir, filename),
-                                        base_path=base_path)
-                        worker.start()
-                        workers.append(worker)
+                if entry.name.lower().endswith('.fcmacro'):
+                    worker = Worker(build_macro_package,
+                                    entry,
+                                    entry.stem,
+                                    is_git=True,
+                                    install_path=Path(install_dir, entry.name),
+                                    base_path=entry.relative_to(path).parent)
+                    worker.start()
+                    workers.append(worker)
             macros = [flags.apply_predefined_flags(w.get()) for w in workers]
         return macros
 
@@ -218,14 +219,13 @@ class GithubProtocol(Protocol):
             if general and general.iconPath:
                 iconPath = repo.manifest.iconPath
 
-        installDir = os.path.join(App.getUserAppDataDir(), 'Mod', subm['name'])
+        installDir = Path(get_mod_path(), subm['name'])
 
         iconSources = utils.get_workbench_icon_candidates(
             subm['name'],
             repo.getRawFileUrl(),
             iconPath,
-            installDir,
-            egit.get_cache_dir())
+            installDir)
 
         pkgInfo = {
             'name': subm['name'],
@@ -287,8 +287,9 @@ class GithubProtocol(Protocol):
         )
 
         # Check valid install dir
-        if not pkg.installDir.startswith(App.getUserAppDataDir()) and not pkg.installDir.startswith(
-                App.getUserMacroDir(True)):
+        in_mods = get_mod_path() == pkg.installDir.parent
+        in_macros = pkg.installFile and get_macro_path() in pkg.installFile.parents
+        if not in_mods and not in_macros:
             log('Invalid install dir: {0}'.format(pkg.installDir))
             result.ok = False
             result.invalidInstallDir = True
@@ -325,19 +326,18 @@ class GithubProtocol(Protocol):
                 return result
 
             # Download mater zip
-            zip_path = tempfile.mktemp(suffix=".zip")
+            zip_path = Path(tempfile.mktemp(suffix=".zip"))
             if http_download(gh.getZipUrl(), zip_path):
-                exploded = tempfile.mktemp(suffix="_zip")
+                exploded = Path(tempfile.mktemp(suffix="_zip"))
                 zlib.unzip(zip_path, exploded)
 
                 # Remove old if exists
-                if os.path.exists(pkg.installDir):
-                    shutil.rmtree(pkg.installDir)
+                if pkg.installDir.exists():
+                    shutil.rmtree(pkg.installDir, ignore_errors=True)
 
                 # Move exploded dir to install dir
-                for entry in os.listdir(exploded):
-                    entry_path = os.path.join(exploded, entry)
-                    if os.path.isdir(entry_path):
+                for entry_path in exploded.iterdir():
+                    if entry_path.is_dir():
                         shutil.move(entry_path, pkg.installDir)
                         result.ok = True
                         break  # Only one zip directory is expected
@@ -351,7 +351,7 @@ class GithubProtocol(Protocol):
     def installModFromGit(self, pkg, result):
 
         # Update instead if already exists
-        if os.path.exists(pkg.installDir):
+        if pkg.installDir.exists():
             return self.updateModFromGit(pkg, result)
 
         # Install
@@ -384,7 +384,7 @@ class GithubProtocol(Protocol):
     def updateModFromGit(self, pkg, result):
 
         # Install instead if not exists
-        if not os.path.exists(pkg.installDir):
+        if not pkg.installDir.exists():
             return self.installModFromGit(pkg, result)
 
         # Update
@@ -403,14 +403,14 @@ class GithubProtocol(Protocol):
 
                 # Upgrade to git if necessary
                 import git
-                barePath = os.path.join(pkg.installDir, '.git')
-                if not os.path.exists(barePath):
-                    bare, _ = gh.clone(barePath, bare=True)
+                bare_path = Path(pkg.installDir, '.git')
+                if not bare_path.exists():
+                    bare, _ = gh.clone(bare_path, bare=True)
                     egit.config_set(bare, 'core', 'bare', False)
                     repo = git.Repo(pkg.installDir)
                     repo.head.reset('--hard')
 
-                    # Pull
+                # Pull
                 repo = git.Git(pkg.installDir)
                 repo.pull()
                 repo = git.Repo(pkg.installDir)
@@ -441,19 +441,19 @@ class GithubProtocol(Protocol):
             gitVersion=gitVersion
         )
 
-        # Get path of source macro file
-        src_file = os.path.join(pkg.basePath, os.path.basename(pkg.installFile))
-
         # Ensure last version it available locally
-        self.downloadMacroList()
+        src_dir = self.downloadMacroList()
+
+        # Get path of source macro file
+        src_file = Path(src_dir, pkg.basePath, pkg.installFile.name)
 
         # Copy Macro
         files = []
         try:
 
-            macros_dir = App.getUserMacroDir(True)
-            if not os.path.exists(macros_dir):
-                os.makedirs(macros_dir)
+            macros_dir = get_macro_path()
+            if not macros_dir.exists():
+                macros_dir.mkdir(parents=True)
 
             log('Installing', pkg.installFile)
 
@@ -464,23 +464,23 @@ class GithubProtocol(Protocol):
             if pkg.files:
                 for f in pkg.files:
 
-                    fpath = utils.path_relative(f)
-                    dst = os.path.abspath(os.path.join(pkg.installDir, fpath))
-                    src = os.path.abspath(os.path.join(pkg.basePath, fpath))
+                    file_base_path = utils.path_relative(f)
+                    dst = Path(pkg.installDir, file_base_path).absolute()
+                    src = Path(src_dir, pkg.basePath, file_base_path).absolute()
 
                     log('Installing ', dst)
 
-                    # if not dst.startswith(pkg.installDir):
-                    #     result.message = tr('Macro package attempts to install files outside of permitted path')
-                    #     raise Exception('')
-                    #
-                    # if not src.startswith(pkg.basePath):
-                    #     result.message = tr('Macro package attempts to access files outside of permitted path')
-                    #     raise Exception('')
+                    if pkg.installDir not in dst.parents:
+                        result.message = tr('Macro package attempts to install files outside of permitted path')
+                        raise Exception()
 
-                    dst_dir = os.path.dirname(dst)
-                    if dst_dir != pkg.installDir and dst_dir not in files:
-                        os.makedirs(dst_dir, 0o777, exist_ok=True)
+                    if src_dir not in src.parents:
+                        result.message = tr('Macro package attempts to access files outside of permitted path')
+                        raise Exception()
+
+                    dst_dir = dst.parent
+                    if dst_dir != pkg.installDir and dst_dir not in files and not dst_dir.exists():
+                        dst_dir.mkdir(parents=True)
                         files.append(dst_dir)
 
                     shutil.copy2(src, dst)
@@ -497,14 +497,14 @@ class GithubProtocol(Protocol):
                 result.message = tr('Macro was not installed, please contact the maintainer.')
 
             # Rollback
-            files.sort(reverse=True, key=lambda t: t[0])
+            files.sort(reverse=True)
             for f in files:
                 try:
                     log("Rollback ", f)
-                    if os.path.isfile(f):
-                        os.remove(f)
-                    elif os.path.isdir(f):
-                        shutil.rmtree(f, True)
+                    if f.is_file():
+                        f.unlink()
+                    elif f.is_dir():
+                        shutil.rmtree(f, ignore_errors=True)
                 except:
                     log(traceback.format_exc())
 
@@ -516,13 +516,13 @@ class GithubProtocol(Protocol):
     def linkMacrosFromMod(self, pkg):
 
         # Ensure macro dir
-        macros = App.getUserMacroDir(True)
-        if not os.path.exists(macros):
-            os.makedirs(macros)
+        macros = get_macro_path()
+        if not macros.exists():
+            macros.mkdir(parents=True)
 
         # Search and link
-        if os.path.exists(pkg.installDir):
-            for f in os.listdir(pkg.installDir):
-                if f.lower().endswith(".fcmacro"):
-                    utils.symlink(os.path.join(pkg.installDir, f), os.path.join(macros, f))
-                    pref.set_plugin_parameter(pkg.name, 'destination', pkg.installDir)
+        if pkg.installDir.exists():
+            for f in pkg.installDir.iterdir():
+                if f.name.lower().endswith(".fcmacro"):
+                    Path(macros, f.name).symlink_to(f)
+                    pref.set_plugin_parameter(pkg.name, 'destination', str(pkg.installDir))

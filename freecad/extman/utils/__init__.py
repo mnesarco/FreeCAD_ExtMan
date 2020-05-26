@@ -26,8 +26,9 @@ import os
 import re
 import tempfile
 from PySide import QtGui, QtCore
+from pathlib import Path
 
-from freecad.extman import isWindowsPlatform, tr
+from freecad.extman import tr, get_mod_path, get_freecad_resource_path, get_macro_path, get_app_data_path
 
 thumbnailsDir = tempfile.mkdtemp(prefix="xpm_thumbnails")
 xmpCache = {}
@@ -51,26 +52,6 @@ _USER_DATA_URL_ = '_USER_DATA_URL_'
 
 _USER_MACRO_DIR_ = '_USER_MACRO_DIR_'
 _USER_MACRO_URL_ = '_USER_MACRO_URL_'
-
-# !-----------------------------------------------------------------------------
-# ! Fix windows Crap
-# ! symlinks support
-if isWindowsPlatform:
-    wsl = getattr(os, 'symlink', None)
-    if not callable(wsl):
-        # ! See: https://stackoverflow.com/a/28382515/1524027
-        def symlink_ms(source, link_name):
-            import ctypes  # Import here as a special case for windows only
-            csl = ctypes.windll.kernel32.CreateSymbolicLinkW
-            csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
-            csl.restype = ctypes.c_ubyte
-            flags = 1 if os.path.isdir(source) else 0
-            try:
-                if csl(link_name, source.replace('/', '\\'), flags) == 0:
-                    raise ctypes.WinError()
-            except:
-                pass
-        os.symlink = symlink_ms
 
 nonStandardNamedWorkbenches = {
     "flamingo": "flamingoToolsWorkbench",
@@ -121,13 +102,7 @@ predefinedCategories = {
 
 
 def path_to_url(path):
-    if path.startswith('file://'):
-        path = path[7:]
-
-    if isWindowsPlatform:
-        path = path.replace('\\', '/')
-
-    return 'extman://' + path
+    return Path(path).as_uri().replace('file:', 'extman:')
 
 
 def extract_icon(src, default='freecad.svg'):
@@ -148,7 +123,7 @@ def extract_icon(src, default='freecad.svg'):
             return 'img' + '/' + default
     else:
         try:
-            if os.path.exists(src):
+            if Path(src).exists():
                 return src
             else:
                 return 'img' + '/' + default
@@ -187,19 +162,17 @@ def remove_absolute_paths(content):
     # FreeCAD directories because directories can be different at restore time
     # ie. AppImage
 
-    core_res_dir = App.getResourceDir()
-    content = content.replace(path_to_url(core_res_dir), _CORE_RES_URL_)
-    content = content.replace(core_res_dir, _CORE_RES_DIR_)
+    core_res_dir = get_freecad_resource_path()
+    content = content.replace(core_res_dir.as_uri(), _CORE_RES_URL_)
+    content = content.replace(str(core_res_dir), _CORE_RES_DIR_)
 
-    user_data_dir = App.getUserAppDataDir()
-    if user_data_dir:
-        content = content.replace(path_to_url(user_data_dir), _USER_DATA_URL_)
-        content = content.replace(user_data_dir, _USER_DATA_DIR_)
+    user_data_dir = get_app_data_path()
+    content = content.replace(user_data_dir.as_uri(), _USER_DATA_URL_)
+    content = content.replace(str(user_data_dir), _USER_DATA_DIR_)
 
-    user_macro_dir = App.getUserMacroDir(True)
-    if user_macro_dir:
-        content = content.replace(path_to_url(user_macro_dir), _USER_MACRO_URL_)
-        content = content.replace(user_macro_dir, _USER_MACRO_DIR_)
+    user_macro_dir = get_macro_path()
+    content = content.replace(user_macro_dir.as_uri(), _USER_MACRO_URL_)
+    content = content.replace(str(user_macro_dir), _USER_MACRO_DIR_)
 
     return content
 
@@ -207,44 +180,41 @@ def remove_absolute_paths(content):
 def restore_absolute_paths(content):
     """Replace placeholders with current absolute paths."""
 
-    # ! See: remove_absolute_paths
-    sep = '/'
+    core_res_dir = get_freecad_resource_path()
+    content = content.replace(_CORE_RES_DIR_, str(core_res_dir))
+    content = content.replace(_CORE_RES_URL_, core_res_dir.as_uri())
 
-    core_res_dir = App.getResourceDir()
-    if not core_res_dir.endswith(sep):
-        core_res_dir += sep
-    content = content.replace(_CORE_RES_DIR_, core_res_dir)
-    content = content.replace(_CORE_RES_URL_, path_to_url(core_res_dir))
+    user_data_dir = get_app_data_path()
+    content = content.replace(_USER_DATA_DIR_, str(user_data_dir))
+    content = content.replace(_USER_DATA_URL_, user_data_dir.as_uri())
 
-    user_data_dir = App.getUserAppDataDir()
-    if not user_data_dir.endswith(sep):
-        user_data_dir += sep
-    content = content.replace(_USER_DATA_DIR_, user_data_dir)
-    content = content.replace(_USER_DATA_URL_, path_to_url(user_data_dir))
-
-    user_macro_dir = App.getUserMacroDir(True)
-    if not user_macro_dir.endswith(sep):
-        user_macro_dir += sep
-    content = content.replace(_USER_MACRO_DIR_, user_macro_dir)
-    content = content.replace(_USER_MACRO_URL_, path_to_url(user_macro_dir))
+    user_macro_dir = get_macro_path()
+    content = content.replace(_USER_MACRO_DIR_, str(user_macro_dir))
+    content = content.replace(_USER_MACRO_URL_, user_macro_dir.as_uri())
 
     return content
 
 
-def get_workbench_icon_candidates(workbench_name, base_url, icon_path, local_dir, cache_dir):
+def get_workbench_icon_candidates(workbench_name, base_url, icon_path, local_dir):
+
     # Legacy icon compiled inside FreeCAD
     sources = ["qrc:/icons/" + workbench_name + "_workbench_icon.svg"]
+
+    # Icon from metadata
     if icon_path:
-        # Locally installed icon
-        sources.append('file://' + os.path.join(local_dir, icon_path))
-        # Locally cached icon
-        sources.append('file://' + os.path.join(cache_dir, workbench_name + "_workbench_icon.svg"))
-        # Remote icon
-        if base_url.endswith('.git'):
-            base_url = base_url[:-4]
-        if base_url.endswith('/'):
-            base_url = base_url[:-1]
-        sources.append(base_url + '/' + icon_path)
+        if icon_path.startswith('http'):
+            sources.append(icon_path)
+        elif icon_path.startswith('Resources'):
+            src = Path(local_dir, icon_path)
+            if src.exists():
+                sources.append(src.as_uri().replace('file:', 'extman:'))
+            else:
+                sources.append(base_url + '/' + icon_path)
+        elif icon_path.startswith('file:'):
+            sources.append(icon_path.replace('file:', 'extman:'))
+        elif icon_path.startswith('extman:'):
+            sources.append(icon_path)
+
     return sources
 
 
@@ -257,16 +227,10 @@ def SanitizedHtml(html):
         return STRIP_TAGS_PATTERN.sub('', html)
 
 
-def symlink(source, link):
-    if os.path.exists(source):
-        if not (os.path.exists(link) or os.path.lexists(link)):
-            os.symlink(source, link)
-
-
 def path_relative(path):
     m = ABS_PATH_PATTERN.match(path)
     if m:
-        return m.group('rel').replace('/', os.path.sep)
+        return m.group('rel').replace('\\', '/')
     else:
         return None
 
@@ -288,38 +252,22 @@ def extract_workbench_class_name(path):
 def analyse_installed_workbench(pkg):
 
     # Check Legacy InitGui.py
-    init = os.path.join(pkg.installDir, 'InitGui.py')
-    if os.path.exists(init):
+    init = Path(pkg.installDir, 'InitGui.py')
+    if init.exists():
         key = extract_workbench_class_name(init)
         if key:
             pkg.key = key
             return
 
     # Check init_gui.py
-    fcp = os.path.join(pkg.installDir, 'freecad')
-    if os.path.exists(fcp) and os.path.isdir(fcp):
-        for subp in os.listdir(fcp):
-            path = os.path.join(fcp, subp)
-            if os.path.isdir(path):
-                init = os.path.join(path, 'init_gui.py')
-                if os.path.exists(init):
+    fcp = Path(pkg.installDir, 'freecad')
+    if fcp.is_dir():
+        for path in fcp.iterdir():
+            if path.is_dir():
+                init = Path(path, 'init_gui.py')
+                if init.exists():
                     key = extract_workbench_class_name(init)
                     if key:
                         pkg.key = key
                         return
-
-
-def fix_win_path(path):
-    if isWindowsPlatform:
-        win_path = WINDOWS_PATH_FIX.sub('/', path)
-        if WINDOWS_DRIVE.match(win_path):
-            if win_path.startswith('/'):
-                win_path = win_path[1:]
-            return win_path
-        else:
-            m = WINDOWS_DRIVE.search(App.getUserAppDataDir())
-            win_path = os.path.join(m.group('drive'), os.path.sep, path)
-            return win_path
-    else:
-        return path
 

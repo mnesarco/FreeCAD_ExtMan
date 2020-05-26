@@ -156,7 +156,7 @@ function extman_readmeDlg(link, event) {
             })
             .then(function(data) {
                 if (format === 'markdown') {
-                    extman_update_readme(null, marked(data));
+                    extman_update_readme(null, marked(data, {baseUrl: url, gfm: true}));
                 }
                 else if (format === 'mediawiki') {
                     extman_update_readme(null, wikipage(data, url));

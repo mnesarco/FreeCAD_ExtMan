@@ -27,10 +27,11 @@ import re
 import sys
 import traceback
 from urllib.parse import quote
+from pathlib import Path
 
 import freecad.extman.protocol.flags as flags
 import freecad.extman.utils as utils
-from freecad.extman import tr, get_resource_path
+from freecad.extman import tr, get_resource_path, get_macro_path
 from freecad.extman.protocol import Protocol
 from freecad.extman.protocol.http import http_get
 from freecad.extman.sources import PackageInfo, InstallResult
@@ -88,6 +89,7 @@ MACRO_CODE_EXTLINK = re.compile(r"""
 # Mediawiki redirect
 REDIRECT = re.compile(r'#REDIRECT\s+\[\[\s*(?P<link>.*?)\s*\]\]')
 
+
 def get_page_content_from_json(jsonObj):
     try:
         return jsonObj['query']['pages'][0]['revisions'][0]['slots']['main']['content']
@@ -112,7 +114,7 @@ class FCWikiProtocol(Protocol):
     def getMacroList(self):
 
         macros = []
-        install_dir = App.getUserMacroDir(True)
+        install_dir = get_macro_path()
         default_icon = utils.path_to_url(get_resource_path('html', 'img', 'package_macro.svg'))
 
         try:
@@ -136,7 +138,7 @@ class FCWikiProtocol(Protocol):
                     pkg = PackageInfo(
                         key=name,
                         installDir=install_dir,
-                        installFile=os.path.join(install_dir, name + '.FCMacro'),
+                        installFile=Path(install_dir, name + '.FCMacro'),
                         name=name,
                         title=label,
                         description=description,

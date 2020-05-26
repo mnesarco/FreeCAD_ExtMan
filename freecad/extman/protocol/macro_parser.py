@@ -22,9 +22,10 @@
 import FreeCAD as App
 import os
 import re
+from pathlib import Path
 
 import freecad.extman.utils as utils
-from freecad.extman import get_resource_path, tr, log_err
+from freecad.extman import get_resource_path, tr, log_err, get_macro_path
 from freecad.extman.sources import PackageInfo
 
 # Regex for tags __tag__ = value
@@ -72,13 +73,13 @@ def build_macro_package(path, macro_name, is_core=False, is_git=False, is_wiki=F
             tags = {k: None for k in MACRO_TAG_FILTER}
             log_err(tr('Macro {0} contains invalid characters').format(path))
 
-        install_dir = App.getUserMacroDir(True)
+        install_dir = get_macro_path()
         base = dict(
-            key=install_path or path,
+            key=str(install_path) if install_path else str(path),
             type='Macro',
             isCore=is_core,
             installDir=install_dir,
-            installFile=os.path.join(install_dir, os.path.basename(path)),
+            installFile=Path(install_dir, path.name),
             isGit=is_git,
             isWiki=is_wiki,
             basePath=base_path
@@ -93,7 +94,10 @@ def build_macro_package(path, macro_name, is_core=False, is_git=False, is_wiki=F
         if not tags['icon']:
             tags['icon'] = get_resource_path('html', 'img', 'package_macro.svg')
 
-        if not os.path.exists(tags['icon']):
+        try:
+            if not Path(tags['icon']).exists():
+                tags['icon'] = get_resource_path('html', 'img', 'package_macro.svg')
+        except:
             tags['icon'] = get_resource_path('html', 'img', 'package_macro.svg')
 
         tags['icon'] = utils.path_to_url(tags['icon'])

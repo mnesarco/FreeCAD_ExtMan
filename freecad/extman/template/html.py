@@ -223,6 +223,7 @@ def render(*path, model):
     """
 
     url, context, abs_path = get_resource_url(*path)
+
     model['_URL_'] = url
     model['_BASE_'] = context
     model['_FILE_'] = abs_path

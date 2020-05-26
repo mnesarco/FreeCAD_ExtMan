@@ -32,7 +32,7 @@ from freecad.extman.gui.webview import register_custom_schemes
 class ExtManWorkbench(Gui.Workbench):
     """Extension Manager Workbench"""
 
-    Icon = get_resource_path('icons', 'ExtManWorkbench.svg')
+    Icon = str(get_resource_path('icons', 'ExtManWorkbench.svg'))
     MenuText = tr("Extension Manager")
     ToolTip = tr("Extension Manager")
 

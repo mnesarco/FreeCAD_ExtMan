@@ -26,8 +26,9 @@ import json
 import os
 import re
 import time
+from pathlib import Path
 
-from freecad.extman import get_resource_path, tr
+from freecad.extman import get_resource_path, tr, get_cache_path
 from freecad.extman import utils
 from freecad.extman.protocol.fcwiki import FCWikiProtocol
 from freecad.extman.protocol.github import GithubProtocol
@@ -126,48 +127,47 @@ class CloudPackageSource(PackageSource):
         return categories
 
     def getCacheFile(self):
-        store = get_resource_path('cache')
-        if not os.path.exists(store):
-            os.mkdir(store)
+        store = get_cache_path()
+        if not store.exists():
+            store.mkdir(parents=True)
         filename = re.sub(r'\W+', '-', "{0}-{1}".format(self.channelId, self.name)) + '.json'
-        store = get_resource_path('cache', filename)
-        return store
+        return Path(store, filename)
 
     def updatePackageList(self):
-        cacheFile = self.getCacheFile()
-        if os.path.exists(cacheFile):
-            os.remove(cacheFile)
+        cache_file = self.getCacheFile()
+        if cache_file.exists():
+            cache_file.unlink()
 
     def storeCacheData(self, categories):
         filename = self.getCacheFile()
-        jcats = []
+        j_categories = []
         for cat in categories:
-            jpkgs = []
+            j_packages = []
             for pkg in cat.packages:
-                jpkgs.append(pkg.__dict__)
-            jcats.append({'name': cat.name, 'packages': jpkgs})
+                j_packages.append(pkg.toSerializable())
+            j_categories.append({'name': cat.name, 'packages': j_packages})
         with open(filename, 'w', encoding='utf-8') as f:
-            content = json.dumps(jcats, indent=4, sort_keys=True)
+            content = json.dumps(j_categories, indent=4, sort_keys=True)
             content = utils.remove_absolute_paths(content)
             f.write(content)
             self.cacheTime = time.time()
 
     def loadCacheData(self):
         filename = self.getCacheFile()
-        if os.path.exists(filename):
-            self.cacheTime = os.path.getmtime(filename)
+        if filename.exists():
+            self.cacheTime = filename.stat().st_mtime
             with open(filename, 'r', encoding='utf-8') as f:
                 content = f.read()
                 content = utils.restore_absolute_paths(content)
                 data = json.loads(content)
                 categories = []
-                for catj in data:
+                for j_category in data:
                     packages = []
-                    if 'packages' in catj:
-                        for pkgj in catj['packages']:
-                            pkg = PackageInfo(**pkgj)
+                    if 'packages' in j_category:
+                        for j_package in j_category['packages']:
+                            pkg = PackageInfo.fromSerializable(j_package)
                             packages.append(pkg)
-                    cat = PackageCategory(catj['name'], packages)
+                    cat = PackageCategory(j_category['name'], packages)
                     categories.append(cat)
                 return categories
 

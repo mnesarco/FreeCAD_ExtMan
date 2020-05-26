@@ -19,44 +19,20 @@
 # *                                                                         *
 # ***************************************************************************
 
-import FreeCADGui as Gui
-import os
 import re
+from pathlib import Path
+
 from PySide import QtCore, QtGui
 from PySide.QtCore import Qt
-from PySide2.QtWebEngineCore import (QWebEngineUrlRequestInfo,
-                                     QWebEngineUrlRequestInterceptor,
-                                     QWebEngineUrlSchemeHandler)
+from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
 from PySide2.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView, QWebEnginePage
 from urllib.parse import unquote
 
-from freecad.extman import utils, log
+from freecad.extman import log
 
 EXTMAN_URL_SCHEME = b'extman'                               # extman://...
-WINDOWS_PATH_PATTERN = re.compile(r'^/([a-zA-Z]\\:.*)')     # /C:...
+WINDOWS_PATH_PATTERN = re.compile(r'^/([a-zA-Z]:.*)')       # /C:... Windows insanity
 ACTION_URL_PATTERN = re.compile(r'.*/action\.(\w+)$')       # action.<name>
-
-
-class UrlRequestInterceptor(QWebEngineUrlRequestInterceptor):
-    """Intercepts extman://... links"""
-
-    def __init__(self, parent):
-        super().__init__()
-        self.owner = parent
-
-    def interceptRequest(self, info):
-        if info.navigationType() == QWebEngineUrlRequestInfo.NavigationTypeLink:
-            url = info.requestUrl()
-
-            # Fix windows path
-            if not url.host() and url.isLocalFile():
-                m = WINDOWS_PATH_PATTERN.match(url.path())  # "/C:/something" -> "C:/something"
-                if m:
-                    url.setPath(m.group(1))
-
-            # Filter
-            if url.scheme() == 'extman':
-                self.owner.interseptLink(info)
 
 
 class Response(QtCore.QObject):
@@ -92,6 +68,11 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
         query = QtCore.QUrlQuery(url)
         params = {k: unquote(v) for k, v in query.queryItems()}
 
+        # Fix Windows URL (This is insane)
+        win_fix = WINDOWS_PATH_PATTERN.match(path)
+        if win_fix:
+            path = win_fix.group(1)
+
         # Prepare response buffer
         buf = QtCore.QBuffer(parent=self)
         request.destroyed.connect(buf.deleteLater)
@@ -116,28 +97,19 @@ class SchemeHandler(QWebEngineUrlSchemeHandler):
             self.requestHandler(path, action, params, request, response)
 
         else:
-            file_path = utils.fix_win_path(path)
-            if os.path.exists(file_path):
+
+            file_path = Path(path)
+            content_type = get_supported_mimetype(file_path)
+            if file_path.exists():
                 with open(file_path, 'rb') as f:
-                    file_path = path.lower()
                     buf.write(f.read())
                     buf.seek(0)
                     buf.close()
-                    if file_path.endswith('.svg'):
-                        content_type = 'image/svg+xml'
-                    elif file_path.endswith('.png'):
-                        content_type = 'image/png'
-                    elif file_path.endswith('.jpg'):
-                        content_type = 'image/jpeg'
-                    elif file_path.endswith('.css'):
-                        content_type = 'text/css'
-                    elif file_path.endswith('.js'):
-                        content_type = 'text/javascript'
-                    else:
-                        content_type = 'text/plain'
                     request.reply(content_type.encode(), buf)
             else:
-                print("Path does not exists: " + file_path)
+                buf.close()
+                request.reply(content_type.encode(), buf)
+                log("Path does not exists: ", str(file_path))
 
 
 class Page(QWebEnginePage):
@@ -152,7 +124,7 @@ class Page(QWebEnginePage):
 class WebView(QtGui.QMdiSubWindow):
     closed = QtCore.Signal(object)
 
-    def __init__(self, title, workdir, requestHandler, *args, **kwargs):
+    def __init__(self, title, work_path, requestHandler, *args, **kwargs):
         # Window Setup
         super().__init__(*args, **kwargs)
         self.setObjectName("freecad.extman.webview")
@@ -160,11 +132,7 @@ class WebView(QtGui.QMdiSubWindow):
         self.setAttribute(Qt.WA_DeleteOnClose, True)
 
         # Scheme setup (extman://)
-        scheme = EXTMAN_URL_SCHEME
         self.handler = SchemeHandler(self, requestHandler)
-
-        # Url Filter setup
-        self.interceptor = UrlRequestInterceptor(self)
 
         # WebView setup
         self.webView = QWebEngineView(self)
@@ -176,13 +144,12 @@ class WebView(QtGui.QMdiSubWindow):
 
         # Profile setup
         profile = self.webView.page().profile()
-        profile.setPersistentStoragePath(os.path.join(workdir, 'persistent'))
-        profile.setCachePath(os.path.join(workdir, 'cache'))
-        profile.setRequestInterceptor(self.interceptor)
-        handler = profile.urlSchemeHandler(scheme)
+        profile.setPersistentStoragePath(str(Path(work_path, 'web_data')))
+        profile.setCachePath(str(Path(work_path, 'web_cache')))
+        handler = profile.urlSchemeHandler(EXTMAN_URL_SCHEME)
         if handler is not None:
             profile.removeUrlSchemeHandler(handler)
-        profile.installUrlSchemeHandler(scheme, self.handler)
+        profile.installUrlSchemeHandler(EXTMAN_URL_SCHEME, self.handler)
 
         # Setting setup
         settings = self.webView.settings()
@@ -192,12 +159,9 @@ class WebView(QtGui.QMdiSubWindow):
 
         # Page setup
         page = self.webView.page().settings()
-        page.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True);
-        page.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True);
-        page.setAttribute(QWebEngineSettings.LocalStorageEnabled, True);
-
-    def interseptLink(self, info):
-        pass
+        page.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
+        page.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
+        page.setAttribute(QWebEngineSettings.LocalStorageEnabled, True)
 
     def closeEvent(self, event):
         self.closed.emit(event)
@@ -207,6 +171,25 @@ class WebView(QtGui.QMdiSubWindow):
         self.webView.load(url)
 
 
+def get_supported_mimetype(path):
+    name = path.name.lower()
+    if name.endswith('.svg'):
+        content_type = 'image/svg+xml'
+    elif name.endswith('.png'):
+        content_type = 'image/png'
+    elif name.endswith('.jpg'):
+        content_type = 'image/jpeg'
+    elif name.endswith('.jpeg'):
+        content_type = 'image/jpeg'
+    elif name.endswith('.css'):
+        content_type = 'text/css'
+    elif name.endswith('.js'):
+        content_type = 'text/javascript'
+    else:
+        content_type = 'text/plain'
+    return content_type
+
+
 # ! Call as soon as possible
 def register_custom_schemes():
     try:
@@ -214,8 +197,7 @@ def register_custom_schemes():
     except ImportError:
         log('Outdated QT version, some graphics will be not available')
     else:
-        scheme = EXTMAN_URL_SCHEME
-        scheme_reg = QWebEngineUrlScheme(scheme)
+        scheme_reg = QWebEngineUrlScheme(EXTMAN_URL_SCHEME)
         scheme_reg.setFlags(
             QWebEngineUrlScheme.SecureScheme
             | QWebEngineUrlScheme.LocalScheme

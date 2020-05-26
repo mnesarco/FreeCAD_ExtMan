@@ -24,10 +24,11 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import configparser as cp
 import os
+from pathlib import Path
 
 import freecad.extman.protocol.github as gh
 from freecad.extman.protocol import flags
-from freecad.extman import get_resource_path, tr
+from freecad.extman import get_resource_path, tr, get_macro_path, get_mod_path, get_freecad_resource_path
 from freecad.extman import utils
 from freecad.extman.protocol.macro_parser import build_macro_package
 from freecad.extman.protocol.manifest import ExtensionManifest
@@ -40,9 +41,9 @@ class InstalledPackageSource(PackageSource):
 
     def __init__(self):
         super().__init__('Installed')
-        self.coreModDir = os.path.join(App.getResourceDir(), 'Mod')
-        self.userModDir = os.path.join(App.getUserAppDataDir(), 'Mod')
-        self.userMacroDir = App.getUserMacroDir(True)
+        self.coreModDir = Path(get_freecad_resource_path(), 'Mod')
+        self.userModDir = get_mod_path()
+        self.userMacroDir = get_macro_path()
         self.workbenches = Gui.listWorkbenches()
         self.updates = {}
         self.showCorePackages = True
@@ -75,20 +76,20 @@ class InstalledPackageSource(PackageSource):
 
     def importMods(self, path, isCore=False):
         packages = []
-        if os.path.exists(path):
-            for pkg_dir in os.listdir(path):
-                if pkg_dir != 'ExtMan':
+        if path.exists():
+            for pkg_dir in path.iterdir():
+                if pkg_dir.stem != 'ExtMan':
                     pkg = self.importMod(path, pkg_dir, isCore)
-                    if pkg: packages.append(pkg)
+                    if pkg:
+                        packages.append(pkg)
         return packages
 
     def importMacros(self, path, isCore=False):
         packages = []
-        if os.path.exists(path):
-            for file_name in os.listdir(path):
-                macro_path = os.path.join(path, file_name)
-                if os.path.isfile(macro_path):
-                    pkg = self.importMacro(macro_path, file_name, isCore)
+        if path.exists():
+            for macro_path in path.iterdir():
+                if macro_path.is_file():
+                    pkg = self.importMacro(macro_path, macro_path.name, isCore)
                     if pkg:
                         packages.append(pkg)
         return packages
@@ -101,9 +102,9 @@ class InstalledPackageSource(PackageSource):
             analyseInstalledMacro(macro)
             return macro
 
-    def importMod(self, path, pdir, isCore):
-        installDir = os.path.join(path, pdir)
-        if os.path.isdir(installDir):
+    def importMod(self, path, installDir, isCore):
+        pdir = installDir.name
+        if installDir.is_dir():
             wbKey = utils.get_workbench_key(pdir)
             wb = self.workbenches.get(wbKey)
             pkg = PackageInfo(
@@ -116,16 +117,16 @@ class InstalledPackageSource(PackageSource):
                 title=wb.MenuText if wb else pdir,
                 description=wb.ToolTip if wb else pdir,
                 categories=utils.get_workbench_categories(wb),
-                isGit=os.path.isdir(os.path.join(installDir, '.git'))
+                isGit=Path(installDir, '.git').is_dir()
             )
             flags.apply_predefined_flags(pkg)
             analyseInstalledMod(pkg)
             return pkg
 
-    def getModIcon(self, name, installDir, wbKey, wb):
-        iconPath = os.path.join(installDir, 'Resources', 'icons', '{0}Workbench.svg'.format(name))
-        if os.path.exists(iconPath):
-            return utils.path_to_url(iconPath)
+    def getModIcon(self, name, install_path, wbKey, wb):
+        icon_path = Path(install_path, 'Resources', 'icons', '{0}Workbench.svg'.format(name))
+        if icon_path.exists():
+            return utils.path_to_url(icon_path)
         else:
             if wb and hasattr(wb, 'Icon'):
                 return utils.path_to_url(utils.extract_icon(wb.Icon, 'workbench.svg'))
@@ -154,10 +155,10 @@ def analyseInstalledMod(pkg):
 
 
 def analyseGit(pkg):
-    gitDir = os.path.join(pkg.installDir, '.git')
-    if os.path.exists(gitDir):
+    git_dir = Path(pkg.installDir, '.git')
+    if git_dir.exists():
         parser = cp.ConfigParser()
-        parser.read(os.path.join(gitDir, 'config'))
+        parser.read(Path(git_dir, 'config'))
         if parser.has_option('remote "origin"', 'url'):
             url = parser['remote "origin"']['url']
             if url:
@@ -166,13 +167,13 @@ def analyseGit(pkg):
 
 
 def analyseManifest(pkg):
-    mfile = os.path.join(pkg.installDir, 'manifest.ini')
+    manifest_file = Path(pkg.installDir, 'manifest.ini')
 
-    if not os.path.exists(mfile):
-        mfile = os.path.join(pkg.installDir, 'metadata.txt')
+    if not manifest_file.exists():
+        manifest_file = Path(pkg.installDir, 'metadata.txt')
 
-    if os.path.exists(mfile):
-        with open(mfile, 'r', encoding='utf-8') as f:
+    if manifest_file.exists():
+        with open(manifest_file, 'r', encoding='utf-8') as f:
             manifest = ExtensionManifest(f.read())
             data = {}
             manifest.getData(data)
@@ -181,8 +182,8 @@ def analyseManifest(pkg):
 
 
 def analyseReadme(pkg):
-    mfile = os.path.join(pkg.installDir, 'README.md')
-    if os.path.exists(mfile) and pkg.git:
+    readme_file = Path(pkg.installDir, 'README.md')
+    if readme_file.exists() and pkg.git:
         if 'github.com' in pkg.git:
             ghr = gh.GithubRepo(pkg.git)
             pkg.readmeUrl = ghr.getRawFileUrl('README.md')

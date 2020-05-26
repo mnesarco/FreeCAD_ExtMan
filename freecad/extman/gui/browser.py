@@ -23,21 +23,18 @@ import FreeCADGui as Gui
 from PySide import QtGui, QtCore
 
 import freecad.extman.gui.controller as actions
-from freecad.extman import tr, isWindowsPlatform, get_resource_path
+from freecad.extman import tr, get_resource_path, get_cache_path, log
 from freecad.extman.template.html import render
 from freecad.extman.gui.webview import WebView
 
-__browser_instance__ = None  # Singleton: WebView
-__browser_session__ = {}  # Singleton: State
-__browser_base_path__ = get_resource_path('html')  # Constant:  Base dir for templates
-__router__ = None  # Singleton: Router configuration
+__browser_instance__ = None                         # Singleton: WebView
+__browser_session__ = {}                            # Singleton: State
+__browser_base_path__ = get_resource_path('html')   # Constant:  Base dir for templates
+__router__ = None                                   # Singleton: Router configuration
 
 
 def path_to_extman_url(path):
-    if isWindowsPlatform:
-        return 'extman://' + path.replace('\\', '/')
-    else:
-        return 'extman://' + path
+    return path.as_uri().replace('file:', 'extman:')
 
 
 class BrowserSession:
@@ -75,7 +72,7 @@ def start_browser():
     global __browser_instance__
     if not __browser_instance__:
         ma = Gui.getMainWindow().findChild(QtGui.QMdiArea)
-        __browser_instance__ = WebView(tr('Extension Manager'), get_resource_path('cache'), request_handler, ma)
+        __browser_instance__ = WebView(tr('Extension Manager'), get_cache_path(), request_handler, ma)
         __browser_instance__.closed.connect(on_web_view_close)
         ma.addSubWindow(__browser_instance__)
         index = path_to_extman_url(get_resource_path('html', 'index.html'))

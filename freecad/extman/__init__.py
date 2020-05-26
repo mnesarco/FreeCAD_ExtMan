@@ -19,45 +19,75 @@
 # *                                                                         *
 # ***************************************************************************
 
+import functools
+from pathlib import Path
+
 import FreeCAD as App
 import FreeCADGui as Gui
-import functools
-import os
 from PySide import QtGui
-
-ADDON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # Constant
-isWindowsPlatform = os.path.sep == '\\'  # Constant
 
 
 def log(*msg):
     """Prints to FreeCAD Console"""
-    App.Console.PrintLog("[ExtMan] {0}\n".format(' '.join(msg)))
+    App.Console.PrintLog("[ExtMan] {0}\n".format(' '.join((str(i) for i in msg))))
 
 
 def log_err(*msg):
     """Prints to FreeCAD Console"""
-    App.Console.PrintError("[ExtMan] {0}\n".format(' '.join(msg)))
+    App.Console.PrintError("[ExtMan] {0}\n".format(' '.join((str(i) for i in msg))))
 
 
 def get_resource_path(*paths, create_dir=False):
     """Returns a path inside Resources"""
-    path = os.path.join(ADDON_DIR, 'Resources', *paths)
-    if create_dir and not os.path.exists(path):
-        os.makedirs(path)
+    path = Path(__extman_home_path__, 'Resources', *paths)
+    if create_dir and not path.exists():
+        path.mkdir(parents=True)
     return path
 
 
-# Setup translations
+def get_macro_path():
+    """Returns platform independent macro base path"""
+    return Path(App.getUserMacroDir(True))
+
+
+def get_mod_path():
+    """Returns platform independent user mod base path"""
+    return __user_mod_path__
+
+
+def get_app_data_path():
+    """Returns platform independent user app data path"""
+    return __user_appdata_path__
+
+
+def get_cache_path():
+    """Returns platform independent cache path"""
+    return __extman_cache_path__
+
+
+def get_freecad_home_path():
+    """Returns platform independent freecad install path"""
+    return __freecad_home_path__
+
+
+def get_freecad_resource_path():
+    """Returns platform independent freecad resource path"""
+    return __freecad_resource_path__
+
+
+# +---------------------------------------------------------------------------+
+# | Translations setup                                                        |
+# +---------------------------------------------------------------------------+
+
 try:
     Gui.addLanguagePath(get_resource_path('translations'))
     Gui.updateLocale()
 except Exception as ex:
     log('Translation loading error')
 
-
-# Define tr
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
     @functools.lru_cache()
     def tr(text):
         """Translate text"""
@@ -65,6 +95,7 @@ try:
         return u.replace(chr(39), "&rsquo;")
 
 except Exception as ex:
+
     @functools.lru_cache()
     def tr(text):
         """Translate text"""
@@ -72,12 +103,28 @@ except Exception as ex:
         return u.replace(chr(39), "&rsquo;")
 
 
+# +---------------------------------------------------------------------------+
+# | Base paths setup                                                          |
+# +---------------------------------------------------------------------------+
+
+__freecad_home_path__ = Path(App.getHomePath()).resolve()
+__freecad_resource_path__ = Path(App.getResourceDir())
+__extman_home_path__ = Path(__file__).parents[2]
+__user_appdata_path__ = Path(App.getUserAppDataDir())
+__user_mod_path__ = Path(__user_appdata_path__, 'Mod')
+__extman_cache_path__ = Path(__user_appdata_path__, 'ExtManCache')
+
 # Ensure Mod dir
-if not os.path.exists(os.path.join(App.getUserAppDataDir(), 'Mod')):
-    os.makedirs(os.path.join(App.getUserAppDataDir(), 'Mod'))
+if not __user_mod_path__.exists():
+    __user_mod_path__.mkdir(parents=True)
 
 
 # Ensure Macro dir
-if not os.path.exists(os.path.join(App.getUserMacroDir(True))):
-    os.makedirs(App.getUserMacroDir(True))
+if not get_macro_path().exists():
+    get_macro_path().mkdir(parents=True)
+
+
+# Ensure Cache dir
+if not __extman_cache_path__.exists():
+    __extman_cache_path__.mkdir(parents=True)
 

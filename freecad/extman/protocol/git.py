@@ -20,17 +20,15 @@
 # ***************************************************************************
 # noinspection PyPep8Naming
 
-import json
 import os
 import re
 import sys
 import tempfile
 import traceback
-import xml
 from distutils.version import StrictVersion
 from shutil import which
+from pathlib import Path
 
-from freecad.extman import get_resource_path, log
 from freecad.extman.protocol.http import http_get
 from freecad.extman.protocol.manifest import ExtensionManifest
 
@@ -99,13 +97,6 @@ class GitRepo:
         pass
 
 
-def get_cache_dir():
-    path = get_resource_path('cache')
-    if not os.path.exists(path):
-        os.mkdir(path)
-    return path
-
-
 def get_submodules(url):
     """Download and parse .gitmodules from git repository using http"""
 
@@ -162,7 +153,7 @@ def update_local(path):
     (gitAvailable, executable, version, pygit, gitVersionOk) = install_info()
 
     if gitAvailable and pygit and gitVersionOk:
-        if os.path.exists(os.path.join(path, '.git')):
+        if Path(path, '.git').exists():
 
             # Reset
             repo = pygit.Repo(path)
@@ -187,10 +178,10 @@ def clone_local(repo_url, path=None, **kwargs):
     if gitAvailable and pygit and gitVersionOk:
 
         if path is None:
-            path = tempfile.mkdtemp()
+            path = Path(tempfile.mkdtemp())
 
         # If exists, reset+pull
-        if os.path.exists(os.path.join(path, '.git')):
+        if Path(path, '.git').exists():
             try:
                 repo = update_local(path)
                 return repo, path

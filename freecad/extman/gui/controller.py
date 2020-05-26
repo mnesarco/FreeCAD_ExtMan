@@ -20,9 +20,9 @@
 # ***************************************************************************
 
 import FreeCADGui as Gui
-import os
+from pathlib import Path
 
-from freecad.extman import utils, log_err, tr, isWindowsPlatform
+from freecad.extman import utils, log_err, tr
 from freecad.extman.utils.preferences import ExtManParameters
 from freecad.extman.gui.router import Router, route
 from freecad.extman.sources.source_cloud import findSource
@@ -131,12 +131,9 @@ def open_macro(path, session, params, request, response):
     Open Macro in code editor
     """
 
-    macro = params['macro']
-    if isWindowsPlatform:
-        macro = utils.fix_win_path(macro)
-
-    if os.path.exists(macro):
-        Gui.open(macro.replace('\\', '/'))
+    macro = Path(params['macro'])
+    if macro.exists():
+        Gui.open(str(macro.as_posix()))
     response.html_ok()
 
 
@@ -154,12 +151,9 @@ def run_macro(path, session, params, request, response):
     Execute macro
     """
 
-    path = params['macro']
-    if isWindowsPlatform:
-        path = utils.fix_win_path(path)
-
+    path = Path(params['macro'])
     try:
-        Gui.doCommandGui("exec(open(\"{0}\").read())".format(path))
+        Gui.doCommandGui("exec(open(\"{0}\").read())".format(path.as_posix()))
     except Exception as ex:
         log_err(tr("Error in macro:"), path, str(ex))
 

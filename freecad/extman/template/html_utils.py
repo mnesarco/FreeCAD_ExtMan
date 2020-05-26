@@ -19,9 +19,9 @@
 # *                                                                         *
 # ***************************************************************************
 
-import os
+from pathlib import Path
 
-from freecad.extman import get_resource_path, isWindowsPlatform
+from freecad.extman import get_resource_path
 
 
 class Components:
@@ -36,11 +36,4 @@ def get_resource_url(*path):
     """
 
     file_path = get_resource_path('html', *path)
-    parent = os.path.dirname(file_path)
-    if isWindowsPlatform:
-        url = file_path.replace('\\', '/')
-        parent_url = parent.replace('\\', '/')
-    else:
-        url = file_path
-        parent_url = parent
-    return "file://" + url, "file://" + parent_url, file_path
+    return file_path.as_uri(), file_path.parent.as_uri(), file_path

@@ -21,9 +21,10 @@
 
 import json
 import os
+from pathlib import Path
 
 import freecad.extman.utils as utils
-from freecad.extman import get_resource_path, tr
+from freecad.extman import get_resource_path, tr, get_cache_path
 
 
 class PackageCategory:
@@ -72,10 +73,10 @@ class PackageInfo:
     def isInstalled(self):
 
         if self.type in ('Mod', 'Workbench') and self.installDir:
-            return os.path.exists(self.installDir)
+            return Path(self.installDir).exists()
 
         elif self.type == 'Macro' and self.installFile:
-            return os.path.exists(self.installFile)
+            return Path(self.installFile).exists()
 
         else:
             return False
@@ -90,6 +91,30 @@ class PackageInfo:
 
         elif isinstance(self.icon, list) and len(self.icon) > 0:
             return self.icon[0]
+
+    def toSerializable(self):
+        serializable = {}
+        for k, v in self.__dict__.items():
+            if isinstance(v, (int, str, float, bool, list, dict)):
+                serializable[k] = v
+            elif v is None:
+                serializable[k] = v
+            else:
+                serializable[k] = str(v)
+        return serializable
+
+    @staticmethod
+    def fromSerializable(serializable):
+        data = {}
+        for k, v in serializable.items():
+            if k in ('installDir', 'installFile'):
+                if v:
+                    data[k] = Path(v)
+                else:
+                    data[k] = None
+            else:
+                data[k] = v
+        return PackageInfo(**data)
 
 
 class PackageSource:
@@ -180,42 +205,50 @@ def groupPackagesInCategories(packages):
 
 
 def savePackageMetadata(pkg):
+
     if pkg.type == 'Macro':
-        cacheDir = get_resource_path('cache', 'Macro')
-        cacheFile = get_resource_path(cacheDir, os.path.basename(pkg.installFile).lower() + ".json")
+        cache_dir = Path(get_cache_path(), 'Macro')
+        cache_file = Path(cache_dir, Path(pkg.installFile).stem.lower() + '.json')
     elif pkg.type in ('Mod', 'Workbench'):
-        cacheDir = get_resource_path('cache', 'Mod')
-        cacheFile = get_resource_path(cacheDir, pkg.name + ".json")
+        cache_dir = Path(get_cache_path(), 'Mod')
+        cache_file = Path(cache_dir, pkg.name + ".json")
     else:
         return None
 
-    if not os.path.exists(cacheDir):
-        os.makedirs(cacheDir)
+    if not cache_dir.exists():
+        cache_dir.mkdir(parents=True)
 
-    with open(cacheFile, 'w', encoding='utf-8') as f:
-        content = json.dumps(pkg.__dict__, indent=4, sort_keys=True)
+    with open(cache_file, 'w', encoding='utf-8') as f:
+        content = json.dumps(pkg.toSerializable(), indent=4, sort_keys=True)
         content = utils.remove_absolute_paths(content)
         f.write(content)
         return None
 
 
 def loadPackageMetadata(pkg):
+
     if pkg.type == 'Macro':
-        cacheDir = get_resource_path('cache', 'Macro')
-        cacheFile = get_resource_path(cacheDir, os.path.basename(pkg.installFile).lower() + ".json")
+        cache_dir = Path(get_cache_path(), 'Macro')
+        cache_file = Path(cache_dir, Path(pkg.installFile).stem.lower() + '.json')
     elif pkg.type in ('Mod', 'Workbench'):
-        cacheDir = get_resource_path('cache', 'Mod')
-        cacheFile = get_resource_path(cacheDir, pkg.name + ".json")
+        cache_dir = Path(get_cache_path(), 'Mod')
+        cache_file = Path(cache_dir, pkg.name + ".json")
     else:
         return False
 
-    if os.path.exists(cacheFile):
-        with open(cacheFile, 'r', encoding='utf-8') as f:
+    if cache_file.exists():
+        with open(cache_file, 'r', encoding='utf-8') as f:
             content = f.read()
             content = utils.restore_absolute_paths(content)
             data = json.loads(content)
             for k, v in data.items():
-                setattr(pkg, k, v)
+                if k in ('installDir', 'installFile'):
+                    if v:
+                        setattr(pkg, k, Path(v))
+                    else:
+                        setattr(pkg, k, None)
+                else:
+                    setattr(pkg, k, v)
             return True
 
     return False
