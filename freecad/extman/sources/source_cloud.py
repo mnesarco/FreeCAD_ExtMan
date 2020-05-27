@@ -23,7 +23,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import json
-import os
+from functools import lru_cache
 import re
 import time
 from pathlib import Path
@@ -194,12 +194,14 @@ class CloudPackageSource(PackageSource):
 
 
 class CloudPackageChannel:
+
     def __init__(self, cid, name, sources):
         self.id = cid
         self.name = name
         self.sources = sources
 
 
+@lru_cache()
 def getSourcesData():
     path = get_resource_path('data', 'sources.json')
     with open(path, 'r', encoding='utf-8') as f:
@@ -207,16 +209,17 @@ def getSourcesData():
         return data
 
 
+@lru_cache()
 def findCloudChannels():
     channels = []
     data = getSourcesData()
     for channel in data:
-        channelId = channel['id']
-        channelName = tr(channel['name'])
+        channel_id = channel['id']
+        channel_name = tr(channel['name'])
         sources = []
         for source in channel['sources']:
-            sources.append(CloudPackageSource(source, channelId))
-        channels.append(CloudPackageChannel(channelId, channelName, sources))
+            sources.append(CloudPackageSource(source, channel_id))
+        channels.append(CloudPackageChannel(channel_id, channel_name, sources))
     return channels
 
 
@@ -227,3 +230,9 @@ def findSource(channelId, name):
             for source in channel['sources']:
                 if source['name'] == name:
                     return CloudPackageSource(source, channelId)
+
+
+def clearSourcesCache():
+    getSourcesData.cache_clear()
+    findCloudChannels.cache_clear()
+    findSource.cache_clear()

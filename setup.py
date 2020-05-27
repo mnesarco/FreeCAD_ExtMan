@@ -38,5 +38,11 @@ setup(
     maintainer="mnesarco",
     maintainer_email="mnesarco@gmail.com",
     url="https://github.com/mnesarco/FreeCAD_ExtMan",
-    description="Extension Manager for FreeCAD"
+    description="Extension Manager for FreeCAD",
+    install_requires=[
+        "python3-pyside2.qtwebchannel",
+        "python3-pyside2.qtnetwork",
+        "python3-pyside2.qtwebenginecore",
+        "python3-pyside2.qtwebenginewidgets",
+    ]
 )

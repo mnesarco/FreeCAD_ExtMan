@@ -19,19 +19,16 @@
 # *                                                                         *
 # ***************************************************************************
 
-import FreeCAD as App
 import FreeCADGui as Gui
 import hashlib
-import os
 import re
-import tempfile
 from PySide import QtGui, QtCore
 from pathlib import Path
 
-from freecad.extman import tr, get_mod_path, get_freecad_resource_path, get_macro_path, get_app_data_path
+from freecad.extman import (tr, get_freecad_resource_path, get_macro_path,
+                            get_app_data_path, get_resource_path, get_cache_path)
 
-thumbnailsDir = tempfile.mkdtemp(prefix="xpm_thumbnails")
-xmpCache = {}
+XPM_CACHE = {}
 
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)
 
@@ -40,9 +37,6 @@ STRIP_TAGS_PATTERN = re.compile(r'<[^>]+>|<!--.*', re.S)
 ABS_PATH_PATTERN = re.compile(r'^(\s|/|\\)*(?P<rel>.*)')
 
 WORKBENCH_CLASS_NAME_PATTERN = re.compile(r'addWorkbench\s*\(\s*(?P<class>\w+)')
-
-WINDOWS_PATH_FIX = re.compile(r"[\\]+|/+")
-WINDOWS_DRIVE = re.compile(r'^/?(?P<drive>[a-zA-Z]:).*')
 
 _CORE_RES_DIR_ = '_CORE_RES_DIR_'
 _CORE_RES_URL_ = '_CORE_RES_URL_'
@@ -106,27 +100,36 @@ def path_to_url(path):
 
 
 def extract_icon(src, default='freecad.svg'):
+
+    default_path = get_resource_path('html', 'img', default)
+    xpm_path = Path(get_cache_path(), 'xpm')
+    if not xpm_path.exists():
+        xpm_path.mkdir(parents=True)
+
     if "XPM" in src:
         try:
-            xmphash = hashlib.sha256(src.encode()).hexdigest()
-            if xmphash in xmpCache:
-                return xmpCache[xmphash]
+            xpm_hash = hashlib.sha256(src.encode()).hexdigest()
+            if xpm_hash in XPM_CACHE:
+                return XPM_CACHE[xpm_hash]
             xpm = src.replace("\n        ", "\n")
             r = [s[:-1].strip('"') for s in re.findall(r"(?s)\{(.*?)\};", xpm)[0].split("\n")[1:]]
             p = QtGui.QPixmap(r)
             p = p.scaled(24, 24)
-            img = tempfile.mkstemp(dir=thumbnailsDir, suffix='.png')[1]
+            img = Path(xpm_path, xpm_hash + '.png')
             p.save(img)
-            xmpCache[xmphash] = img
-            return img
+            if img.exists():
+                XPM_CACHE[xpm_hash] = str(img)
+                return str(img)
+            else:
+                return default_path
         except:
-            return 'img' + '/' + default
+            return default_path
     else:
         try:
             if Path(src).exists():
                 return src
             else:
-                return 'img' + '/' + default
+                return default_path
         except:
             return src
 
