@@ -25,9 +25,11 @@ import FreeCAD as App
 # str parameter mapping required only if default value
 # Constant
 __PARAMETER_OPTIONS__ = {
-    'updateCheck': (bool, True),
-    'proxyCheck': (int, 0),
-    'packagesViewMode': (str, 'rows')
+    'UpdateCheck': (bool, True),
+    'ProxyCheck': (str, 'none'),  # none, system, user
+    'ProxyUrl': (str, ''),
+    'PackagesViewMode': (str, 'rows'),  # rows, cards
+    'CustomCloudSources': (str, '[]')
 }
 
 __PARAMETER_GROUP__ = "User parameter:BaseApp/Preferences/ExtMan"  # Constant

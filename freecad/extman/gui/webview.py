@@ -19,14 +19,16 @@
 # *                                                                         *
 # ***************************************************************************
 
+import json
 import re
 from pathlib import Path
+from urllib.parse import unquote
 
 from PySide import QtCore, QtGui
 from PySide.QtCore import Qt
+from PySide2 import QtWebChannel
 from PySide2.QtWebEngineCore import QWebEngineUrlSchemeHandler
 from PySide2.QtWebEngineWidgets import QWebEngineSettings, QWebEngineView, QWebEnginePage
-from urllib.parse import unquote
 
 from freecad.extman import log
 
@@ -121,10 +123,27 @@ class Page(QWebEnginePage):
         pass
 
 
+class MessageBus(QtCore.QObject):
+    """
+    Manages message communication between Javascript client and Python backend
+    """
+
+    message = QtCore.Signal(str)
+
+    def __init__(self, message_handler, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.message_handler = message_handler
+
+    @QtCore.Slot(str)
+    def send(self, message):
+        return self.message_handler(json.loads(message))
+
+
 class WebView(QtGui.QMdiSubWindow):
+
     closed = QtCore.Signal(object)
 
-    def __init__(self, title, work_path, requestHandler, *args, **kwargs):
+    def __init__(self, title, work_path, request_handler, message_handler, *args, **kwargs):
         # Window Setup
         super().__init__(*args, **kwargs)
         self.setObjectName("freecad.extman.webview")
@@ -132,7 +151,7 @@ class WebView(QtGui.QMdiSubWindow):
         self.setAttribute(Qt.WA_DeleteOnClose, True)
 
         # Scheme setup (extman://)
-        self.handler = SchemeHandler(self, requestHandler)
+        self.handler = SchemeHandler(self, request_handler)
 
         # WebView setup
         self.webView = QWebEngineView(self)
@@ -157,11 +176,17 @@ class WebView(QtGui.QMdiSubWindow):
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
 
-        # Page setup
+        # Page settings
         page = self.webView.page().settings()
         page.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
         page.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         page.setAttribute(QWebEngineSettings.LocalStorageEnabled, True)
+
+        # WebChannel Setup
+        self.messageBus = MessageBus(message_handler, self.webView)
+        self.channel = QtWebChannel.QWebChannel(self.webView)
+        self.channel.registerObject('ExtManMessageBus', self.messageBus)
+        self.webView.page().setWebChannel(self.channel)
 
     def closeEvent(self, event):
         self.closed.emit(event)

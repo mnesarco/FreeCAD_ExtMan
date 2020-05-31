@@ -61,7 +61,7 @@
 
     from freecad.extman.utils.preferences import ExtManParameters
     
-    mode = ExtManParameters.packagesViewMode
+    mode = ExtManParameters.PackagesViewMode
 
     hprint(comp.PackageViewModeSelect(mode))
 
@@ -74,3 +74,6 @@
 
 </py>
 
+<script type="text/javascript">
+$(document).ready(function() {$('#package-search').removeClass('invisible');});
+</script>

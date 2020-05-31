@@ -35,6 +35,7 @@ from freecad.extman.protocol.github import GithubProtocol
 from freecad.extman.sources import (
     PackageInfo, PackageSource, PackageCategory, UnsupportedSourceException,
     groupPackagesInCategories, savePackageMetadata)
+from freecad.extman.utils.preferences import ExtManParameters
 
 
 class CloudPackageSource(PackageSource):
@@ -203,10 +204,22 @@ class CloudPackageChannel:
 
 @lru_cache()
 def getSourcesData():
+
+    # Official sources
     path = get_resource_path('data', 'sources.json')
+    data = []
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        return data
+
+    # Custom sources
+    custom = {
+        'id': 'Custom',
+        'name': 'Custom Extensions Sources',
+        'sources': json.loads(ExtManParameters.CustomCloudSources)
+    }
+    data.append(custom)
+
+    return data
 
 
 @lru_cache()

@@ -26,7 +26,8 @@
         window._TR_README_ERROR = "${t:Readme info not available or unsupported}";
     </script>
 
-    <!-- Scripts: jquery, extman_base, extman. Order is important and must be included in head. -->
+    <!-- Scripts: qwebchannel, jquery, extman_base, extman. Order is important and must be included in head. -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
     <script src="js/jquery.slim.min.js"></script>
     <script src="js/extman_base.js"></script>
     <script src="js/extman.js"></script>
@@ -52,7 +53,7 @@
             </li>
         </ul>
         <div class="form-inline">
-            <input class="form-control form-control-sm mr-sm-2" type="search" name="search" placeholder="${t:Search}..."
+            <input id="package-search" class="form-control form-control-sm mr-sm-2 invisible" type="search" name="search" placeholder="${t:Search}..."
                 onkeyup="extman_filterPackages(this.value)" 
                 onclick="extman_filterPackages(this.value)"
                 onblur="extman_filterPackages(this.value)"

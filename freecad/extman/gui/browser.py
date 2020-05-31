@@ -22,8 +22,8 @@
 import FreeCADGui as Gui
 from PySide import QtGui, QtCore
 
-import freecad.extman.gui.controller as actions
-from freecad.extman import tr, get_resource_path, get_cache_path, log
+from freecad.extman.gui.controller import actions, message_handlers
+from freecad.extman import tr, get_resource_path, get_cache_path, log, log_err
 from freecad.extman.template.html import render
 from freecad.extman.gui.webview import WebView
 
@@ -71,13 +71,19 @@ def on_web_view_close(event):
 def start_browser():
     global __browser_instance__
     if not __browser_instance__:
-        ma = Gui.getMainWindow().findChild(QtGui.QMdiArea)
-        __browser_instance__ = WebView(tr('Extension Manager'), get_cache_path(), request_handler, ma)
-        __browser_instance__.closed.connect(on_web_view_close)
-        ma.addSubWindow(__browser_instance__)
+        main_window = Gui.getMainWindow().findChild(QtGui.QMdiArea)
+        bi = WebView(
+            tr('Extension Manager'),
+            get_cache_path(),
+            request_handler,
+            message_handler,
+            main_window)
+        bi.closed.connect(on_web_view_close)
+        main_window.addSubWindow(bi)
         index = path_to_extman_url(get_resource_path('html', 'index.html'))
-        __browser_instance__.load(index)
-        __browser_instance__.show()
+        bi.load(index)
+        bi.show()
+        __browser_instance__ = bi
     return __browser_instance__
 
 
@@ -118,7 +124,7 @@ class TemplateResponseWrapper:
 
 def request_handler(path, action, params, request, response):
     """
-    Process extman:// requests
+    Process extman:// requests from webview
     """
 
     # Restore state
@@ -127,14 +133,36 @@ def request_handler(path, action, params, request, response):
     # Call action logic if any
     if action:
         response_wrapper = TemplateResponseWrapper(response)
-        cmd = 'actions.{0}(path, session, params, request, response_wrapper)'.format(action)
-        eval(cmd, {'actions': actions}, locals())
+        try:
+            handler = actions[action]
+        except KeyError:
+            log_err("Invalid action {0}".format(action))
+        else:
+            handler(path, session, params, request, response_wrapper)
 
     # Default action is render template.
     else:
         html, url = render(path, model=session.model)
         response.write(html)
         response.send()
+
+
+def message_handler(message):
+    """
+    Process Javascript messages from webview
+    """
+
+    try:
+        handler_name = message['handler']
+    except KeyError:
+        log_err("Invalid handler {0}".format(handler_name))
+    else:
+        try:
+            handler = message_handlers[handler_name]
+        except KeyError:
+            log_err("Invalid handler {0}".format(handler_name))
+        else:
+            handler(message, get_updated_browser_session())
 
 
 def install_router(router):

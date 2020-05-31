@@ -91,17 +91,17 @@ function extman_update_readme(url, content) {
     // Write content directly if provided
     if (content) {
         $("#extman_ReadmeDlg .modal-body").append(frame);
-        fdoc = frame.contentWindow.document;
-        fdoc.open();
-        fdoc.write('<html><head>')
-        fdoc.write('<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />');
-        fdoc.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" ' +
+        doc = frame.contentWindow.document;
+        doc.open();
+        doc.write('<html><head>')
+        doc.write('<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0,minimal-ui" />');
+        doc.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" ' +
             'integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />')
-        fdoc.write('<style>img {max-width:100% !important;}</style>')
-        fdoc.write('</head><body><div class="container-fluid">')
-        fdoc.write(content);
-        fdoc.write('</div></body></html>')
-        fdoc.close();
+        doc.write('<style>img {max-width:100% !important;}</style>')
+        doc.write('</head><body><div class="container-fluid">')
+        doc.write(content);
+        doc.write('</div></body></html>')
+        doc.close();
         extman_frame_disable_links(frame);
         $('#readmeSpinner').hide();
     }
@@ -139,7 +139,7 @@ function extman_readmeDlg(link, event) {
         extman_update_readme(url);
     }
 
-    // Fetch data and parse if format is markdown or wikimedia
+    // Fetch data and parse if format is markdown or mediawiki
     else {
         fetch(url, 
             { 
@@ -171,7 +171,7 @@ function extman_readmeDlg(link, event) {
 }
 
 /**
- * Parse wikimedia's parse api result (json) into html
+ * Parse mediawiki's parse api result (json) into html
  * @param data 
  */
 function wikipage(data, url) {

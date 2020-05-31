@@ -37,7 +37,7 @@
     from freecad.extman.sources.source_installed import InstalledPackageSource
     from freecad.extman.utils.preferences import ExtManParameters
     
-    mode = ExtManParameters.packagesViewMode
+    mode = ExtManParameters.PackagesViewMode
     hprint(comp.PackageViewModeSelect(mode))
 
     installed = InstalledPackageSource()
@@ -49,3 +49,7 @@
             hprint(categoryRows(cat=c, installed=installed))
 
 </py>
+
+<script type="text/javascript">
+$(document).ready(function() {$('#package-search').removeClass('invisible');});
+</script>

@@ -29,6 +29,11 @@ from freecad.extman.sources.source_cloud import findSource
 from freecad.extman.utils.worker import Worker
 
 
+# +---------------------------------------------------------------------------+
+# | Request-Response based actions                                            |
+# +---------------------------------------------------------------------------+
+
+
 def restart(path, session, params, request, response):
     utils.restart_freecad()
 
@@ -122,7 +127,7 @@ def open_installed(path, session, params, request, response):
 
 
 def set_package_viewmode(path, session, params, request, response):
-    ExtManParameters.packagesViewMode = params['vm']
+    ExtManParameters.PackagesViewMode = params['vm']
     response.render_template('index.html')
 
 
@@ -160,6 +165,20 @@ def run_macro(path, session, params, request, response):
     response.html_ok()
 
 
+# +---------------------------------------------------------------------------+
+# | Javascript message based actions                                          |
+# +---------------------------------------------------------------------------+
+
+
+def on_form_add_source(data, session):
+    log_err(data)
+
+
+# +---------------------------------------------------------------------------+
+# | Configuration                                                             |
+# +---------------------------------------------------------------------------+
+
+
 def create_router():
     """
     Setup routes
@@ -171,3 +190,30 @@ def create_router():
         CloudSourcesPackages=route(prefix="/CloudSources/Packages"),
         Install=route(exact='/CloudSources/Packages/Install')
     )
+
+
+# Functions exposed as actions to WebView
+actions = {
+    f.__name__: f
+    for f in (
+        restart,
+        show_install_info,
+        install_package,
+        update_cloud_source,
+        open_cloud_source,
+        open_cloud,
+        open_installed,
+        set_package_viewmode,
+        open_macro,
+        open_workbench,
+        run_macro
+    )
+}
+
+# Message handlers
+message_handlers = {
+    f.__name__: f
+    for f in (
+        on_form_add_source,
+    )
+}

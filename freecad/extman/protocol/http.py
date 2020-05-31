@@ -26,6 +26,7 @@ import urllib.error as errors
 import urllib.request as request
 
 from freecad.extman import log
+from freecad.extman.utils.preferences import ExtManParameters
 
 # <Start Legacy urllib code>
 #   Can be replaced by modern request lib but
@@ -45,16 +46,15 @@ else:
 
 
 def get_proxy_conf():
-    pref = App.ParamGet("User parameter:BaseApp/Preferences/Addons")
-    if pref.GetBool("NoProxyCheck", True):
-        proxies = {}
+    proxy_check = ExtManParameters.ProxyCheck
+    if proxy_check == 'system':
+        proxy = request.getproxies()
+        proxies = {"http": proxy.get('http'), "https": proxy.get('http')}
+    elif proxy_check == 'user':
+        proxy = ExtManParameters.ProxyUrl
+        proxies = {"http": proxy, "https": proxy}
     else:
-        if pref.GetBool("SystemProxyCheck", False):
-            proxy = request.getproxies()
-            proxies = {"http": proxy.get('http'), "https": proxy.get('http')}
-        elif pref.GetBool("UserProxyCheck", False):
-            proxy = pref.GetString("ProxyUrl", "")
-            proxies = {"http": proxy, "https": proxy}
+        proxies = {}
     return request.ProxyHandler(proxies)
 
 

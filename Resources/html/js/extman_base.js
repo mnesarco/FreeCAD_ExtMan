@@ -146,6 +146,26 @@ function extman_frame_disable_links(frame) {
     });
 }
 
+
+function extman_send_form(form, callback, event) {
+
+    if (event) {
+        event.preventDefault();
+    }
+
+    var data = {};
+    var $form = $(form)
+    $form.find(":input").not("[type='submit']").not("[type='reset']").each(function() {
+        $input = $(this);
+        data[$input.attr('name')] = $input.val();
+    });
+
+    data.handler = $form.data('handler');
+    extman_send_msg(data, callback);
+
+}
+
+
 /**
  * Javascript behaviour setup.
  */
@@ -174,6 +194,21 @@ $( document ).ready(function() {
     $('#extman_ReadmeDlg').on('hidden.bs.modal', function () {
         $('#extmanReadmeSandbox').remove();
     });
+
+    // Setup QT Communication Channel
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+        window.ExtManMessageBus = channel.objects.ExtManMessageBus;
+        window.ExtManMessageBus.message.connect(function(msg) {
+            data = JSON.parse(msg)
+            if (data.handler && window[data.handler]) {
+                window[data.handler](data)
+            }
+        });
+    });
+
+    window.extman_send_msg = function(data, callback) {
+        window.ExtManMessageBus.send(JSON.stringify(data), callback);
+    };
 
 });
 
