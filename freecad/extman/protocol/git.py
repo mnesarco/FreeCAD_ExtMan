@@ -213,7 +213,7 @@ class GitProtocol(Protocol):
         if syncReadme:
             repo.syncReadmeHttp()
 
-        icon_path = "Resources/icons/{0}Workbench.svg".format(mod['name'])
+        icon_path = "Resources/icons/{0}.svg".format(mod['name'])
 
         index_key = mod['url']
         if index_key.endswith('.git'):
