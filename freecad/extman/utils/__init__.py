@@ -29,7 +29,6 @@ from freecad.extman import (tr, get_freecad_resource_path, get_macro_path,
                             get_app_data_path, get_resource_path, get_cache_path)
 
 from freecad.extman.protocol.manifest import ExtensionManifest
-from freecad.extman.sources import PackageInfo
 
 XPM_CACHE = {}
 
@@ -263,10 +262,10 @@ def analyse_installed_workbench(pkg):
         with open(manifest_file, 'r', encoding='utf-8') as f:
             manifest_content = f.read()
             manifest = ExtensionManifest(manifest_content)
-            if isinstance(pkg, PackageInfo):
-                manifest.getData(pkg.__dict__)
-            elif isinstance(pkg, dict):
+            if isinstance(pkg, dict):
                 manifest.getData(pkg)
+            else:
+                manifest.getData(pkg.__dict__)
 
     # Check Legacy InitGui.py
     init = Path(pkg.installDir, 'InitGui.py')
