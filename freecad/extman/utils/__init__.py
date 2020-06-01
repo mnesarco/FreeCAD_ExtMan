@@ -28,6 +28,9 @@ from pathlib import Path
 from freecad.extman import (tr, get_freecad_resource_path, get_macro_path,
                             get_app_data_path, get_resource_path, get_cache_path)
 
+from freecad.extman.protocol.manifest import ExtensionManifest
+from freecad.extman.sources import PackageInfo
+
 XPM_CACHE = {}
 
 COMMA_SEP_LIST_PATTERN = re.compile(r'\s*,\s*', re.S)
@@ -253,6 +256,17 @@ def extract_workbench_class_name(path):
 
 
 def analyse_installed_workbench(pkg):
+
+    # Read Manifest
+    manifest_file = Path(pkg.installDir, 'manifest.ini')
+    if manifest_file.exists():
+        with open(manifest_file, 'r', encoding='utf-8') as f:
+            manifest_content = f.read()
+            manifest = ExtensionManifest(manifest_content)
+            if isinstance(pkg, PackageInfo):
+                manifest.getData(pkg.__dict__)
+            elif isinstance(pkg, dict):
+                manifest.getData(pkg)
 
     # Check Legacy InitGui.py
     init = Path(pkg.installDir, 'InitGui.py')
