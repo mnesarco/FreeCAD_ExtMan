@@ -1,6 +1,7 @@
 @startuml
 Protocol <|-- GitProtocol
 GitProtocol <|-- GithubProtocol
+GitProtocol <|-- FramagitProtocol
 Protocol <|-- FCWikiProtocol
 PackageSource <|-- InstalledPackageSource
 PackageSource <|-- CloudPackageSource
