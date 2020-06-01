@@ -21,61 +21,15 @@
 # noinspection PyPep8Naming
 
 import re
-from html import unescape
-from html.parser import HTMLParser
 
 from freecad.extman.protocol.git import GitProtocol, GitRepo
 from freecad.extman.protocol.http import http_get
 
-# Github repository URL
-REPO_URL = re.compile(r'https://github.com/(?P<org>[^/]+)/(?P<repo>[A-Za-z0-9_\-.]+?)(\.git).*', re.I)
+# Framagit repository URL
+REPO_URL = re.compile(r'https://framagit.org/(?P<org>[^/]+)/(?P<repo>[A-Za-z0-9_\-.]+?)(\.git).*', re.I)
 
 
-class ReadmeParser(HTMLParser):
-
-    def error(self, message):
-        pass
-
-    def __init__(self, meta_filter=None):
-        super().__init__()
-        self.html = None
-        self.meta = {}
-        self.inContent = False
-        self.meta_filter = meta_filter
-
-    def handle_starttag(self, tag, attrs):
-        if self.inContent:
-            text = "<{0} ".format(tag)
-            for attName, attVal in attrs:
-                text += "{0}=\"{1}\" ".format(attName, attVal)
-            text += '>'
-            self.html += text
-
-        elif tag == 'meta':
-            meta = dict(attrs)
-            name = meta.get('name', meta.get('property'))
-            if self.meta_filter is None:
-                self.meta[name] = meta.get('content')
-            else:
-                if name in self.meta_filter:
-                    self.meta[name] = meta.get('content')
-
-        elif tag == 'article':
-            self.inContent = True
-            self.html = ''
-
-    def handle_endtag(self, tag):
-        if self.inContent:
-            self.html += "</{0}>".format(tag)
-        elif tag == 'article':
-            self.inContent = False
-
-    def handle_data(self, data):
-        if self.inContent:
-            self.html += unescape(data).replace(b'\xc2\xa0'.decode("utf-8"), ' ')
-
-
-class GithubRepo(GitRepo):
+class FramagitRepo(GitRepo):
 
     def __init__(self, url):
         super().__init__(url)
@@ -86,24 +40,25 @@ class GithubRepo(GitRepo):
         return http_get(url)
 
     def getRawFileUrl(self, path=""):
-        url = self.url.replace('github.com', 'raw.githubusercontent.com')
+        url = self.url
         if url.endswith('.git'):
             url = url[:-4]
-        return "{0}/master/{1}".format(url, path)
+        return "{0}/-/raw/master/{1}".format(url, path)
 
     def syncReadmeHttp(self):
         readme = self.getRawFile('README.md')
         if readme:
-            parser = ReadmeParser(['og:description'])
-            parser.feed(readme)
-            self.description = parser.meta.get('og:description')
-            self.readme = parser.html
+            self.readme = readme
 
     def getZipUrl(self):
         url = self.url
         if url.endswith('.git'):
             url = url[:-4]
-        return url.strip('/') + "/archive/master.zip"
+        rep = REPO_URL.search(self.url)
+        if rep:
+            return "{0}/-/archive/{1}-master.zip".format(url.strip('/'), rep.group('repo'))
+        else:
+            return None
 
     def asModule(self):
         repo_url = REPO_URL.search(self.url)
@@ -118,13 +73,16 @@ class GithubRepo(GitRepo):
             return None
 
     def getReadmeUrl(self):
-        return self.getRawFileUrl('README.md')
+        url = self.url
+        if url.endswith('.git'):
+            url = url[:-4]
+        return url.strip('/') + '/-/blob/master/README.md'
 
     def getReadmeFormat(self):
-        return 'markdown'
+        return 'html'
 
 
-class GithubProtocol(GitProtocol):
+class FramagitProtocol(GitProtocol):
     def __init__(self, url, submodulesUrl, indexType, indexUrl, wikiUrl):
-        super().__init__(GithubRepo, url, submodulesUrl, indexType, indexUrl, wikiUrl)
+        super().__init__(FramagitRepo, url, submodulesUrl, indexType, indexUrl, wikiUrl)
 

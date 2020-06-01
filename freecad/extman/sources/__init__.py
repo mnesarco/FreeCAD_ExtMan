@@ -20,11 +20,10 @@
 # ***************************************************************************
 
 import json
-import os
 from pathlib import Path
 
 import freecad.extman.utils as utils
-from freecad.extman import get_resource_path, tr, get_cache_path
+from freecad.extman import tr, get_cache_path
 
 
 class PackageCategory:
@@ -48,7 +47,7 @@ class PackageInfo:
         self.description = None  # description
         self.icon = None  # icon url
         self.iconSources = []  # List of alternative icons
-        self.isCore = False  # True for all kackages included in FreeCAD
+        self.isCore = False  # True for all packages included in FreeCAD
         self.type = 'Mod'  # Mod, Macro, Workbench
         self.isGit = False  # is based on git?
         self.isWiki = False  # is based on wiki?

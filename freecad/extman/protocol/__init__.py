@@ -43,3 +43,6 @@ class Protocol:
 
     def updateMacro(self, pkg):
         pass
+
+    def getUrl(self):
+        pass

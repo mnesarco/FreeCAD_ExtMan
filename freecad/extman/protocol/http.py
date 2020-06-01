@@ -19,8 +19,6 @@
 # *                                                                         *
 # ***************************************************************************
 
-import FreeCAD as App
-import sys
 import traceback
 import urllib.error as errors
 import urllib.request as request
@@ -110,7 +108,8 @@ def http_download(url, path, headers=None, timeout=30):
                 block = 8192
                 while True:
                     p = stream.read(block)
-                    if not p: break
+                    if not p:
+                        break
                     localFile.write(p)
                 return True
     except errors.URLError as ex:
@@ -119,3 +118,15 @@ def http_download(url, path, headers=None, timeout=30):
         log(traceback.format_exc())
 
     return False
+
+
+def http_url_exists(url, timeout=30):
+    urllib_init()
+    try:
+        req = request.Request(url, timeout=timeout)
+        req.get_method = lambda: 'HEAD'
+        request.urlopen(req)
+    except:
+        return False
+    else:
+        return True

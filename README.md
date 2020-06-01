@@ -1,13 +1,31 @@
 # FreeCAD Extension Manager
 
-## Do not install yet
-
-| :warning: WARNING: Please do not install this extension yet. It is in active development and it is not ready for final users. |
-| --- |
-
 ## Description
 
 This project is an attempt to improve management of FreeCAD Extensions repositories.
+
+## Install
+
+### Git
+```
+cd ~/.FreeCAD/Mod
+git clone https://github.com/mnesarco/FreeCAD_ExtMan.git ExtMan
+```
+Restart FreeCAD
+
+### Zip
+```
+cd ~/.FreeCAD/Mod
+curl -LOk https://github.com/mnesarco/FreeCAD_ExtMan/archive/master.zip
+unzip master.zip
+mv FreeCAD_ExtMan-master ExtMan
+```
+Restart FreeCAD
+
+
+
+| :warning: WARNING: This project is in active development and it is not ready for final users. |
+| --- |
 
 ## Python Requirements
 

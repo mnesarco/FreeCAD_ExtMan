@@ -125,7 +125,7 @@ class Page(QWebEnginePage):
 
 class MessageBus(QtCore.QObject):
     """
-    Manages message communication between Javascript client and Python backend
+    Manages two way message communication between Javascript client and Python backend
     """
 
     message = QtCore.Signal(str)
@@ -136,7 +136,11 @@ class MessageBus(QtCore.QObject):
 
     @QtCore.Slot(str)
     def send(self, message):
-        return self.message_handler(json.loads(message))
+        request_data = json.loads(message)
+        response_data = self.message_handler(request_data)
+        if response_data:
+            response_data['handler'] = request_data.get('handler', 'default_message') + '_response'
+            self.message.emit(json.dumps(response_data))
 
 
 class WebView(QtGui.QMdiSubWindow):

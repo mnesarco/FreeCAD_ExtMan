@@ -39,13 +39,13 @@
                 </div>
             </div>
 
-            <py>
+            <script type="text/python">
                 if installResult is not None:
                     if installResult.ok:
                         hprint(resultOk())
                     else:
                         hprint(resultError())
-            </py>
+            </script>
 
         </div>
 
@@ -57,10 +57,10 @@
                 </ul>
             </div>
 
-            <py>
+            <script type="text/python">
                 if installPkg.author:
                     hprint(authors())
-            </py>
+            </script>
 
         </div>
     </div>
@@ -100,12 +100,12 @@
         </div>
         <div class="card-body">
             <p class="card-text">
-                <py>
+                <script type="text/python">
                     hprint('<p class="card-text">', tr("Package installed."), '</p>')
                     if installPkg.type in ('Mod', 'Workbench'):
                         hprint('<p class="card-text">', tr("Now you must restart FreeCAD to load the changes"), '</p>')
                         hprint('<a class="btn btn-danger" href="action.restart">', tr("Restart"), '</a>')
-                </py>
+                </script>
             </p>
         </div>
     </div>

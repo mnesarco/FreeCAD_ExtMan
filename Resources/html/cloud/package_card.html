@@ -23,17 +23,17 @@
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">               
-                <py>
+                <script type="text/python">
                     hprint(comp.PkgFlags(params.pkg))
                     hprint(comp.PkgAllBadges(params.pkg, showCore=False))
-                </py>
+                </script>
             </li>
             <li class="list-group-item">
-                <py>
+                <script type="text/python">
                     pkg = params.pkg
                     hprint( comp.BtnInstallPackage(pkg, pkgSource) )
                     hprint( comp.BtnUpdatePackage(pkg, pkgSource) )
-                </py>
+                </script>
             </li>
         </ul>
     </div>

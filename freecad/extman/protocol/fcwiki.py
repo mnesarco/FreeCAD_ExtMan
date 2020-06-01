@@ -108,6 +108,9 @@ class FCWikiProtocol(Protocol):
         self.url = url
         self.wiki = wiki
 
+    def getUrl(self):
+        return self.url
+
     def getModList(self):
         return []
 

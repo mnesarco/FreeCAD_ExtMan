@@ -14,13 +14,13 @@
         </div>
     </td>
     <td style="white-space: nowrap; text-align: right;">
-        <py>
+        <script type="text/python">
             pkg = params.pkg
             hprint( comp.PkgFlags(pkg) )
             hprint( comp.PkgAllBadges(pkg, showCore=False) )
             hprint( comp.BtnInstallPackage(pkg, pkgSource) )
             hprint( comp.BtnUpdatePackage(pkg, pkgSource) )
-        </py>
+        </script>
         <div>
             <small>${e: comp.PkgReadmeLink(params.pkg) }</small>
         </div>

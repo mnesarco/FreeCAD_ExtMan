@@ -20,17 +20,15 @@
 # ***************************************************************************
 # noinspection PyPep8Naming
 
-import FreeCAD as App
-import FreeCADGui as Gui
 import json
-from functools import lru_cache
 import re
 import time
+from functools import lru_cache
 from pathlib import Path
 
-from freecad.extman import get_resource_path, tr, get_cache_path
-from freecad.extman import utils
+from freecad.extman import get_resource_path, tr, get_cache_path, utils
 from freecad.extman.protocol.fcwiki import FCWikiProtocol
+from freecad.extman.protocol.framagit import FramagitProtocol
 from freecad.extman.protocol.github import GithubProtocol
 from freecad.extman.sources import (
     PackageInfo, PackageSource, PackageCategory, UnsupportedSourceException,
@@ -46,7 +44,7 @@ class CloudPackageSource(PackageSource):
         self.channelId = channelId
         self.name = data['name']
         self.title = tr(data['title'])
-        self.description = tr(data['description'])
+        self.description = tr(data['description']) or data.get('git', data.get('wiki', ''))
         self.protocolName = data['protocol']
         self.cacheTime = 0
         self.type = data['type']
@@ -65,10 +63,16 @@ class CloudPackageSource(PackageSource):
                 data.get('index_url'),
                 data.get('wiki'),
             )
-
+        elif data['protocol'] == 'framagit':
+            self.protocol = FramagitProtocol(
+                data['git'],
+                data.get('git_submodules'),
+                data.get('index_type'),
+                data.get('index_url'),
+                data.get('wiki'),
+            )
         elif data['protocol'] == 'fcwiki':
             self.protocol = FCWikiProtocol(data['url'], data['wiki'])
-
         else:
             raise UnsupportedSourceException("Unsupported protocol: {0}".format(data['protocol']))
 
@@ -248,4 +252,3 @@ def findSource(channelId, name):
 def clearSourcesCache():
     getSourcesData.cache_clear()
     findCloudChannels.cache_clear()
-    findSource.cache_clear()

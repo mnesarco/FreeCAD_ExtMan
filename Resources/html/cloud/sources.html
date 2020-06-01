@@ -1,38 +1,170 @@
 @{macro:renderChannel channel}
 <div class="container-fluid package-channel" style="padding: 10px 30px 10px 10px">
     <ul class="nav nav-tabs border-secondary" style="margin-bottom: 20px; border-bottom: solid 3px;">
-        <li class="nav-item" >
-            <a style="border: 0px;" onclick="event.preventDefault()" href="#" class="nav-link active bg-secondary text-light">${e: channel.name }</a>
+        <li class="nav-item">
+            <a style="border: 0px;" onclick="event.preventDefault()" href="#"
+               class="nav-link active bg-secondary text-light">${e: channel.name }</a>
+        </li>
+        <li class="nav-item ${e: 'invisible' if channel.id != 'Custom' else ''}">
+            <a style="margin-left: 10px;" onclick="add_custom_source(event)" href="#"
+               class="btn btn-sm btn-outline-secondary">${t:+ Add}</a>
         </li>
     </ul>
     <div style="padding: 10px;">
-        <py>
+        <script type="text/python">
             for source in channel.sources:
                 hprint(renderSource(source=source, channel=channel))
-        </py>
+        </script>
     </div>
 </div>
 @{/macro}
 
 @{macro:renderSource source channel}
 <div class="package-channel-source border-secondary border-bottom" style="margin-bottom: 10px;">
-    <div class="media" >
-        <img class="mr-3" src="${e:source.getIcon()}" onerror="this.src='img/package_source.svg'; this.onerror=null" alt="icon" />
+    <div class="media">
+        <img class="mr-3" src="${e:source.getIcon()}" onerror="this.src='img/package_source.svg'; this.onerror=null"
+             alt="icon"/>
         <div class="media-body">
             <h5 class="mt-0">
                 <a class="extman-loading"
-                    href="action.open_cloud_source?channel=${e:channel.id}&name=${e:source.name}">
+                   href="action.open_cloud_source?channel=${e:channel.id}&name=${e:source.name}">
                     ${e:source.getTitle()}
                 </a>
             </h5>
+            <a href="#" onclick="edit_source(this, event)" class="float-right ${e:'invisible' if channel.id != 'Custom' else ''}">
+                <span style="display:none" class="data-title">${e:source.getTitle()}</span>
+                <span style="display:none" class="data-description">${e:source.getDescription()}</span>
+                <span style="display:none" class="data-protocol">${e:source.protocolName}</span>
+                <span style="display:none" class="data-url">${e:source.protocol.getUrl()}</span>
+                <img src="img/bootstrap/pencil.svg" title="${t:Edit}" />
+            </a>
             ${e:source.getDescription()}
         </div>
     </div>
 </div>
 @{/macro}
 
-<py>
-from freecad.extman.sources.source_cloud import findCloudChannels
-for channel in findCloudChannels():
-    hprint(renderChannel(channel=channel))
-</py>
+<script type="text/python">
+    from freecad.extman.sources.source_cloud import findCloudChannels
+    for channel in findCloudChannels():
+        hprint(renderChannel(channel=channel))
+</script>
+
+<!-- Custom Repository Form -->
+<div class="modal fade" id="extman_custom_source_form" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-white bg-primary">
+                <h5 class="modal-title">${t:Custom Source}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="${t:Close}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form onsubmit="on_form_submit(event)" id="custom-repo-form" novalidate="novalidate">
+
+                    <div class="form-group">
+                        <label for="title">${t:Title}</label>
+                        <input type="text" class="form-control" id="title" name="title" aria-describedby="titleHelp" />
+                        <small id="titleHelp" class="form-text text-muted">${t:Write something that helps you to
+                            identify this external source}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">${t:Description}</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  aria-describedby="descHelp"></textarea>
+                        <small id="descHelp" class="form-text text-muted">${t:Optional detailed description}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="protocol">${t:Protocol}</label>
+                        <select class="custom-select" id="protocol" name="protocol" aria-describedby="protocolHelp">
+                            <option>github</option>
+                            <option>framagit</option>
+                        </select>
+                        <small id="protocolHelp" class="form-text text-muted">${t:Source repository type}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="url">${t:Url}</label>
+                        <input type="text" class="form-control" id="url" name="url" aria-describedby="urlHelp" />
+                        <small id="urlHelp" class="form-text text-muted">${t:Public repository url}</small>
+                    </div>
+
+                    <input type="hidden" name="handler" value="on_form_add_source" />
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="remove-btn" class="btn btn-outline-danger mr-auto" onclick="remove_source()">${t:Remove}</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">${t:Close}</button>
+                <button type="button" class="btn btn-primary" onclick="on_form_submit(event)">${t:Save}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function add_custom_source(event) {
+        event.preventDefault();
+        var $form = $('#extman_custom_source_form');
+        $('#title, #description, #url').val('').removeClass('is-invalid').prop('readonly', false);
+        $('#remove-btn').addClass('invisible');
+        $form.modal('show');
+    }
+
+    function edit_source(anchor, event) {
+        event.preventDefault();
+        var $form = $('#extman_custom_source_form');
+        var $a = $(anchor);
+        var title = $a.find('.data-title').text();
+        var description = $a.find('.data-description').text();
+        var protocol = $a.find('.data-protocol').text();
+        var url = $a.find('.data-url').text();
+        $('#title, #description, #url').removeClass('is-invalid')
+        $('#title').val(title);
+        $('#description').val(description);
+        $('#protocol').val(protocol);
+        $('#url').val(url).prop('readonly', true);
+        $('#remove-btn')
+            .removeClass('invisible')
+            .html("${t:Remove}")
+            .data('confirm', false);
+        $form.modal('show');
+    }
+
+    function remove_source() {
+        var $btn = $('#remove-btn');
+        if ($btn.data('confirm')) {
+            var url = $('#url').val();
+            data = { url: url, 'handler': 'on_form_remove_source'};
+            extman_send_msg(data, function() {
+                location.reload();
+            });
+        } else {
+            $('#remove-btn')
+                .html("${t:Click again to confirm}")
+                .data('confirm', true);
+        }
+    }
+
+    function on_form_submit(event) {
+        var form = document.getElementById('extman_custom_source_form');
+        var onResponse = function(data) {
+            console.log(data);
+            if (data.validation && data.validation.length > 0) {
+                for (var i=0; i<data.validation.length; i++) {
+                    $('#' + data.validation[i].field).addClass('is-invalid').attr('title', data.validation[i].message);
+                }
+            } else {
+                location.reload();
+            }
+        };
+        $('#title, #description, #url').removeClass('is-invalid');
+        extman_send_form(form, onResponse, event);
+    }
+
+</script>

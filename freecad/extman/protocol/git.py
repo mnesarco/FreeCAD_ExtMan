@@ -113,6 +113,12 @@ class GitRepo:
     def asModule(self):
         pass
 
+    def getReadmeUrl(self):
+        pass
+
+    def getReadmeFormat(self):
+        pass
+
 
 class GitProtocol(Protocol):
 
@@ -125,6 +131,9 @@ class GitProtocol(Protocol):
         self.wikiUrl = wikiUrl
         self.repo = repoImpl(url)
         self.RepoImpl = repoImpl
+
+    def getUrl(self):
+        return self.url
 
     def getModList(self):
 
@@ -233,8 +242,8 @@ class GitProtocol(Protocol):
             'description': None,
             'categories': None,
             'iconSources': icon_sources,
-            'readmeUrl': repo.getRawFileUrl('README.md'),
-            'readmeFormat': 'markdown'
+            'readmeUrl': repo.getReadmeUrl(),
+            'readmeFormat': repo.getReadmeFormat()
         }
 
         # Copy data from index

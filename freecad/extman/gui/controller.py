@@ -21,11 +21,14 @@
 
 import FreeCADGui as Gui
 from pathlib import Path
+import json
+from random import randint
+import hashlib
 
 from freecad.extman import utils, log_err, tr
 from freecad.extman.utils.preferences import ExtManParameters
 from freecad.extman.gui.router import Router, route
-from freecad.extman.sources.source_cloud import findSource
+from freecad.extman.sources.source_cloud import findSource, clearSourcesCache
 from freecad.extman.utils.worker import Worker
 
 
@@ -171,7 +174,59 @@ def run_macro(path, session, params, request, response):
 
 
 def on_form_add_source(data, session):
-    log_err(data)
+
+    result = {
+        'status': 'ok',
+        'validation': [],
+        'message': None
+    }
+
+    if not data.get('title'):
+        result['status'] = 'error'
+        result['validation'].append({'field': 'title', 'message': tr('title is required')})
+
+    if not data.get('url'):
+        result['status'] = 'error'
+        result['validation'].append({'field': 'url', 'message': tr('url is required')})
+
+    if not data.get('protocol'):
+        result['status'] = 'error'
+        result['validation'].append({'field': 'protocol', 'message': tr('protocol is required')})
+
+    if result['status'] != 'ok':
+        result['message'] = tr('Validation error')
+        return result
+
+    name = str(hashlib.sha256(data['url'].encode()).hexdigest())
+    sources = json.loads(ExtManParameters.CustomCloudSources)
+    sources = [s for s in sources if s['name'] != name]
+
+    if data.get('protocol') in ('github', 'framagit'):
+        if not data['url'].endswith('.git'):
+            data['url'] = data['url'].strip('/') + '.git'
+
+    source = {
+        'name': name,
+        'title': data['title'],
+        'description': data['description'],
+        'git': data['url'],
+        'protocol': data.get('protocol', 'github'),
+        'type': 'Mod',
+        'icon': 'html/img/package_source.svg'
+    }
+    sources.append(source)
+    ExtManParameters.CustomCloudSources = json.dumps(sources)
+    clearSourcesCache()
+    return {"status": 'ok'}
+
+
+def on_form_remove_source(data, session):
+    name = str(hashlib.sha256(data['url'].encode()).hexdigest())
+    sources = json.loads(ExtManParameters.CustomCloudSources)
+    sources = [s for s in sources if s['name'] != name]
+    ExtManParameters.CustomCloudSources = json.dumps(sources)
+    clearSourcesCache()
+    return {"status": 'ok'}
 
 
 # +---------------------------------------------------------------------------+
@@ -215,5 +270,6 @@ message_handlers = {
     f.__name__: f
     for f in (
         on_form_add_source,
+        on_form_remove_source
     )
 }

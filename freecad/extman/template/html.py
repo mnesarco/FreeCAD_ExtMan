@@ -37,7 +37,7 @@ from freecad.extman.template.html_utils import get_resource_url
 # ${x:statement}                     => exec statement
 # ${e:include(*template, **params)}  => include template with params
 TEMPLATE_EXPR_PATTERN = re.compile(r'\${([tex]:)?\s*([^}]+)}', flags=re.S)
-TEMPLATE_EXEC_PATTERN = re.compile(r'<py>(.*?)</py>', flags=re.S)
+TEMPLATE_EXEC_PATTERN = re.compile(r'<script\s+type\s*=\s*["\']text/python["\']\s*>(.*?)</script>', flags=re.S)
 TEMPLATE_MACRO_PATTERN = re.compile(r'@{macro:\s*(\w+)\b[^}]*}(.*?)@{/macro}', flags=re.S)
 
 

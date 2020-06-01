@@ -79,9 +79,9 @@ def start_browser():
             message_handler,
             main_window)
         bi.closed.connect(on_web_view_close)
-        main_window.addSubWindow(bi)
         index = path_to_extman_url(get_resource_path('html', 'index.html'))
         bi.load(index)
+        main_window.addSubWindow(bi)
         bi.show()
         __browser_instance__ = bi
     return __browser_instance__
@@ -155,14 +155,14 @@ def message_handler(message):
     try:
         handler_name = message['handler']
     except KeyError:
-        log_err("Invalid handler {0}".format(handler_name))
+        log_err("Invalid handler: None")
     else:
         try:
             handler = message_handlers[handler_name]
         except KeyError:
             log_err("Invalid handler {0}".format(handler_name))
         else:
-            handler(message, get_updated_browser_session())
+            return handler(message, get_updated_browser_session())
 
 
 def install_router(router):

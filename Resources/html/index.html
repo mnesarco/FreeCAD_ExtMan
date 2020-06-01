@@ -68,7 +68,7 @@
 
     <div style="height: 56px;"></div>
 
-    <py> 
+    <script type="text/python">
 
         if route.isInstalledPackages():
             hprint(include('installed', 'packages.html'))
@@ -76,7 +76,7 @@
         if route.isCloudSources():
             hprint(include('cloud', 'index.html'))
             
-    </py>
+    </script>
 
     <!-- Modal -->
     <div class="modal fade" id="extman_confirmModalDlg" tabindex="-1" role="dialog" aria-hidden="true">

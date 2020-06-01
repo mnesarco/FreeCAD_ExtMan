@@ -157,10 +157,11 @@ function extman_send_form(form, callback, event) {
     var $form = $(form)
     $form.find(":input").not("[type='submit']").not("[type='reset']").each(function() {
         $input = $(this);
-        data[$input.attr('name')] = $input.val();
+        name = $input.attr('name');
+        if (name) {
+            data[$input.attr('name')] = $input.val();
+        }
     });
-
-    data.handler = $form.data('handler');
     extman_send_msg(data, callback);
 
 }
@@ -206,8 +207,27 @@ $( document ).ready(function() {
         });
     });
 
+    window.default_message_response = function(data) {
+        console.log('Unmanaged message response')
+        console.log(data);
+    };
+
     window.extman_send_msg = function(data, callback) {
-        window.ExtManMessageBus.send(JSON.stringify(data), callback);
+
+        // Set default handler if missing
+        if (!data.handler) {
+            data.handler = 'default_message';
+        }
+
+        // Install response handler
+        window[data.handler + '_response'] = function(data) {
+            window[data.handler + '_response'] = null;
+            callback(data);
+        };
+
+        // Send
+        window.ExtManMessageBus.send(JSON.stringify(data));
+
     };
 
 });
