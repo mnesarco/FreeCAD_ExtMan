@@ -38,8 +38,8 @@ def log_err(*msg):
 
 
 def get_resource_path(*paths, create_dir=False):
-    """Returns a path inside Resources"""
-    path = Path(__extman_home_path__, 'Resources', *paths)
+    """Returns a path inside resources"""
+    path = Path(__extman_home_path__, 'resources', *paths)
     if create_dir and not path.exists():
         path.mkdir(parents=True)
     return path
@@ -109,7 +109,7 @@ except Exception as ex:
 
 __freecad_home_path__ = Path(App.getHomePath()).resolve()
 __freecad_resource_path__ = Path(App.getResourceDir())
-__extman_home_path__ = Path(__file__).parents[2]
+__extman_home_path__ = Path(__file__).parent
 __user_appdata_path__ = Path(App.getUserAppDataDir())
 __user_mod_path__ = Path(__user_appdata_path__, 'Mod')
 __extman_cache_path__ = Path(__user_appdata_path__, 'ExtManCache')

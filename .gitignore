@@ -3,4 +3,4 @@ notes.ipynb
 .env
 build/
 .vscode
-Resources/cache/
+freecad/extman/resources/cache/

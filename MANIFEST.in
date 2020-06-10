@@ -1,1 +1,1 @@
-recursive-include Resources *
+recursive-include freecad/extman/resources *

@@ -29,7 +29,7 @@ from freecad.extman import tr, get_resource_path
 @functools.lru_cache()
 def get_flags_database():
     """
-    Reads Resources/data/flags.json
+    Reads resources/data/flags.json
     returns dict( "{pkg.type:pkg.name.lower()}" => flags )
     """
 
