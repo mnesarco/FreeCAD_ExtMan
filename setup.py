@@ -44,5 +44,6 @@ setup(
         "python3-pyside2.qtnetwork",
         "python3-pyside2.qtwebenginecore",
         "python3-pyside2.qtwebenginewidgets",
-    ]
+    ],
+    include_package_data=True
 )
