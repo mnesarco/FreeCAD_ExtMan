@@ -22,6 +22,9 @@ mv FreeCAD_ExtMan-master ExtMan
 ```
 Restart FreeCAD
 
+### Usage
+
+Once installed, restart FreeCAD and activate it from the Workbenches list.
 
 
 | :warning: WARNING: This project is in active development and it is not ready for final users. |
@@ -36,8 +39,8 @@ Restart FreeCAD
 
 ## Core Classes
 
-![Classes](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/Resources/docs/core-classes.png)
+![Classes](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/core-classes.png)
 
 ## UI Rendering
 
-![Sequence](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/Resources/docs/gui-cycle.png)
+![Sequence](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/gui-cycle.png)
