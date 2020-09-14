@@ -27,6 +27,9 @@ Restart FreeCAD
 Once installed, restart FreeCAD and activate it from the Workbenches list.
 
 
+![Menu](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/workbenches.png)
+
+
 | :warning: WARNING: This project is in active development and it is not ready for final users. |
 | --- |
 
