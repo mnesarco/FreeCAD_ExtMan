@@ -421,7 +421,7 @@ class GitProtocol(Protocol):
 
                 # Pull
                 repo = git.Git(pkg.installDir)
-                repo.pull()
+                repo.pull('--depth=1')
                 repo = git.Repo(pkg.installDir)
                 for mod in repo.submodules:
                     mod.update(init=True, recursive=True)
@@ -601,7 +601,7 @@ def update_local(path):
 
             # Pull
             repo = pygit.Git(path)
-            repo.pull()
+            repo.pull('--depth=1')
             repo = pygit.Repo(path)
             for submodule in repo.submodules:
                 submodule.update(init=True, recursive=True)
@@ -631,7 +631,7 @@ def clone_local(repo_url, path=None, **kwargs):
         # Clone
         else:
             try:
-                repo = pygit.Repo.clone_from(repo_url, path, **kwargs)
+                repo = pygit.Repo.clone_from(repo_url, path, depth=1, **kwargs)
                 return repo, path
             except:
                 traceback.print_exc(file=sys.stderr)
