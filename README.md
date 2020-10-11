@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is an attempt to improve management of FreeCAD Extensions repositories.
+This project is an attempt to improve management of FreeCAD Extensions repositories. The current solution is the built-in FreeCAD [Addon Manager](https://wiki.freecadweb.org/AddonManager). Eventually this project aims to replace it.
 
 ## Install
 
@@ -32,6 +32,11 @@ Once installed, restart FreeCAD and activate it from the Workbenches list.
 
 | :warning: WARNING: This project is in active development and it is not ready for final users. |
 | --- |
+
+## Features
+
+* Improved UI/UX
+* Extension Manager will pull submodules for repos that use them, automatically
 
 ## Python Requirements
 
