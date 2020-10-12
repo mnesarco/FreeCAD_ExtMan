@@ -334,7 +334,7 @@ class GitProtocol(Protocol):
                 result.failedDependencies = failedDependencies
                 return result
 
-            # Download mater zip
+            # Download master zip
             zip_path = Path(tempfile.mktemp(suffix=".zip"))
             if http_download(gh.getZipUrl(), zip_path):
                 exploded = Path(tempfile.mktemp(suffix="_zip"))
