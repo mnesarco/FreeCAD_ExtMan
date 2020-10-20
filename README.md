@@ -1,4 +1,4 @@
-# FreeCAD Extension Manager
+# FreeCAD Extension Manager (For FreeCAD 0.19+)
 
 ## Description
 
