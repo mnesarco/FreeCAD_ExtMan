@@ -626,7 +626,16 @@ def clone_local(repo_url, path=None, **kwargs):
                 repo = update_local(path)
                 return repo, path
             except:
+                #If update_local fails, try clean clone
                 traceback.print_exc(file=sys.stderr)
+                tmp_path = Path(tempfile.mkdtemp())
+                try:
+                    repo = pygit.Repo.clone_from(repo_url, tmp_path, depth=1, **kwargs)
+                    shutil.rmtree(path, True)
+                    shutil.move(tmp_path, path)
+                    return repo, path
+                except:
+                    traceback.print_exc(file=sys.stderr)
 
         # Clone
         else:
