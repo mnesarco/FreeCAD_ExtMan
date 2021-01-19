@@ -11,7 +11,7 @@
                 "protocol": "github",
                 "type": "Mod",
                 "index_type": "wiki",
-                "index_url": "https://wiki.freecadweb.org/api.php?action=query&prop=revisions&titles=External_workbench_list&rvslots=%2A&rvprop=content&formatversion=2&format=json",
+                "index_url": "https://wiki.freecadweb.org/api.php?action=query&prop=revisions&titles=External_workbenches&rvslots=%2A&rvprop=content&formatversion=2&format=json",
                 "git": "https://github.com/FreeCAD/FreeCAD-addons.git",
                 "git_submodules": "https://raw.githubusercontent.com/FreeCAD/FreeCAD-addons/master/.gitmodules",
                 "wiki": "https://wiki.freecadweb.org"
