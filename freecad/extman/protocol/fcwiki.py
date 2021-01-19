@@ -47,6 +47,7 @@ MOD_TABLE_ITEM = re.compile(r"""
         (\n[^|].*)?
         \s+\|+(?P<authors>.*)
         \s+\|+(?P<code>.*)
+        \s+\|+(?P<trash>.*)
         (\s+\|+(?!-)(?P<flag>.*))?
     """, re.X | re.I | re.M)
 
