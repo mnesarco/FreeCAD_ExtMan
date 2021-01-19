@@ -4,6 +4,10 @@
 
 This project is an attempt to improve management of FreeCAD Extensions repositories. The current solution is the built-in FreeCAD [Addon Manager](https://wiki.freecadweb.org/AddonManager). Eventually this project aims to replace it.
 
+![Sequence](https://github.com/mnesarco/FreeCAD_ExtMan/raw/master/freecad/extman/resources/docs/ExtMan_Screenshot1.png)
+
+Old video: https://www.youtube.com/watch?v=PNQObE37vxE
+
 ## Install
 
 ### Git
@@ -27,11 +31,8 @@ Restart FreeCAD
 Once installed, restart FreeCAD and activate it from the Workbenches list.
 
 
-![Menu](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/workbenches.png)
+![Menu](https://github.com/mnesarco/FreeCAD_ExtMan/raw/master/freecad/extman/resources/docs/workbenches.png)
 
-
-| :warning: WARNING: This project is in active development and it is not ready for final users. |
-| --- |
 
 ## Features
 
@@ -45,10 +46,14 @@ Once installed, restart FreeCAD and activate it from the Workbenches list.
 * python3-pyside2.qtwebenginecore
 * python3-pyside2.qtwebenginewidgets
 
+
+
+# Technical Info for developers
+
 ## Core Classes
 
-![Classes](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/core-classes.png)
+![Classes](https://github.com/mnesarco/FreeCAD_ExtMan/raw/master/freecad/extman/resources/docs/core-classes.png)
 
 ## UI Rendering
 
-![Sequence](https://github.com/mnesarco/FreeCAD_ExtMan/blob/master/freecad/extman/resources/docs/gui-cycle.png)
+![Sequence](https://github.com/mnesarco/FreeCAD_ExtMan/raw/master/freecad/extman/resources/docs/gui-cycle.png)
