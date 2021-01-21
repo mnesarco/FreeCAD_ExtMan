@@ -21,14 +21,14 @@ python3-pyside2.qtwebenginecore
 python3-pyside2.qtwebenginewidgets
 ```
 
-### Git
+### Install method 1: Using Git
 ```
 cd ~/.FreeCAD/Mod
 git clone https://github.com/mnesarco/FreeCAD_ExtMan.git ExtMan
 ```
 Restart FreeCAD
 
-### Zip
+### Install method 2: Using Zip
 ```
 cd ~/.FreeCAD/Mod
 curl -LOk https://github.com/mnesarco/FreeCAD_ExtMan/archive/master.zip
