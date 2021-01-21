@@ -10,6 +10,17 @@ Old video: https://www.youtube.com/watch?v=PNQObE37vxE
 
 ## Install
 
+### Dependencies
+
+If you are using the AppImage, everything is already included, but if you are using a system installed version, or a locally compiled version, you must install the python dependencies listed here:
+
+```
+python3-pyside2.qtwebchannel
+python3-pyside2.qtnetwork
+python3-pyside2.qtwebenginecore
+python3-pyside2.qtwebenginewidgets
+```
+
 ### Git
 ```
 cd ~/.FreeCAD/Mod
