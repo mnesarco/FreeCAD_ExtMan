@@ -209,7 +209,7 @@ def get_workbench_icon_candidates(workbench_name, base_url, icon_path, local_dir
     if icon_path:
         if icon_path.startswith('http'):
             sources.append(icon_path)
-        elif icon_path.startswith('Resources'):
+        elif icon_path.startswith('resources'):
             src = Path(local_dir, icon_path)
             if src.exists():
                 sources.append(src.as_uri().replace('file:', 'extman:'))

@@ -21,6 +21,7 @@
 # noinspection PyPep8Naming
 
 
+from freecad.extman.sources.source_installed import InstalledPackageSource
 import os
 from urllib.parse import quote
 
@@ -44,6 +45,7 @@ TR_FLAG_OBSOLETE = tr('Obsolete package')
 TR_FLAG_PY2ONLY = tr('Python2 only')
 TR_README = tr('readme')
 TR_INSTALL = tr('Install')
+TR_UNINSTALL = tr('Uninstall')
 TR_INSTALLING = tr('Installing...')
 TR_VIEWMODE = tr('View mode')
 TR_VIEWMODE_LIST = tr('List view')
@@ -135,18 +137,47 @@ def comp_btn_install_package(pkg, source):
         return ''
 
 
+def comp_btn_uninstall_package(pkg):
+    if pkg.isInstalled() and not pkg.isCore:
+        source = InstalledPackageSource()
+        return """
+        <a class="btn btn-sm btn-outline-danger btn-labeled extman-loading" 
+            href="action.show_uninstall_info?pkg={0}&source={1}&channel={2}">
+            {3}
+        </a>
+        """.format(quote(pkg.name), quote(source.name), quote(source.channelId), TR_UNINSTALL)
+    else:
+        return ''
+
+
+def comp_btn_do_uninstall_package(pkg):
+    if pkg.isInstalled() and not pkg.isCore:
+        source = InstalledPackageSource()
+        return """
+        <a class="btn btn-sm btn-outline-danger btn-labeled extman-loading" 
+            href="action.uninstall_package?pkg={0}&source={1}&channel={2}">
+            {3}
+        </a>
+        """.format(quote(pkg.name), quote(source.name), quote(source.channelId), TR_UNINSTALL)
+    else:
+        return ''
+
+
 def comp_btn_install_or_update_package(pkg):
-    return """
-    <a class="btn btn-danger extman-loading" data-spinner-message="{0}"
-        href="action.install_package?pkg={1}&source={2}&channel={3}">
-        {4}
-    </a>
-    """.format(
-        TR_INSTALLING,
-        quote(pkg.name),
-        quote(pkg.sourceName),
-        quote(pkg.channelId),
-        TR_UPDATE if pkg.isInstalled() else TR_INSTALL)
+    if hasattr(pkg, 'sourceName') and pkg.sourceName:
+        return """
+        <a class="btn btn-danger extman-loading" data-spinner-message="{0}"
+            href="action.install_package?pkg={1}&source={2}&channel={3}">
+            {4}
+        </a>
+        """.format(
+            TR_INSTALLING,
+            quote(pkg.name),
+            quote(pkg.sourceName),
+            quote(pkg.channelId),
+            TR_UPDATE if pkg.isInstalled() else TR_INSTALL)
+    else:
+        return ""
 
 
 def comp_btn_update_package(pkg, source):
@@ -343,6 +374,7 @@ components = Components(
     BtnActivateWB=comp_btn_activate_wb,
     BtnUpdatePackage=comp_btn_update_package,
     BtnInstallPackage=comp_btn_install_package,
+    BtnUninstallPackage=comp_btn_uninstall_package,
     PkgCoreBadge=comp_badge_core,
     PkgTypeBadge=comp_badge_type,
     PkgInstalledBadge=comp_badge_installed,
@@ -353,5 +385,6 @@ components = Components(
     PkgAllBadges=comp_package_badges,
     PkgFlags=comp_package_flags,
     PkgReadmeLink=comp_link_readme,
-    BtnDoInstallOrUpdatePkg=comp_btn_install_or_update_package
+    BtnDoInstallOrUpdatePkg=comp_btn_install_or_update_package,
+    BtnDoUninstallPackage=comp_btn_do_uninstall_package
 )

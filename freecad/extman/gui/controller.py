@@ -19,6 +19,7 @@
 # *                                                                         *
 # ***************************************************************************
 
+from freecad.extman.sources.source_installed import InstalledPackageSource
 import FreeCADGui as Gui
 from pathlib import Path
 import json
@@ -63,6 +64,25 @@ def show_install_info(path, session, params, request, response):
     Worker(job).start()
 
 
+def show_uninstall_info(path, session, params, request, response):
+    """
+    Show information before uninstall
+    """
+
+    pkg_name = params['pkg']
+    session.set_state(installResult=None)
+
+    def job():
+        pkg_source = InstalledPackageSource()
+        install_pkg = pkg_source.findPackageByName(pkg_name)
+        if install_pkg:
+            session.set_state(pkgSource=pkg_source, pkgName=pkg_name, installPkg=install_pkg)
+            session.route_to('/CloudSources/Packages/Install')
+        response.render_template('index.html')
+
+    Worker(job).start()
+
+
 def install_package(path, session, params, request, response):
     """
     Install/Update package
@@ -80,6 +100,25 @@ def install_package(path, session, params, request, response):
             result = pkg_source.install(pkg_name)
             session.set_state(pkgSource=pkg_source, pkgName=pkg_name, installPkg=install_pkg, installResult=result)
             session.route_to('/CloudSources/Packages/Install')
+        response.render_template('index.html')
+
+    Worker(job).start()
+
+
+def uninstall_package(path, session, params, request, response):
+    """
+    Uninstall package
+    """
+
+    pkg_name = params['pkg']
+    session.set_state(installResult=None)
+
+    def job():
+        pkg_source = InstalledPackageSource()
+        install_pkg = pkg_source.findPackageByName(pkg_name)
+        result = pkg_source.uninstall(install_pkg)
+        session.set_state(pkgSource=pkg_source, pkgName=pkg_name, installPkg=install_pkg, installResult=result)
+        session.route_to('/InstalledPackages')
         response.render_template('index.html')
 
     Worker(job).start()
@@ -125,6 +164,7 @@ def open_installed(path, session, params, request, response):
     List installed packages
     """
 
+    session.set_state(pkgSource=InstalledPackageSource())
     session.route_to('/InstalledPackages')
     response.render_template('index.html')
 
@@ -243,7 +283,8 @@ def create_router():
         InstalledPackages=route(any_of=['/InstalledPackages', '/']),
         CloudSources=route(prefix="/CloudSources"),
         CloudSourcesPackages=route(prefix="/CloudSources/Packages"),
-        Install=route(exact='/CloudSources/Packages/Install')
+        Install=route(exact='/CloudSources/Packages/Install'),
+        Uninstall=route(exact='/CloudSources/Packages/Install')
     )
 
 
@@ -253,7 +294,9 @@ actions = {
     for f in (
         restart,
         show_install_info,
+        show_uninstall_info,
         install_package,
+        uninstall_package,
         update_cloud_source,
         open_cloud_source,
         open_cloud,

@@ -388,258 +388,258 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="13"/>
+            <location filename="../../resources/html/index.html" line="13"/>
             <source>Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="17"/>
+            <location filename="../../resources/html/index.html" line="17"/>
             <source>Disabled</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="18"/>
+            <location filename="../../resources/html/index.html" line="18"/>
             <source>Loading...</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="19"/>
+            <location filename="../../resources/html/index.html" line="19"/>
             <source>Run</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="20"/>
+            <location filename="../../resources/html/index.html" line="20"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="21"/>
+            <location filename="../../resources/html/index.html" line="21"/>
             <source>Confirm</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="22"/>
+            <location filename="../../resources/html/index.html" line="22"/>
             <source>Are you sure?</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="23"/>
+            <location filename="../../resources/html/index.html" line="23"/>
             <source>Confirm unsafe run?</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="24"/>
+            <location filename="../../resources/html/index.html" line="24"/>
             <source>This Macro comes from an external source. It executes code on your computer and it is potentially dangerous.</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="25"/>
+            <location filename="../../resources/html/index.html" line="25"/>
             <source>This action will download metadata from extenal sources. It can take a while to complete.</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="26"/>
+            <location filename="../../resources/html/index.html" line="26"/>
             <source>Readme info not available or unsupported</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="40"/>
+            <location filename="../../resources/html/index.html" line="40"/>
             <source>Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="45"/>
+            <location filename="../../resources/html/index.html" line="45"/>
             <source>Installed</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="51"/>
+            <location filename="../../resources/html/index.html" line="51"/>
             <source>Cloud</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="56"/>
+            <location filename="../../resources/html/index.html" line="56"/>
             <source>Search</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="62"/>
+            <location filename="../../resources/html/index.html" line="62"/>
             <source>Search</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="64"/>
+            <location filename="../../resources/html/index.html" line="64"/>
             <source>Loading...</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="86"/>
+            <location filename="../../resources/html/index.html" line="86"/>
             <source>Confirm</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="87"/>
+            <location filename="../../resources/html/index.html" line="87"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="95"/>
+            <location filename="../../resources/html/index.html" line="95"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="107"/>
+            <location filename="../../resources/html/index.html" line="107"/>
             <source>Loading...</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="122"/>
+            <location filename="../../resources/html/index.html" line="122"/>
             <source>Readme</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/index.html" line="127"/>
+            <location filename="../../resources/html/index.html" line="127"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="10"/>
+            <location filename="../../resources/html/cloud/sources.html" line="10"/>
             <source>+ Add</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="39"/>
+            <location filename="../../resources/html/cloud/sources.html" line="39"/>
             <source>Edit</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="58"/>
+            <location filename="../../resources/html/cloud/sources.html" line="58"/>
             <source>Custom Source</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="59"/>
+            <location filename="../../resources/html/cloud/sources.html" line="59"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="68"/>
+            <location filename="../../resources/html/cloud/sources.html" line="68"/>
             <source>Title</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="71"/>
+            <location filename="../../resources/html/cloud/sources.html" line="71"/>
             <source>Write something that helps you to
                             identify this external source</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="75"/>
+            <location filename="../../resources/html/cloud/sources.html" line="75"/>
             <source>Description</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="78"/>
+            <location filename="../../resources/html/cloud/sources.html" line="78"/>
             <source>Optional detailed description</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="82"/>
+            <location filename="../../resources/html/cloud/sources.html" line="82"/>
             <source>Protocol</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="87"/>
+            <location filename="../../resources/html/cloud/sources.html" line="87"/>
             <source>Source repository type</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="91"/>
+            <location filename="../../resources/html/cloud/sources.html" line="91"/>
             <source>Url</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="93"/>
+            <location filename="../../resources/html/cloud/sources.html" line="93"/>
             <source>Public repository url</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="101"/>
+            <location filename="../../resources/html/cloud/sources.html" line="101"/>
             <source>Remove</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="102"/>
+            <location filename="../../resources/html/cloud/sources.html" line="102"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="103"/>
+            <location filename="../../resources/html/cloud/sources.html" line="103"/>
             <source>Save</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="134"/>
+            <location filename="../../resources/html/cloud/sources.html" line="134"/>
             <source>Remove</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/sources.html" line="149"/>
+            <location filename="../../resources/html/cloud/sources.html" line="149"/>
             <source>Click again to confirm</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/packages.html" line="54"/>
+            <location filename="../../resources/html/cloud/packages.html" line="54"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/packages.html" line="58"/>
+            <location filename="../../resources/html/cloud/packages.html" line="58"/>
             <source>Update list</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="26"/>
+            <location filename="../../resources/html/cloud/install.html" line="26"/>
             <source>Back</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="34"/>
+            <location filename="../../resources/html/cloud/install.html" line="34"/>
             <source>Source</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="73"/>
+            <location filename="../../resources/html/cloud/install.html" line="73"/>
             <source>Authors</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="86"/>
+            <location filename="../../resources/html/cloud/install.html" line="86"/>
             <source>Install error</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="99"/>
+            <location filename="../../resources/html/cloud/install.html" line="99"/>
             <source>Install Ok</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="90"/>
+            <location filename="../../resources/html/cloud/install.html" line="90"/>
             <source>There was an unexpected error while installing this package</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="104"/>
+            <location filename="../../resources/html/cloud/install.html" line="104"/>
             <source>Package installed.</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="106"/>
+            <location filename="../../resources/html/cloud/install.html" line="106"/>
             <source>Now you must restart FreeCAD to load the changes</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../Resources/html/cloud/install.html" line="107"/>
+            <location filename="../../resources/html/cloud/install.html" line="107"/>
             <source>Restart</source>
             <translation type="unfinished"></translation>
         </message>

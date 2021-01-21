@@ -20,15 +20,18 @@
 # ***************************************************************************
 # noinspection PyPep8Naming
 
+import shutil
+
+from git.objects import base
 import FreeCAD as App
 import FreeCADGui as Gui
 import configparser as cp
-import os
+import os, ast
 from pathlib import Path
 
 import freecad.extman.protocol.github as gh
 from freecad.extman.protocol import flags
-from freecad.extman import get_resource_path, tr, get_macro_path, get_mod_path, get_freecad_resource_path
+from freecad.extman import get_resource_path, log, log_err, tr, get_macro_path, get_mod_path, get_freecad_resource_path
 from freecad.extman import utils
 from freecad.extman.protocol.macro_parser import build_macro_package
 from freecad.extman.protocol.manifest import ExtensionManifest
@@ -47,6 +50,9 @@ class InstalledPackageSource(PackageSource):
         self.workbenches = Gui.listWorkbenches()
         self.updates = {}
         self.showCorePackages = True
+        self.name = "Installed"
+        self.channelId = "InstalledPackages"
+        self.isInstalledSource = True
 
     def getTitle(self):
         return tr('Installed packages')
@@ -124,7 +130,7 @@ class InstalledPackageSource(PackageSource):
             return pkg
 
     def getModIcon(self, name, install_path, wbKey, wb):
-        icon_path = Path(install_path, 'Resources', 'icons', '{0}Workbench.svg'.format(name))
+        icon_path = Path(install_path, 'resources', 'icons', '{0}Workbench.svg'.format(name))
         if icon_path.exists():
             return utils.path_to_url(icon_path)
         else:
@@ -137,6 +143,16 @@ class InstalledPackageSource(PackageSource):
 
     def install(self, pkg):
         return None
+
+    def uninstall(self, pkg):
+        log("Uninstalling {}".format(pkg.name))
+        try:
+            if hasattr(pkg, 'installFile') and pkg.type == 'Macro':
+                uninstall_macro(pkg.installFile)
+            elif hasattr(pkg, 'installDir') and pkg.type == 'Workbench':
+                shutil.rmtree(pkg.installDir, ignore_errors=True)                
+        except BaseException as e:
+            log_err(str(e))
 
 
 def analyseInstalledMod(pkg):
@@ -202,3 +218,32 @@ def analyseInstalledMacro(pkg):
     if not loadPackageMetadata(pkg):
         savePackageMetadata(pkg)
     return pkg
+
+
+def get_macro_files(path):
+    base_dir = Path(path.parent)
+    files = [path]
+    with open(path, 'r') as f:
+        src = ast.parse(f.read(), str(path), 'exec')
+        for node in src.body:
+            if isinstance(node, ast.Assign) and node.targets[0].id == '__Files__':
+                names = node.value.s.split(",")
+                for name in names:
+                    files.append(base_dir / name)
+                break
+    return files
+
+
+def uninstall_macro(path):
+    dirs = set()  
+    macros = get_macro_path()
+    for file in get_macro_files(path):
+        if file.exists():
+            if file.is_file():
+                os.remove(file)
+                dirs.add(Path(file.parent))
+            elif file.is_dir():
+                dirs.append(file)
+    for d in dirs:
+        if not os.listdir(d) and d != macros:
+            os.rmdir(d)

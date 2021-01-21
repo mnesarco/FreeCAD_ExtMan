@@ -122,6 +122,7 @@ class PackageSource:
         self.type = sourceType
         self.name = None
         self.channelId = None
+        self.isInstalledSource = False
 
     def getTitle(self):
         return 'Unknown'

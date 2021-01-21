@@ -28,12 +28,24 @@
 
                     ${e:comp.PkgReadmeLink(installPkg, cssClass="btn btn-info text-uppercase")}
                     ${e:comp.BtnDoInstallOrUpdatePkg(installPkg)}
+                    <div style="float: right;">
+                        ${e:comp.BtnDoUninstallPackage(installPkg)}
+                    </div>
 
                 </div>
                 <div class="card-footer">
+
+                    <script type="text/python">
+                        if pkgSource.channelId == "InstalledPackages":
+                            action = "action.open_installed"
+                        else:
+                            action = "action.open_cloud_source"
+                    </script>
+        
+
                     ${t:Source}: 
                     <a class="extman-loading"
-                        href="action.open_cloud_source?channel=${e:pkgSource.channelId}&name=${e:pkgSource.name}#${e:sha256(installPkg.name)}">
+                        href="${e:action}?channel=${e:pkgSource.channelId}&name=${e:pkgSource.name}#${e:sha256(installPkg.name)}">
                         ${e:pkgSource.getTitle()}
                     </a>
                 </div>
