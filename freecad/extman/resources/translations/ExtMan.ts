@@ -5,12 +5,12 @@
         <name>extman</name>               
 
         <message>
-            <location filename="../../freecad/extman/init_gui.py" line="36"/>
+            <location filename="../../freecad/extman/init_gui.py" line="40"/>
             <source>Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/init_gui.py" line="37"/>
+            <location filename="../../freecad/extman/init_gui.py" line="41"/>
             <source>Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
@@ -30,30 +30,30 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="191"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="192"/>
             <source>This macro contains invalid content, it cannot be installed directly by the 
                 Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="214"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="215"/>
             <source>This macro contains invalid content, 
                                 it cannot be installed directly by the Extension Manager</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="222"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="223"/>
             <source>Copy the link, download it and install it manually 
                         or follow instructions from the external resource</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="154"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="155"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/protocol/fcwiki.py" line="220"/>
+            <location filename="../../freecad/extman/protocol/fcwiki.py" line="221"/>
             <source>This macro must be downloaded from this link</source>
             <translation type="unfinished"></translation>
         </message>
@@ -73,33 +73,23 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="68"/>
+            <location filename="../../freecad/extman/utils/__init__.py" line="70"/>
             <source>Architecture</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="69"/>
-            <source>Other</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="70"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="71"/>
-            <source>CAD/CAM</source>
+            <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="72"/>
-            <source>Analysis</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="73"/>
-            <source>Other</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -109,17 +99,17 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="75"/>
-            <source>3D</source>
+            <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="76"/>
-            <source>CAD/CAM</source>
+            <source>Analysis</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="77"/>
-            <source>CAD/CAM</source>
+            <source>3D</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -139,37 +129,37 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="81"/>
-            <source>3D</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="82"/>
-            <source>Engineering</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="83"/>
-            <source>Engineering</source>
+            <source>3D</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="84"/>
-            <source>CAD/CAM</source>
+            <source>Engineering</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="85"/>
-            <source>Data</source>
+            <source>Engineering</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="86"/>
-            <source>Other</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="87"/>
-            <source>CAD/CAM</source>
+            <source>Data</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -179,51 +169,61 @@
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="89"/>
-            <source>Other</source>
+            <source>CAD/CAM</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="90"/>
-            <source>Engineering</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="91"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="92"/>
-            <source>CAD/CAM</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="93"/>
             <source>Other</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
+            <location filename="../../freecad/extman/utils/__init__.py" line="91"/>
+            <source>Other</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils/__init__.py" line="92"/>
+            <source>Engineering</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils/__init__.py" line="93"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
             <location filename="../../freecad/extman/utils/__init__.py" line="94"/>
+            <source>CAD/CAM</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils/__init__.py" line="95"/>
+            <source>Other</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/utils/__init__.py" line="96"/>
             <source>PCB/EDA</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="147"/>
+            <location filename="../../freecad/extman/utils/__init__.py" line="149"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/utils/__init__.py" line="157"/>
+            <location filename="../../freecad/extman/utils/__init__.py" line="159"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/sources/source_installed.py" line="52"/>
+            <location filename="../../freecad/extman/sources/source_installed.py" line="56"/>
             <source>Installed packages</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/sources/source_installed.py" line="55"/>
+            <location filename="../../freecad/extman/sources/source_installed.py" line="59"/>
             <source>All installed packages</source>
             <translation type="unfinished"></translation>
         </message>
@@ -233,18 +233,274 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/sources/__init__.py" line="182"/>
+            <location filename="../../freecad/extman/sources/__init__.py" line="183"/>
             <source>Uncategorized</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/sources/__init__.py" line="183"/>
+            <location filename="../../freecad/extman/sources/__init__.py" line="184"/>
             <source>Libraries</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/sources/__init__.py" line="184"/>
+            <location filename="../../freecad/extman/sources/__init__.py" line="185"/>
             <source>Other</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="13"/>
+            <source>Extension Manager</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="17"/>
+            <source>Disabled</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="18"/>
+            <source>Loading...</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="19"/>
+            <source>Run</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="20"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="21"/>
+            <source>Confirm</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="22"/>
+            <source>Are you sure?</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="23"/>
+            <source>Confirm unsafe run?</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="24"/>
+            <source>This Macro comes from an external source. It executes code on your computer and it is potentially dangerous.</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="25"/>
+            <source>This action will download metadata from external sources. It can take a while to complete.</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="26"/>
+            <source>Readme info not available or unsupported</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="40"/>
+            <source>Extension Manager</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="45"/>
+            <source>Installed</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="51"/>
+            <source>Add (Download)</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="56"/>
+            <source>Search</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="62"/>
+            <source>Search</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="64"/>
+            <source>Loading...</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="86"/>
+            <source>Confirm</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="87"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="95"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="107"/>
+            <source>Loading...</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="122"/>
+            <source>Readme</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/index.html" line="127"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="10"/>
+            <source>+ Add</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="39"/>
+            <source>Edit</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="58"/>
+            <source>Custom Source</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="59"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="68"/>
+            <source>Title</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="71"/>
+            <source>Write something that helps you to
+                            identify this external source</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="75"/>
+            <source>Description</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="78"/>
+            <source>Optional detailed description</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="82"/>
+            <source>Protocol</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="87"/>
+            <source>Source repository type</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="91"/>
+            <source>Url</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="93"/>
+            <source>Public repository url</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="101"/>
+            <source>Remove</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="102"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="103"/>
+            <source>Save</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="134"/>
+            <source>Remove</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/sources.html" line="149"/>
+            <source>Click again to confirm</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/packages.html" line="54"/>
+            <source>Close</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/packages.html" line="58"/>
+            <source>Update list</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="26"/>
+            <source>Back</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="46"/>
+            <source>Source</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="85"/>
+            <source>Authors</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="98"/>
+            <source>Install error</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="111"/>
+            <source>Install Ok</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="102"/>
+            <source>There was an unexpected error while installing this package</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="116"/>
+            <source>Package installed.</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="118"/>
+            <source>Now you must restart FreeCAD to load the changes</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/resources/html/cloud/install.html" line="119"/>
+            <source>Restart</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
@@ -253,107 +509,112 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="30"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="31"/>
             <source>Run</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="31"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="32"/>
             <source>Close</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="32"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="33"/>
             <source>Edit</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="33"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="34"/>
             <source>Activate</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="34"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="35"/>
             <source>Update</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="35"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="36"/>
             <source>Core Package</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="36"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="37"/>
             <source>Community Package</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="37"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="38"/>
             <source>Workbench</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="38"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="39"/>
             <source>Macro</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="39"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="40"/>
             <source>Module</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="40"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="41"/>
             <source>Installed</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="41"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="42"/>
             <source>Git</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="42"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="43"/>
             <source>Wiki</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="43"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="44"/>
             <source>Obsolete package</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="44"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="45"/>
             <source>Python2 only</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="45"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="46"/>
             <source>readme</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="46"/>
+            <location filename="../../freecad/extman/template/html_components.py" line="47"/>
             <source>Install</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/template/html_components.py" line="47"/>
-            <source>Installing...</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
             <location filename="../../freecad/extman/template/html_components.py" line="48"/>
-            <source>View mode</source>
+            <source>Uninstall</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/template/html_components.py" line="49"/>
-            <source>List view</source>
+            <source>Installing...</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
             <location filename="../../freecad/extman/template/html_components.py" line="50"/>
+            <source>View mode</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/template/html_components.py" line="51"/>
+            <source>List view</source>
+            <translation type="unfinished"></translation>
+        </message>
+        <message>
+            <location filename="../../freecad/extman/template/html_components.py" line="52"/>
             <source>Card view</source>
             <translation type="unfinished"></translation>
         </message>
@@ -363,284 +624,28 @@
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/gui/controller.py" line="166"/>
+            <location filename="../../freecad/extman/gui/controller.py" line="206"/>
             <source>Error in macro:</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/gui/controller.py" line="186"/>
+            <location filename="../../freecad/extman/gui/controller.py" line="226"/>
             <source>title is required</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/gui/controller.py" line="190"/>
+            <location filename="../../freecad/extman/gui/controller.py" line="230"/>
             <source>url is required</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/gui/controller.py" line="194"/>
+            <location filename="../../freecad/extman/gui/controller.py" line="234"/>
             <source>protocol is required</source>
             <translation type="unfinished"></translation>
         </message>
         <message>
-            <location filename="../../freecad/extman/gui/controller.py" line="197"/>
+            <location filename="../../freecad/extman/gui/controller.py" line="237"/>
             <source>Validation error</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="13"/>
-            <source>Extension Manager</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="17"/>
-            <source>Disabled</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="18"/>
-            <source>Loading...</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="19"/>
-            <source>Run</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="20"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="21"/>
-            <source>Confirm</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="22"/>
-            <source>Are you sure?</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="23"/>
-            <source>Confirm unsafe run?</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="24"/>
-            <source>This Macro comes from an external source. It executes code on your computer and it is potentially dangerous.</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="25"/>
-            <source>This action will download metadata from extenal sources. It can take a while to complete.</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="26"/>
-            <source>Readme info not available or unsupported</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="40"/>
-            <source>Extension Manager</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="45"/>
-            <source>Installed</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="51"/>
-            <source>Cloud</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="56"/>
-            <source>Search</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="62"/>
-            <source>Search</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="64"/>
-            <source>Loading...</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="86"/>
-            <source>Confirm</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="87"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="95"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="107"/>
-            <source>Loading...</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="122"/>
-            <source>Readme</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/index.html" line="127"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="10"/>
-            <source>+ Add</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="39"/>
-            <source>Edit</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="58"/>
-            <source>Custom Source</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="59"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="68"/>
-            <source>Title</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="71"/>
-            <source>Write something that helps you to
-                            identify this external source</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="75"/>
-            <source>Description</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="78"/>
-            <source>Optional detailed description</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="82"/>
-            <source>Protocol</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="87"/>
-            <source>Source repository type</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="91"/>
-            <source>Url</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="93"/>
-            <source>Public repository url</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="101"/>
-            <source>Remove</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="102"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="103"/>
-            <source>Save</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="134"/>
-            <source>Remove</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/sources.html" line="149"/>
-            <source>Click again to confirm</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/packages.html" line="54"/>
-            <source>Close</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/packages.html" line="58"/>
-            <source>Update list</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="26"/>
-            <source>Back</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="34"/>
-            <source>Source</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="73"/>
-            <source>Authors</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="86"/>
-            <source>Install error</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="99"/>
-            <source>Install Ok</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="90"/>
-            <source>There was an unexpected error while installing this package</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="104"/>
-            <source>Package installed.</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="106"/>
-            <source>Now you must restart FreeCAD to load the changes</source>
-            <translation type="unfinished"></translation>
-        </message>
-        <message>
-            <location filename="../../resources/html/cloud/install.html" line="107"/>
-            <source>Restart</source>
             <translation type="unfinished"></translation>
         </message>
     </context>

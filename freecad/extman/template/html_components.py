@@ -366,6 +366,29 @@ def comp_link_readme(pkg, cssClass=""):
         return ''
 
 
+
+def comp_link_title(pkg, cssClass=""):
+    if pkg.readmeUrl:
+        return """
+        <a class="{0}" 
+            href="#" 
+            onclick="extman_readmeDlg(this, event)"
+            data-readme="{1}"
+            data-readmeformat="{2}"
+            data-title="{3}">
+            {4}
+        </a>
+        """.format(
+            cssClass or 'title-link',
+            pkg.readmeUrl,
+            pkg.readmeFormat,
+            pkg.title,
+            pkg.title
+        )
+    else:
+        return pkg.title
+
+
 # Components visible in all templates
 components = Components(
     Icon=comp_icon,
@@ -385,6 +408,7 @@ components = Components(
     PkgAllBadges=comp_package_badges,
     PkgFlags=comp_package_flags,
     PkgReadmeLink=comp_link_readme,
+    PkgTitleLink=comp_link_title,
     BtnDoInstallOrUpdatePkg=comp_btn_install_or_update_package,
     BtnDoUninstallPackage=comp_btn_do_uninstall_package
 )
