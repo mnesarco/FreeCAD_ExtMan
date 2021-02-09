@@ -22,8 +22,6 @@
 
 import shutil
 
-from git.objects import base
-import FreeCAD as App
 import FreeCADGui as Gui
 import configparser as cp
 import os, ast
