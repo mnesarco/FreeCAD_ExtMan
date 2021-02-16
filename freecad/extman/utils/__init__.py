@@ -201,24 +201,37 @@ def restore_absolute_paths(content):
 
 
 def get_workbench_icon_candidates(workbench_name, base_url, icon_path, local_dir):
-
+    
     # Legacy icon compiled inside FreeCAD
     sources = ["qrc:/icons/" + workbench_name + "_workbench_icon.svg"]
+
+    default_icon_path = "resources/icons/{0}.svg".format(workbench_name)
 
     # Icon from metadata
     if icon_path:
         if icon_path.startswith('http'):
             sources.append(icon_path)
-        elif icon_path.startswith('resources'):
-            src = Path(local_dir, icon_path)
-            if src.exists():
-                sources.append(src.as_uri().replace('file:', 'extman:'))
-            else:
-                sources.append(base_url.strip('/') + '/' + icon_path)
         elif icon_path.startswith('file:'):
             sources.append(icon_path.replace('file:', 'extman:'))
         elif icon_path.startswith('extman:'):
             sources.append(icon_path)
+        elif icon_path == default_icon_path:
+            icon_root = base_url.strip('/')
+            sources.append(icon_root + '/' + icon_path)
+            # Well known fallbacks
+            sources.append(icon_root + '/Resources/' + workbench_name + '.svg')
+            sources.append(icon_root + '/Resources/' + workbench_name + '.png')
+            sources.append(icon_root + '/Resources/icons/' + workbench_name + '.svg')
+            sources.append(icon_root + '/Resources/icons/' + workbench_name + '.png')
+            sources.append(icon_root + '/freecad/' + workbench_name.lower() + '/icons/' + workbench_name + ".svg")
+            sources.append(icon_root + '/freecad/' + workbench_name.lower() + '/icons/' + workbench_name + ".png")
+        else:
+            src = Path(local_dir, icon_path)
+            if src.exists():
+                sources.append(src.as_uri().replace('file:', 'extman:'))
+            else:
+                icon_root = base_url.strip('/')
+                sources.append(icon_root + '/' + icon_path)
 
     return sources
 
