@@ -83,11 +83,15 @@ tr_encoding = None
 
 def setup_translation():
     import FreeCADGui as Gui
-    global tr_encoding
-
+    global tr_encoding, tr_initialized
     try:
         Gui.addLanguagePath(get_resource_path('translations'))
         Gui.updateLocale()
+        tr_initialized = True
+        try:
+            tr_encoding = QtGui.QApplication.UnicodeUTF8
+        except:
+            tr_encoding = None
     except Exception as ex:
         log('Translation loading error')
 
@@ -95,6 +99,8 @@ def setup_translation():
 @functools.lru_cache()
 def tr(text):
     """Translate text"""
+    if not tr_initialized:
+        setup_translation()
     if tr_encoding:
         u = QtGui.QApplication.translate('extman', text, None, tr_encoding)
     else:
