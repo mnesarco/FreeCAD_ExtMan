@@ -78,7 +78,7 @@ def get_freecad_resource_path():
 # | Translations setup                                                        |
 # +---------------------------------------------------------------------------+
 
-tr_initialized = False
+tr_initialized = 0
 tr_encoding = None
 
 def setup_translation():
@@ -87,26 +87,29 @@ def setup_translation():
     try:
         Gui.addLanguagePath(get_resource_path('translations'))
         Gui.updateLocale()
-        tr_initialized = True
+        tr_initialized = 1
         try:
             tr_encoding = QtGui.QApplication.UnicodeUTF8
         except:
             tr_encoding = None
     except Exception as ex:
         log('Translation loading error')
+        tr_initialized = -1
 
 
 @functools.lru_cache()
 def tr(text):
     """Translate text"""
-    if not tr_initialized:
+    if tr_initialized == 0:
         setup_translation()
-    if tr_encoding:
-        u = QtGui.QApplication.translate('extman', text, None, tr_encoding)
+    if tr_initialized > 0:
+        if tr_encoding:
+            u = QtGui.QApplication.translate('extman', text, None, tr_encoding)
+        else:
+            u = QtGui.QApplication.translate('extman', text, None)
+        return u.replace(chr(39), "&rsquo;")
     else:
-        u = QtGui.QApplication.translate('extman', text, None)
-    return u.replace(chr(39), "&rsquo;")
-
+        return text
 
 # +---------------------------------------------------------------------------+
 # | Base paths setup                                                          |
