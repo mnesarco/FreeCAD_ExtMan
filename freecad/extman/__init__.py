@@ -23,7 +23,6 @@ import functools
 from pathlib import Path
 
 import FreeCAD as App
-import FreeCADGui as Gui
 from PySide import QtGui
 
 
@@ -79,28 +78,28 @@ def get_freecad_resource_path():
 # | Translations setup                                                        |
 # +---------------------------------------------------------------------------+
 
-try:
-    Gui.addLanguagePath(get_resource_path('translations'))
-    Gui.updateLocale()
-except Exception as ex:
-    log('Translation loading error')
+tr_initialized = False
+tr_encoding = None
 
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
+def setup_translation():
+    import FreeCADGui as Gui
+    global tr_encoding
 
-    @functools.lru_cache()
-    def tr(text):
-        """Translate text"""
-        u = QtGui.QApplication.translate('extman', text, None, _encoding)
-        return u.replace(chr(39), "&rsquo;")
+    try:
+        Gui.addLanguagePath(get_resource_path('translations'))
+        Gui.updateLocale()
+    except Exception as ex:
+        log('Translation loading error')
 
-except Exception as ex:
 
-    @functools.lru_cache()
-    def tr(text):
-        """Translate text"""
+@functools.lru_cache()
+def tr(text):
+    """Translate text"""
+    if tr_encoding:
+        u = QtGui.QApplication.translate('extman', text, None, tr_encoding)
+    else:
         u = QtGui.QApplication.translate('extman', text, None)
-        return u.replace(chr(39), "&rsquo;")
+    return u.replace(chr(39), "&rsquo;")
 
 
 # +---------------------------------------------------------------------------+
