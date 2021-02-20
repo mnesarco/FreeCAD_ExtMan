@@ -85,7 +85,8 @@ def setup_translation():
     import FreeCADGui as Gui
     global tr_encoding, tr_initialized
     try:
-        Gui.addLanguagePath(get_resource_path('translations'))
+        log('Loading Translations...')
+        Gui.addLanguagePath(str(get_resource_path('translations')))
         Gui.updateLocale()
         tr_initialized = 1
         try:
@@ -93,7 +94,7 @@ def setup_translation():
         except:
             tr_encoding = None
     except Exception as ex:
-        log('Translation loading error')
+        log('Translation loading error: ', str(ex))
         tr_initialized = -1
 
 
