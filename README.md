@@ -1,3 +1,6 @@
+# Archived (2021-12-19)
+This project is not maintained anymore. Some of the ideas were adopted by the official FreeCAD AddonManager (thanks to @chennes).
+
 # FreeCAD Extension Manager (For FreeCAD 0.19+)
 
 ## Description
